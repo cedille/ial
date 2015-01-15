@@ -1,0 +1,50 @@
+The Iowa Agda Library (IAL)
+Development Version
+Aaron Stump
+
+1. About the library
+
+The goal is to provide a concrete library focused on verification
+examples, as opposed to mathematics.  The library has a good number
+of theorems for booleans, natural numbers, and lists.  It also has
+trees, tries, vectors, and rudimentary IO.  A number of good ideas
+come from Agda's standard library.
+
+2. Using the library 
+
+This library is known to work with Agda 2.4.2.2/2.4.2.1.
+
+In Agda, you can include the whole library by importing lib.agda.  
+
+You can compile the whole library by running "make".
+
+The library is set up so there are no name conflicts between modules
+(except sometimes I have several versions of the same module, like
+stream and stream2 or nat-division and nat-division2, and there might
+be name conflicts in such cases).
+
+3. Credits
+
+The library is mostly written by myself, but it also includes some
+contributions from undergraduates who took my Programming Language
+Concepts class, Spring 2014.
+
+4. Releases
+
+Released versions of the library can be found at
+
+https://svn.divms.uiowa.edu/repos/clc/projects/agda/ial-releases
+
+5. License
+
+This library is currently provided under the MIT License, see LICENSE.txt.
+
+6. Documentation
+
+There is no formal documentation currently, besides comments in the files.
+
+I have described some of the library in my book in progress, "Verified
+Functional Programming in Agda".  The current draft is available at
+
+https://svn.divms.uiowa.edu/repos/clc/projects/agda/book/
+
