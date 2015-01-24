@@ -1,10 +1,11 @@
-ROOTS=  bool bool-test bool-thms bool-thms2 \
+ROOTS=  bool bool-test bool-thms bool-thms2 bool-kleene \
+	braun-tree \
 	char \
 	datatypes \
 	eq \
 	io io-test io-test2 \
 	level \
-	list list-test list-thms \
+	list list-test list-thms list-merge-sort list-merge-sort-test \
 	logic \
 	maybe maybe-thms \
 	nat nat-thms nat-division nat-division2 nat-to-string nat-tests \

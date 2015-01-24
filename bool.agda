@@ -25,7 +25,7 @@ bool = 𝔹
 ----------------------------------------------------------------------
 
 infix  7 ~_
-infixl 6 _xor_
+infix 6 _xor_ _nand_
 infixr 6 _&&_
 infixr 5 _||_ 
 infix  4 if_then_else_   if*_then_else_
@@ -69,3 +69,10 @@ ff xor ff = ff
 _imp_ : 𝔹 → 𝔹 → 𝔹 
 tt imp b2 = b2
 ff imp b2 = tt
+
+-- also called the Sheffer stroke
+_nand_ : 𝔹 → 𝔹 → 𝔹
+tt nand tt = ff
+tt nand ff = tt
+ff nand tt = tt
+ff nand ff = tt

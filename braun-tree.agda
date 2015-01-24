@@ -27,10 +27,9 @@ bt-insert a (bt-node{n}{m} a' l r p) | inj₁ p' | (a1 , a2)
   where lem : suc m =ℕ m + 1 ≡ tt
         lem rewrite +comm m 1 = =ℕ-refl m 
 bt-insert a (bt-node{n}{m} a' l r p) | inj₂ p' | (a1 , a2) =
-  (bt-node a1 (bt-insert a2 r) l (inj₁ lem))
-  where lem : suc m =ℕ n ≡ tt
-        lem rewrite =ℕ-to-≡{n} p' | +comm m 1 = =ℕ-refl m
-
+  (bt-node a1 (bt-insert a2 r) l (inj₁ (lem n m p')))
+  where lem : ∀ n m → n =ℕ m + 1 ≡ tt → suc m =ℕ n ≡ tt
+        lem n m p' rewrite =ℕ-to-≡{n} p' | +comm m 1 = =ℕ-refl m
 
 
 
@@ -48,9 +47,9 @@ bt'-insert a (bt'-node{n}{m} l r p) rewrite +comm n m with p
 bt'-insert a (bt'-node{n}{m} l r p) | inj₁ p' rewrite =ℕ-to-≡{n} p' = (bt'-node (bt'-insert a r) l (inj₂ lem))
   where lem : suc m =ℕ m + 1 ≡ tt
         lem rewrite +comm m 1 = =ℕ-refl m 
-bt'-insert a (bt'-node{n}{m} l r p) | inj₂ p' = (bt'-node (bt'-insert a r) l (inj₁ lem))
-  where lem : suc m =ℕ n ≡ tt
-        lem rewrite =ℕ-to-≡{n} p' | +comm m 1 = =ℕ-refl m
+bt'-insert a (bt'-node{n}{m} l r p) | inj₂ p' = (bt'-node (bt'-insert a r) l (inj₁ (lem n m p')))
+  where lem : ∀ n m → n =ℕ m + 1 ≡ tt → suc m =ℕ n ≡ tt
+        lem n m p' rewrite =ℕ-to-≡{n} p' | +comm m 1 = =ℕ-refl m
   
 𝕃-to-braun-tree' : A → (l : 𝕃 A) → braun-tree' (suc (length l))
 𝕃-to-braun-tree' a [] = bt'-leaf a

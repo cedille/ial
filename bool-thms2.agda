@@ -129,6 +129,10 @@ ff-xor : ∀ (b : 𝔹) → ff xor b ≡ b
 ff-xor tt = refl
 ff-xor ff = refl
 
+tt-xor : ∀ (b : 𝔹) → tt xor b ≡ ~ b
+tt-xor tt = refl
+tt-xor ff = refl
+
 ~-xor-distrb : ∀ (a b : 𝔹) → ~ (a xor b) ≡ ~ a xor b
 ~-xor-distrb tt tt = refl
 ~-xor-distrb tt ff = refl

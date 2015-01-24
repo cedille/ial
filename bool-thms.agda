@@ -15,16 +15,13 @@ open import product
 ~~-elim tt = refl
 ~~-elim ff = refl
 
-&&-same : ∀ {b} → b && b ≡ b
-&&-same{tt} = refl
-&&-same{ff} = refl
+&&-idem : ∀ {b} → b && b ≡ b
+&&-idem{tt} = refl
+&&-idem{ff} = refl
 
-test-&&-same : tt && tt ≡ tt
-test-&&-same = &&-same
-
-||-same : ∀{b} → b || b ≡ b
-||-same{tt} = refl
-||-same{ff} = refl
+||-idem : ∀{b} → b || b ≡ b
+||-idem{tt} = refl
+||-idem{ff} = refl
 
 ||≡ff₁ : ∀ {b1 b2} → b1 || b2 ≡ ff → ff ≡ b1
 ||≡ff₁ {ff} p = refl
