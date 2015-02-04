@@ -43,7 +43,7 @@ repeat 0 a = []
 repeat (suc n) a = a :: (repeat n a)
 
 map : ∀ {ℓ ℓ'} {A : Set ℓ} {B : Set ℓ'} → (A → B) → 𝕃 A → 𝕃 B
-map f []       = []
+map f []        = []
 map f (x :: xs) = f x :: map f xs
 
 {- (maybe-map f xs) returns (just ys) if f returns (just y_i) for each
@@ -92,29 +92,24 @@ _shorter_ : ∀{ℓ}{A : Set ℓ}(l1 l2 : 𝕃 A) → 𝔹
 x shorter y = y longer x
 
 -- return tt iff all elements in the list satisfy the given predicate pred.
-list-all : ∀{A : Set}(pred : A → 𝔹)(l : 𝕃 A) → 𝔹
+list-all : ∀{ℓ}{A : Set ℓ}(pred : A → 𝔹)(l : 𝕃 A) → 𝔹
 list-all pred [] = tt
 list-all pred (x :: xs) = pred x && list-all pred xs
+
+list-and : (l : 𝕃 𝔹) → 𝔹
+list-and [] = tt
+list-and (x :: xs) = x && (list-and xs)
 
 is-empty : ∀{ℓ}{A : Set ℓ} → 𝕃 A → 𝔹
 is-empty [] = tt
 is-empty (_ :: _) = ff
 
-list-max : ∀{A : Set} (lt : A → A → 𝔹) → 𝕃 A → A → A
+list-max : ∀{ℓ}{A : Set ℓ} (lt : A → A → 𝔹) → 𝕃 A → A → A
 list-max lt [] x = x
 list-max lt (y :: ys) x = list-max lt ys (if lt y x then x else y)
 
-isSublist-h : ∀{ℓ}{A : Set ℓ} → 𝕃 A → 𝕃 A → 𝕃 A → (A → A → 𝔹) → 𝔹
-isSublist-h [] xs copy eq = tt
-isSublist-h (y :: ys) (x :: xs) (c :: cs) eq with eq x y | eq x c
-...| tt | tt = isSublist-h ys xs (c :: cs) eq || isSublist-h cs xs (c :: cs) eq
-...| tt | ff = isSublist-h ys xs (c :: cs) eq
-...| ff | tt = isSublist-h cs xs (c :: cs) eq
-...| ff | ff = isSublist-h (c :: cs) xs (c :: cs) eq
-isSublist-h a b c eq = ff
-
 isSublist : ∀{ℓ}{A : Set ℓ} → 𝕃 A → 𝕃 A → (A → A → 𝔹) → 𝔹
-isSublist l1 l2 eq = isSublist-h l1 l2 l1 eq
+isSublist l1 l2 eq = list-all (λ a → list-member eq a l2) l1
 
 =𝕃 : ∀{ℓ}{A : Set ℓ} → (A → A → 𝔹) → (l1 : 𝕃 A) → (l2 : 𝕃 A) → 𝔹
 =𝕃 eq (a :: as) (b :: bs) = eq a b && =𝕃 eq as bs

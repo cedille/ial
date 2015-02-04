@@ -12,17 +12,14 @@ open import logic
 ++[] [] = refl
 ++[] (x :: xs) rewrite ++[] xs = refl
 
-
 ++-assoc : ∀ {ℓ}{A : Set ℓ} (l1 : 𝕃 A)(l2 : 𝕃 A)(l3 : 𝕃 A) → 
           (l1 ++ l2) ++ l3 ≡ l1 ++ (l2 ++ l3)
 ++-assoc [] l2 l3 = refl
 ++-assoc (x :: xs) l2 l3 rewrite ++-assoc xs l2 l3 = refl
 
-
-multi++-assoc : ∀{ℓ}{A : Set ℓ} → (Ls : 𝕃 (𝕃 A)) → (l0 : 𝕃 A) → (foldr _++_ [] Ls) ++ l0 ≡ (foldr _++_ [] (Ls ++ [ l0 ]))
-multi++-assoc [] l' rewrite ++[] l' = refl
-multi++-assoc (l :: ls) l' rewrite ++-assoc l (foldr _++_ [] ls) l' | multi++-assoc ls l' = refl
-
+length-++ : ∀{ℓ}{A : Set ℓ}(l1 l2 : 𝕃 A) → length (l1 ++ l2) ≡ (length l1) + (length l2)
+length-++ [] l = refl
+length-++ (head :: tail) l rewrite length-++ tail l = refl
 
 map-append : ∀ {ℓ ℓ'} {A : Set ℓ} {B : Set ℓ'} → 
              (f : A → B) (l1 l2 : 𝕃 A) → 
@@ -43,6 +40,14 @@ length-repeat : ∀{ℓ}{A : Set ℓ} (n : ℕ) (a : A) → length (repeat n a) 
 length-repeat 0 a = refl
 length-repeat (suc n) a rewrite length-repeat n a = refl
 
+map-repeat : ∀ {ℓ ℓ'}{A : Set ℓ}{B : Set ℓ'}(n : ℕ)(a : A)(f : A → B) → map f (repeat n a) ≡ repeat n (f a)
+map-repeat 0 a f = refl
+map-repeat (suc x) a f rewrite map-repeat x a f = refl
+
+length-map : ∀{ℓ ℓ'} {A : Set ℓ} {B : Set ℓ'} (f : A → B)(l : 𝕃 A) → length (map f l) ≡ length l
+length-map f [] = refl
+length-map f (head :: tail) rewrite length-map f tail = refl
+
 length-reverse-helper : ∀{ℓ}{A : Set ℓ}(h l : 𝕃 A) → 
                       length (reverse-helper h l) ≡ length h + length l
 length-reverse-helper h [] rewrite +0 (length h) = refl
@@ -50,6 +55,14 @@ length-reverse-helper h (x :: xs) rewrite length-reverse-helper (x :: h) xs = sy
 
 length-reverse : ∀{ℓ}{A : Set ℓ}(l : 𝕃 A) → length (reverse l) ≡ length l
 length-reverse l = length-reverse-helper [] l
+
+reverse-++h : ∀{ℓ}{A : Set ℓ}(l1 l2 : 𝕃 A) → reverse-helper l1 l2 ≡ reverse-helper [] l2 ++ l1
+reverse-++h l1 [] = refl
+reverse-++h l1 (x :: xs) rewrite reverse-++h (x :: l1) xs | reverse-++h (x :: []) xs | ++-assoc (reverse xs) (x :: []) l1 = refl
+
+reverse-++ : ∀{ℓ}{A : Set ℓ}(l1 l2 : 𝕃 A) → reverse(l1 ++ l2) ≡ reverse(l2) ++ reverse(l1)
+reverse-++ [] l2 rewrite ++[] (reverse l2) = refl
+reverse-++ (x :: xs) l2 rewrite reverse-++h (x :: []) (xs ++ l2) | reverse-++ xs l2 | ++-assoc (reverse l2) (reverse xs) (x :: []) | sym (reverse-++h (x :: []) xs) = refl 
 
 =𝕃-refl : ∀{ℓ}{A : Set ℓ}{l1 : 𝕃 A} → (eq : A → A → 𝔹) → ((x y : A) → x ≡ y → eq x y ≡ tt) → =𝕃 eq l1 l1 ≡ tt
 =𝕃-refl{l1 = []} eq rise = refl
@@ -63,4 +76,8 @@ length-reverse l = length-reverse-helper [] l
 
 =𝕃-from-≡ : ∀{ℓ}{A : Set ℓ}{l1 l2 : 𝕃 A} → (eq : A → A → 𝔹) → ((x y : A) → x ≡ y → eq x y ≡ tt) → l1 ≡ l2  → =𝕃 eq l1 l2 ≡ tt
 =𝕃-from-≡{l2 = l2} eq rise p rewrite p  = =𝕃-refl{l1 = l2} eq rise 
+
+multi++-assoc : ∀{ℓ}{A : Set ℓ} → (Ls : 𝕃 (𝕃 A)) → (l0 : 𝕃 A) → (foldr _++_ [] Ls) ++ l0 ≡ (foldr _++_ [] (Ls ++ [ l0 ]))
+multi++-assoc [] l' rewrite ++[] l' = refl
+multi++-assoc (l :: ls) l' rewrite ++-assoc l (foldr _++_ [] ls) l' | multi++-assoc ls l' = refl
 

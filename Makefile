@@ -27,7 +27,7 @@ TARGETS=$(ROOTS:=.agdai)
 test-all: Makefile.deps $(TARGETS)
 
 %.agdai : %.agda
-	agda -v 0 $<
+	agda  -v 0 $<
 
 Makefile.deps: $(DEPS)	
 	@cat $(DEPS) > Makefile.deps

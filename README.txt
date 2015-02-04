@@ -26,8 +26,8 @@ be name conflicts in such cases).
 3. Credits
 
 The library is mostly written by myself, but it also includes some
-contributions from undergraduates who took my Programming Language
-Concepts class, Spring 2014.
+contributions from John Bodeen and from undergraduates who took my
+Programming Language Concepts class, Spring 2014.
 
 4. Releases
 
