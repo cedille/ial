@@ -5,6 +5,7 @@ open import bool-thms
 open import list
 open import nat
 open import nat-thms
+open import product-thms
 open import logic
 
 
@@ -18,8 +19,8 @@ open import logic
 ++-assoc (x :: xs) l2 l3 rewrite ++-assoc xs l2 l3 = refl
 
 length-++ : ∀{ℓ}{A : Set ℓ}(l1 l2 : 𝕃 A) → length (l1 ++ l2) ≡ (length l1) + (length l2)
-length-++ [] l = refl
-length-++ (head :: tail) l rewrite length-++ tail l = refl
+length-++ [] l2 = refl
+length-++ (h :: t) l2 rewrite length-++ t l2 = refl
 
 map-append : ∀ {ℓ ℓ'} {A : Set ℓ} {B : Set ℓ'} → 
              (f : A → B) (l1 l2 : 𝕃 A) → 
@@ -81,3 +82,18 @@ multi++-assoc : ∀{ℓ}{A : Set ℓ} → (Ls : 𝕃 (𝕃 A)) → (l0 : 𝕃 A)
 multi++-assoc [] l' rewrite ++[] l' = refl
 multi++-assoc (l :: ls) l' rewrite ++-assoc l (foldr _++_ [] ls) l' | multi++-assoc ls l' = refl
 
+longer-trans : ∀{ℓ}{A : Set ℓ}(l1 l2 l3 : 𝕃 A) → 
+                l1 longer l2 ≡ tt →
+                l2 longer l3 ≡ tt →
+                l1 longer l3 ≡ tt
+longer-trans [] l2 l3 () q 
+longer-trans (x :: l1) [] l3 p ()
+longer-trans (x :: l1) (x₁ :: l2) [] p q = refl
+longer-trans (x :: l1) (x₁ :: l2) (x₂ :: l3) p q = longer-trans l1 l2 l3 p q
+
+filter-idem : ∀{ℓ}{A : Set ℓ}(p : A → 𝔹)(l : 𝕃 A) →
+              (filter p (filter p l)) ≡ (filter p l)
+filter-idem p [] = refl
+filter-idem p (x :: l) with keep (p x)
+filter-idem p (x :: l) | tt , p' rewrite p' | p' | filter-idem p l = refl
+filter-idem p (x :: l) | ff , p' rewrite p' = filter-idem p l

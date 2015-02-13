@@ -10,6 +10,7 @@ open import nat-thms
 open import product
 open import sum
 
+-- the index n is the size of the tree (number of elements of type A)
 data braun-tree : (n : ℕ) → Set where
   bt-empty : braun-tree 0
   bt-node : ∀ {n m : ℕ} → 
@@ -31,9 +32,29 @@ bt-insert a (bt-node{n}{m} a' l r p) | inj₂ p' | (a1 , a2) =
   where lem : ∀ n m → n =ℕ m + 1 ≡ tt → suc m =ℕ n ≡ tt
         lem n m p' rewrite =ℕ-to-≡{n} p' | +comm m 1 = =ℕ-refl m
 
+-- helper for bt-remove-min
+bt-remove-minh : ∀ {p n : ℕ} → braun-tree n → n ≡ (suc p) → A × braun-tree p
+bt-remove-minh bt-empty ()
+bt-remove-minh{p} (bt-node a bt-empty bt-empty u) e rewrite sym (suc-inj{0}{p} e) = a , bt-empty
+bt-remove-minh{p} (bt-node a bt-empty (bt-node _ _ _ _) (inj₁ ()))
+bt-remove-minh{p} (bt-node a bt-empty (bt-node _ _ _ _) (inj₂ ()))
+bt-remove-minh{p} (bt-node a (bt-node{n1}{m1} a' l' r' u') bt-empty u) e rewrite sym (suc-inj{suc (n1 + m1 + 0)}{p} e) | +0 (n1 + m1) = 
+  a , (bt-node a' l' r' u')
+bt-remove-minh (bt-node a (bt-node{n1}{m1} a1 l1 r1 u1) (bt-node a2 l2 r2 u2) u) e with bt-remove-minh (bt-node a1 l1 r1 u1) refl
+bt-remove-minh (bt-node a (bt-node{n1}{m1} a1 l1 r1 u1) (bt-node a2 l2 r2 u2) u) e | a1' , l1' 
+  with if a1' <A a2  then (a1' , a2) else (a2 , a1')
+bt-remove-minh{p} (bt-node a (bt-node{n1}{m1} a1 l1 r1 u1) (bt-node{n2}{m2} a2 l2 r2 u2) u) e | a1' , l1' | (smaller , other) 
+  rewrite +suc (n1 + m1) (n2 + m2) | sym (suc-inj{suc (suc (n1 + m1 + (n2 + m2)))}{p} e) | +comm (n1 + m1) (n2 + m2) = 
+  a , bt-node smaller (bt-node other l2 r2 u2) l1' (lem (n1 + m1) (n2 + m2) u)
+  where lem : ∀ (x y : ℕ) → x =ℕ y ≡ tt ⊎ x =ℕ y + 1 ≡ tt → suc y =ℕ x ≡ tt ⊎ suc y =ℕ x + 1 ≡ tt
+        lem x y (inj₁ u) rewrite =ℕ-to-≡{x}{y} u | +1 y = inj₂ (=ℕ-refl y)
+        lem x y (inj₂ u) rewrite +1 y | =ℕ-sym x (suc y) = inj₁ u
 
+-- remove the minimum (root) element from a nonempty tree, returning the element and the updated tree
+bt-remove-min : ∀ {n : ℕ} → braun-tree (suc n) → A × braun-tree n
+bt-remove-min t = bt-remove-minh t refl
 
-
+-- this version stores data at the leaves instead of at the nodes
 data braun-tree' : (n : ℕ) → Set where
   bt'-leaf : A → braun-tree' 1
   bt'-node : ∀ {n m : ℕ} → 

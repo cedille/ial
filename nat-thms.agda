@@ -20,6 +20,10 @@ open import sum
 +0 zero = refl
 +0 (suc x) rewrite +0 x = refl
 
++1 : ∀ (x : ℕ) → x + 1 ≡ suc x
++1 zero = refl
++1 (suc x) rewrite +1 x = refl
+
 +suc : ∀ (x y : ℕ) → x + (suc y) ≡ suc(x + y)
 +suc zero y = refl
 +suc (suc x) y rewrite +suc x y = refl
