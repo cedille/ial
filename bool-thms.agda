@@ -52,7 +52,7 @@ ite-arg : ∀{ℓ ℓ'}{A : Set ℓ}{B : Set ℓ'} → (f : A → B)(b : 𝔹)(x
 ite-arg f tt x y = refl
 ite-arg f ff x y = refl
 
-𝔹-contra : ff ≡ tt → ∀ {P : Set} → P
+𝔹-contra : ff ≡ tt → ∀{ℓ} {P : Set ℓ} → P
 𝔹-contra ()
 
 ||-split : ∀ {b b' : 𝔹} → b || b' ≡ tt → b ≡ tt ⊎ b' ≡ tt

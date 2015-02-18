@@ -2,7 +2,6 @@ module datatypes where
 
 open import bool public
 open import bool-to-string public
-open import braun-tree public
 open import char public
 open import list public
 open import list-to-string public
