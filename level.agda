@@ -1,3 +1,5 @@
+-- mostly adapted from Agda stdlib
+
 module level where
 
 import Agda.Primitive 
@@ -10,3 +12,8 @@ level = Level
 lone : level
 lone = lsuc lzero
 
+record Lift {a ℓ} (A : Set a) : Set (a ⊔ ℓ) where
+  constructor lift
+  field lower : A
+
+open Lift public

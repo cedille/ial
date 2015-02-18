@@ -62,6 +62,27 @@ trie-insert-h (Node odata ts) (c :: cs) x | nothing =
 trie-insert : ∀{A : Set} → trie A → string → A → trie A
 trie-insert t s x = trie-insert-h t (string-to-𝕃char s) x
 
+trie-to-string-h : ∀{A : Set} → (A → string) → trie A → 𝕃 char → string
+cal-trie-to-string-h : ∀{A : Set} → (A → string) → cal (trie A) → 𝕃 char → string
+trie-to-string-h d (Node (just x) c) prev-str = 
+  (𝕃char-to-string (reverse prev-str)) ^ " -> " ^ (d x) ^ "\n" ^ (cal-trie-to-string-h d c prev-str)
+trie-to-string-h d (Node nothing c) prev-str = cal-trie-to-string-h d c prev-str
+cal-trie-to-string-h d [] prev-str = ""
+cal-trie-to-string-h d ((c , t) :: cs) prev-str = (trie-to-string-h d t (c :: prev-str)) ^ (cal-trie-to-string-h d cs prev-str)
+
+trie-to-string : ∀{A : Set} → (A → string) → trie A → string
+trie-to-string d t = trie-to-string-h d t []
+
+trie-mappings-h : ∀{A : Set} → trie A → 𝕃 char → 𝕃 (string × A)
+cal-trie-mappings-h : ∀{A : Set} → cal (trie A) → 𝕃 char → 𝕃 (string × A)
+trie-mappings-h (Node (just x) c) prev-str = (𝕃char-to-string (reverse prev-str) , x) :: (cal-trie-mappings-h c prev-str)
+trie-mappings-h (Node nothing c) prev-str = (cal-trie-mappings-h c prev-str)
+cal-trie-mappings-h [] prev-str = []
+cal-trie-mappings-h ((c , t) :: cs) prev-str = trie-mappings-h t (c :: prev-str) ++ (cal-trie-mappings-h cs prev-str)
+
+trie-mappings : ∀{A : Set} → trie A → 𝕃 (string × A)
+trie-mappings t = trie-mappings-h t []
+
 ----------------------------------------------------------------------
 -- stringset
 ----------------------------------------------------------------------

@@ -255,12 +255,17 @@ suc≤<{n} p = <≤-trans{n} (<-suc n) p
 suc<< : ∀ {n' n : ℕ} → suc n < n' ≡ tt → n < n' ≡ tt
 suc<<{n = n} p = <-trans{n} (<-suc n) p 
 
-<-suc-trans : ∀ {x y : ℕ} → x < y ≡ tt → x < suc y ≡ tt
-<-suc-trans{x}{y} p with ℕ-trichotomy x (suc y)
-... | inj₁ p' = p'
-... | inj₂ (inj₁ p'') rewrite (=ℕ-to-≡ {x}  p'') | <-suc2 y = 𝔹-contra p
-... | inj₂ (inj₂ p'') with <-irrefl x | <-trans {x} {y} {x} p (<-trans{y}  (<-suc y) p'')
-... | p1 | p2 rewrite p1 = 𝔹-contra p2
+<-suc-trans : ∀{x y : ℕ} → x < y ≡ tt → x < suc y ≡ tt
+<-suc-trans{0}{0} _ = refl
+<-suc-trans{suc x}{0} ()
+<-suc-trans{0}{suc y} _ = refl
+<-suc-trans{suc x}{suc y} p = <-suc-trans{x}{y} p
+
+≤-suc-trans : ∀{x y : ℕ} → x ≤ y ≡ tt → x ≤ suc y ≡ tt
+≤-suc-trans{0}{0} _ = refl
+≤-suc-trans{suc x}{0} ()
+≤-suc-trans{0}{suc y} _ = refl
+≤-suc-trans{suc x}{suc y} p = ≤-suc-trans{x}{y} p
 
 <+ : ∀ {x y : ℕ} → y =ℕ 0 ≡ ff → x < y + x ≡ tt
 <+{y = 0} ()

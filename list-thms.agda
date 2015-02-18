@@ -98,5 +98,6 @@ filter-idem p (x :: l) with keep (p x)
 filter-idem p (x :: l) | tt , p' rewrite p' | p' | filter-idem p l = refl
 filter-idem p (x :: l) | ff , p' rewrite p' = filter-idem p l
 
-::-injective : ∀{ℓ}{A : Set ℓ}{x y : A}{xs ys : 𝕃 A} → x :: xs ≡ y :: ys → x ≡ y ∧ xs ≡ ys
+::-injective : ∀{ℓ}{A : Set ℓ}{x y : A}{xs ys : 𝕃 A} → 
+               x :: xs ≡ y :: ys → x ≡ y ∧ xs ≡ ys
 ::-injective refl = refl , refl

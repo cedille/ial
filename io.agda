@@ -1,5 +1,6 @@
 module io where
 
+open import char
 open import list
 open import string
 open import unit
@@ -70,3 +71,12 @@ getArgs = privGetArgs >>= (λ args → return (simple-list-to-𝕃 args))
 
 _>>_ : ∀ {A B : Set} → IO A → IO B → IO B
 x >> y = x >>= (λ q -> y)
+
+base-filenameh : 𝕃 char → 𝕃 char
+base-filenameh [] = []
+base-filenameh ('.' :: cs) = cs
+base-filenameh (_ :: cs) = base-filenameh cs
+
+-- return the part of the string up to the last (rightmost) period ('.'); so for "foo.txt" return "foo"
+base-filename : string → string
+base-filename s = 𝕃char-to-string (reverse (base-filenameh (reverse (string-to-𝕃char s))))
