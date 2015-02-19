@@ -42,20 +42,9 @@ size𝕋 (node a ts) = suc (size𝕋s ts)
 size𝕋s [] = 0
 size𝕋s (t :: ts) = size𝕋 t + size𝕋s ts
 
-
-
-
-
-
-
-
-
-
-
 size-perfect : ∀ {ℓ}{A : Set ℓ}(n : ℕ)(a : A) → (size𝕋 (perfect-binary-tree n a)) ≡ pred (2 pow (suc n))
 size-perfect 0 a = refl
 size-perfect (suc n) a with (size𝕋 (perfect-binary-tree n a)) | size-perfect n a
 ... | s | ps rewrite ps with 2 pow n | nonzero-pow 2 n refl
 ... | x | px rewrite +0 x with x + x | (iszerosum2 x x px)
 ... | x2 | q rewrite +0 x2 | +0 (pred x2) | sym (+suc (pred x2) (pred x2)) | sucpred q | pred+ x2 x2 q = refl
-
