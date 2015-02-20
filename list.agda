@@ -34,6 +34,10 @@ infixr 5 _shorter_ _longer_
 [_] : ∀ {ℓ} {A : Set ℓ} → A → 𝕃 A
 [ x ] = x :: []
 
+tail : ∀ {ℓ} {A : Set ℓ} → 𝕃 A → 𝕃 A
+tail [] = []
+tail (x :: xs) = xs
+
 _++_ : ∀ {ℓ} {A : Set ℓ} → 𝕃 A → 𝕃 A → 𝕃 A
 []        ++ ys = ys
 (x :: xs) ++ ys = x :: (xs ++ ys)
@@ -96,6 +100,11 @@ list-all : ∀{ℓ}{A : Set ℓ}(pred : A → 𝔹)(l : 𝕃 A) → 𝔹
 list-all pred [] = tt
 list-all pred (x :: xs) = pred x && list-all pred xs
 
+-- return tt iff at least one element in the list satisfies the given predicate pred.
+list-any : ∀{ℓ}{A : Set ℓ}(pred : A → 𝔹)(l : 𝕃 A) → 𝔹
+list-any pred [] = ff
+list-any pred (x :: xs) = pred x || list-any pred xs
+
 list-and : (l : 𝕃 𝔹) → 𝔹
 list-and [] = tt
 list-and (x :: xs) = x && (list-and xs)
@@ -120,3 +129,10 @@ filter : ∀{ℓ}{A : Set ℓ} → (A → 𝔹) → 𝕃 A → 𝕃 A
 filter p [] = []
 filter p (x :: xs) = let r = filter p xs in 
                      if p x then x :: r else r
+
+{- nthTail n l returns the part of the list after the first n elements, 
+   or [] if the list has fewer than n elements -}
+nthTail : ∀{ℓ}{A : Set ℓ} → ℕ → 𝕃 A → 𝕃 A
+nthTail 0 l = l
+nthTail n [] = []
+nthTail (suc n) (x :: l) = nthTail n l

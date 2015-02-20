@@ -24,13 +24,13 @@ infix 4 _=𝕊_
 ----------------------------------------------------------------------
 
 ----------------------------------------------------------
--- if streams are equal, their heads and tails are equal
+-- if streams are equal, their heads and tail𝕊s are equal
 ----------------------------------------------------------
 =𝕊-head : ∀{ℓ}{A : Set ℓ} {n : ℕ} (xs ys : 𝕊i A n) → xs =𝕊 ys → head xs ≡ head ys
 =𝕊-head xs ys p = p izero
 
-=𝕊-tail : ∀{ℓ}{A : Set ℓ}{n : ℕ} {xs ys : 𝕊i A (suc n)} → xs =𝕊 ys → tail xs =𝕊 tail ys
-=𝕊-tail p o = p (isuc o)
+=𝕊-tail𝕊 : ∀{ℓ}{A : Set ℓ}{n : ℕ} {xs ys : 𝕊i A (suc n)} → xs =𝕊 ys → tail𝕊 xs =𝕊 tail𝕊 ys
+=𝕊-tail𝕊 p o = p (isuc o)
 
 ----------------------------------------------------------
 -- stream equality is an equivalence

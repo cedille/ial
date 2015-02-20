@@ -22,7 +22,7 @@ test-map𝕊 = take 10 (map𝕊 (_+_ 10) nats)
 fib : 𝕊 ℕ
 fib izero = 0
 fib (isuc izero) = 1
-fib (isuc (isuc o)) = (fib +𝕊ℕ (tail fib)) o
+fib (isuc (isuc o)) = (fib +𝕊ℕ (tail𝕊 fib)) o
 
 test-fib = take 10 fib
 test-fib2 = nth𝕊 8 fib
@@ -60,10 +60,10 @@ fib1 (isuc (isuc o)) = fib1h (𝕊-to-𝕍 (fib1{suc n}))  =
 {- (drop-every-h n N s) returns the stream which removes the n'th element
    of stream s (starting from 0), and after that removes every N'th element. -}
 drop-every : ∀ {ℓ}{A : Set ℓ} → ℕ → ℕ → 𝕊 A → 𝕊 A
-drop-every 0 N xs {d} izero = (head (tail (xs{suc d})))
-drop-every 0 N xs (isuc o) = drop-every N N (tail (tail xs)) o
+drop-every 0 N xs {d} izero = (head (tail𝕊 (xs{suc d})))
+drop-every 0 N xs (isuc o) = drop-every N N (tail𝕊 (tail𝕊 xs)) o
 drop-every (suc _) N xs {d} izero = (head (xs{d}))
-drop-every (suc n) N xs (isuc o) = drop-every n N (tail xs) o
+drop-every (suc n) N xs (isuc o) = drop-every n N (tail𝕊 xs) o
 
 ones = repeat𝕊 1
 nats1 = nats-from 1
@@ -88,11 +88,11 @@ test-moessner = take 6 (moessner 2)
 ----------------------------------------------------------------------
 φ : ∀{ℓ}{A : Set ℓ} {n : ℕ} (xs : 𝕊i A n) → 𝕊i A n
 φ xs izero = xs izero
-φ xs (isuc o) = (φ (φ (tail xs))) o
+φ xs (isuc o) = (φ (φ (tail𝕊 xs))) o
 
 φ-id : ∀{ℓ}{A : Set ℓ}{n : ℕ} (xs : 𝕊i A n) → φ xs =𝕊 xs
 φ-id xs izero = refl
-φ-id xs (isuc o) rewrite φ-id (φ (tail xs)) o = φ-id (tail xs) o
+φ-id xs (isuc o) rewrite φ-id (φ (tail𝕊 xs)) o = φ-id (tail𝕊 xs) o
 
 ----------------------------------------------------------------------
 -- Thue-Morse sequence
@@ -100,13 +100,13 @@ test-moessner = take 6 (moessner 2)
 -- This follows the following definition from the paper "Productivity of 
 -- Stream Definitions" by Endrullis et al.
 --
---     M = 0:1:zip(tail(M), inv(tail(M)))
+--     M = 0:1:zip(tail𝕊(M), inv(tail𝕊(M)))
 --
 ----------------------------------------------------------------------
 thue-morse : 𝕊 𝔹 
 thue-morse izero = ff
 thue-morse (isuc izero) = tt
-thue-morse{suc (suc n)} (isuc (isuc o)) = ((tail (thue-morse{suc n})) ⋎ (map𝕊 (~_) (tail (thue-morse{suc n})))) (≤2* n) o
+thue-morse{suc (suc n)} (isuc (isuc o)) = ((tail𝕊 (thue-morse{suc n})) ⋎ (map𝕊 (~_) (tail𝕊 (thue-morse{suc n})))) (≤2* n) o
 
 test-thue-morse : take 10 thue-morse ≡ ff :: tt :: tt :: ff :: tt :: ff :: ff :: tt :: tt :: ff :: []
 test-thue-morse = refl 
@@ -124,9 +124,9 @@ merge xs ys p izero with compare (head xs) (head ys)
 ... | compare-gt = (head ys)
 ... | compare-eq = (head xs)
 merge{suc n}{suc m} xs ys {suc k} p (isuc o) rewrite min-suc n m with compare (head xs) (head ys)
-... | compare-lt = merge (tail xs) ys (≤-trans{k} p (min-mono2 n m (suc m) (≤-suc m))) o
-... | compare-gt = merge xs (tail ys) (≤-trans{k} p (min-mono1 n (suc n) m (≤-suc n))) o
-... | compare-eq = merge (tail xs) (tail ys) p o
+... | compare-lt = merge (tail𝕊 xs) ys (≤-trans{k} p (min-mono2 n m (suc m) (≤-suc m))) o
+... | compare-gt = merge xs (tail𝕊 ys) (≤-trans{k} p (min-mono1 n (suc n) m (≤-suc n))) o
+... | compare-eq = merge (tail𝕊 xs) (tail𝕊 ys) p o
 merge{0}{suc m} xs ys () (isuc o)
 merge{0}{0} xs ys () (isuc o)
 merge{suc n}{0} xs ys () (isuc o)
