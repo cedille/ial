@@ -1,6 +1,6 @@
 open import bool
 
-module braun-tree (A : Set) (_<A_ : A → A → 𝔹) where
+module braun-tree{ℓ} (A : Set ℓ) (_<A_ : A → A → 𝔹) where
 
 open import bool-thms
 open import eq
@@ -11,7 +11,7 @@ open import product
 open import sum
 
 -- the index n is the size of the tree (number of elements of type A)
-data braun-tree : (n : ℕ) → Set where
+data braun-tree : (n : ℕ) → Set ℓ where
   bt-empty : braun-tree 0
   bt-node : ∀ {n m : ℕ} → 
             A → braun-tree n → braun-tree m → 
@@ -54,8 +54,10 @@ bt-remove-minh{p} (bt-node a (bt-node{n1}{m1} a1 l1 r1 u1) (bt-node{n2}{m2} a2 l
 bt-remove-min : ∀ {n : ℕ} → braun-tree (suc n) → A × braun-tree n
 bt-remove-min t = bt-remove-minh t refl
 
+----------------------------------------------------------------------
 -- this version stores data at the leaves instead of at the nodes
-data braun-tree' : (n : ℕ) → Set where
+----------------------------------------------------------------------
+data braun-tree' : (n : ℕ) → Set ℓ where
   bt'-leaf : A → braun-tree' 1
   bt'-node : ∀ {n m : ℕ} → 
             braun-tree' n → braun-tree' m → 
