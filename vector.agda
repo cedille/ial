@@ -36,17 +36,22 @@ _++𝕍_ : ∀ {ℓ} {A : Set ℓ}{n m : ℕ} → 𝕍 A n → 𝕍 A m → 𝕍
 []        ++𝕍 ys = ys
 (x :: xs) ++𝕍 ys = x :: (xs ++𝕍 ys)
 
+head𝕍 : ∀ {ℓ} {A : Set ℓ}{n : ℕ} → 𝕍 A (suc n) → A
+head𝕍 (x :: _) = x
+
+tail𝕍 : ∀ {ℓ} {A : Set ℓ}{n : ℕ} → 𝕍 A n → 𝕍 A (pred n)
+tail𝕍 [] = []
+tail𝕍 (_ :: xs) = xs
+
 map𝕍 : ∀ {ℓ ℓ'} {A : Set ℓ} {B : Set ℓ'}{n : ℕ} → (A → B) → 𝕍 A n → 𝕍 B n
 map𝕍 f []       = []
 map𝕍 f (x :: xs) = f x :: map𝕍 f xs
 
-head𝕍 : ∀ {ℓ} {A : Set ℓ}{n : ℕ} → 𝕍 A (suc n) → A
-head𝕍 (x :: _) = x
+concat𝕍 : ∀{ℓ}{A : Set ℓ}{n m : ℕ} → 𝕍 (𝕍 A n) m → 𝕍 A (m * n)
+concat𝕍 [] = []
+concat𝕍 (x :: xs) = x ++𝕍 (concat𝕍 xs)
 
-tail𝕍 : ∀ {ℓ} {A : Set ℓ}{n : ℕ} → 𝕍 A (suc n) → 𝕍 A n
-tail𝕍 (_ :: xs) = xs
-
-nth𝕍 : ∀ {ℓ} {A : Set ℓ} → (n : ℕ) → {m : ℕ} → n < m ≡ tt → 𝕍 A m → A
+nth𝕍 : ∀ {ℓ} {A : Set ℓ}{m : ℕ} → (n : ℕ) → n < m ≡ tt → 𝕍 A m → A
 nth𝕍 0 _ (x :: _) = x
 nth𝕍 (suc n) p (_ :: xs) = nth𝕍 n p xs
 nth𝕍 (suc n) () []

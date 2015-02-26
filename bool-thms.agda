@@ -5,12 +5,6 @@ open import eq
 open import sum
 open import product
 
-~~tt : ~ ~ tt ≡ tt
-~~tt = refl
-
-~~ff : ~ ~ ff ≡ ff
-~~ff = refl
-
 ~~-elim : ∀ (b : 𝔹) → ~ ~ b ≡ b
 ~~-elim tt = refl
 ~~-elim ff = refl

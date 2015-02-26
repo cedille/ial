@@ -136,3 +136,8 @@ nthTail : ∀{ℓ}{A : Set ℓ} → ℕ → 𝕃 A → 𝕃 A
 nthTail 0 l = l
 nthTail n [] = []
 nthTail (suc n) (x :: l) = nthTail n l
+
+nth : ∀{ℓ}{A : Set ℓ} → ℕ → 𝕃 A → maybe A
+nth _ [] = nothing
+nth 0 (x :: xs) = just x
+nth (suc n) (x :: xs) = nth n xs
