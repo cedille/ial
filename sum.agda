@@ -33,6 +33,11 @@ inj₂ x ≫=⊎ f = f x
 return⊎ : ∀ {ℓ ℓ'}{A : Set ℓ}{B : Set ℓ'} → B → A ⊎ B
 return⊎ b = inj₂ b
 
+infix 5 error⊎_
+
+error⊎_ : ∀ {ℓ ℓ'}{A : Set ℓ}{B : Set ℓ'} → A → A ⊎ B
+error⊎_ a = inj₁ a
+
 extract-inj₁≡ : ∀{ℓ}{ℓ'}{A : Set ℓ}{B : Set ℓ'}{a a' : A} → inj₁{B = B} a ≡ inj₁ a' → a ≡ a'
 extract-inj₁≡ refl = refl
 
@@ -59,3 +64,4 @@ extract-inj₂≡ refl = refl
 ≡⊎-to-= eqa eqb dropa dropb (inj₂ b) (inj₂ b') p = dropb b b' (extract-inj₂≡ p)
 ≡⊎-to-= eqa eqb dropa dropb (inj₁ a) (inj₂ b) ()
 ≡⊎-to-= eqa eqb dropa dropb (inj₂ b) (inj₁ a) ()
+
