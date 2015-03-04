@@ -34,7 +34,7 @@ _=char_ = primCharEquality
 postulate
   ≡char-to-= : (c1 c2 : char) → c1 ≡ c2 → _=char_ c1 c2 ≡ tt
   =char-to-≡ : (c1 c2 : char) → _=char_ c1 c2 ≡ tt → c1 ≡ c2
-
+  =char-sym : (c1 c2 : char) → (c1 =char c2) ≡ (c2 =char c1)
 
 
 ----------------------------------------------------------------------
