@@ -3,6 +3,8 @@ module char where
 open import bool
 open import nat
 open import eq
+open import product
+open import product-thms
 
 ----------------------------------------------------------------------
 -- datatypes
@@ -34,8 +36,13 @@ _=char_ = primCharEquality
 postulate
   ≡char-to-= : (c1 c2 : char) → c1 ≡ c2 → _=char_ c1 c2 ≡ tt
   =char-to-≡ : (c1 c2 : char) → _=char_ c1 c2 ≡ tt → c1 ≡ c2
-  =char-sym : (c1 c2 : char) → (c1 =char c2) ≡ (c2 =char c1)
 
+=char-sym : (c1 c2 : char) → (c1 =char c2) ≡ (c2 =char c1)
+=char-sym c1 c2 with keep (c1 =char c2)
+=char-sym c1 c2 | tt , p rewrite =char-to-≡ c1 c2 p = refl
+=char-sym c1 c2 | ff , p with keep (c2 =char c1) 
+=char-sym c1 c2 | ff , p | tt , p' rewrite =char-to-≡ c2 c1 p' = refl
+=char-sym c1 c2 | ff , p | ff , p' rewrite p | p' = refl
 
 ----------------------------------------------------------------------
 -- defined operations
