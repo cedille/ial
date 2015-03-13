@@ -98,6 +98,14 @@ filter-idem p (x :: l) with keep (p x)
 filter-idem p (x :: l) | tt , p' rewrite p' | p' | filter-idem p l = refl
 filter-idem p (x :: l) | ff , p' rewrite p' = filter-idem p l
 
+length-filter : ∀{ℓ}{A : Set ℓ}(p : A → 𝔹)(l : 𝕃 A) → 
+                length (filter p l) ≤ length l ≡ tt
+length-filter p [] = refl
+length-filter p (x :: l) with p x
+length-filter p (x :: l) | tt = length-filter p l
+length-filter p (x :: l) | ff = 
+  ≤-trans{length (filter p l)} (length-filter p l) (≤-suc (length l))
+
 ::-injective : ∀{ℓ}{A : Set ℓ}{x y : A}{xs ys : 𝕃 A} → 
                x :: xs ≡ y :: ys → x ≡ y ∧ xs ≡ ys
 ::-injective refl = refl , refl

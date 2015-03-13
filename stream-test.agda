@@ -60,9 +60,9 @@ fib1 (isuc (isuc o)) = fib1h (𝕊-to-𝕍 (fib1{suc n}))  =
 {- (drop-every-h n N s) returns the stream which removes the n'th element
    of stream s (starting from 0), and after that removes every N'th element. -}
 drop-every : ∀ {ℓ}{A : Set ℓ} → ℕ → ℕ → 𝕊 A → 𝕊 A
-drop-every 0 N xs {d} izero = (head (tail𝕊 (xs{suc d})))
+drop-every 0 N xs {d} izero = (head𝕊 (tail𝕊 (xs{suc d})))
 drop-every 0 N xs (isuc o) = drop-every N N (tail𝕊 (tail𝕊 xs)) o
-drop-every (suc _) N xs {d} izero = (head (xs{d}))
+drop-every (suc _) N xs {d} izero = (head𝕊 (xs{d}))
 drop-every (suc n) N xs (isuc o) = drop-every n N (tail𝕊 xs) o
 
 ones = repeat𝕊 1
@@ -119,11 +119,11 @@ test-thue-morse = refl
 -- of n are contained in {2,3,5}.
 ----------------------------------------------------------------------
 merge : {n m : ℕ} → 𝕊i ℕ n → 𝕊i ℕ m → {k : ℕ} → k ≤ min n m ≡ tt → 𝕊i ℕ k
-merge xs ys p izero with compare (head xs) (head ys)
-... | compare-lt = (head xs) 
-... | compare-gt = (head ys)
-... | compare-eq = (head xs)
-merge{suc n}{suc m} xs ys {suc k} p (isuc o) rewrite min-suc n m with compare (head xs) (head ys)
+merge xs ys p izero with compare (head𝕊 xs) (head𝕊 ys)
+... | compare-lt = (head𝕊 xs) 
+... | compare-gt = (head𝕊 ys)
+... | compare-eq = (head𝕊 xs)
+merge{suc n}{suc m} xs ys {suc k} p (isuc o) rewrite min-suc n m with compare (head𝕊 xs) (head𝕊 ys)
 ... | compare-lt = merge (tail𝕊 xs) ys (≤-trans{k} p (min-mono2 n m (suc m) (≤-suc m))) o
 ... | compare-gt = merge xs (tail𝕊 ys) (≤-trans{k} p (min-mono1 n (suc n) m (≤-suc n))) o
 ... | compare-eq = merge (tail𝕊 xs) (tail𝕊 ys) p o

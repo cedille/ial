@@ -26,7 +26,7 @@ infix 4 _=𝕊_
 ----------------------------------------------------------
 -- if streams are equal, their heads and tail𝕊s are equal
 ----------------------------------------------------------
-=𝕊-head : ∀{ℓ}{A : Set ℓ} {n : ℕ} (xs ys : 𝕊i A n) → xs =𝕊 ys → head xs ≡ head ys
+=𝕊-head : ∀{ℓ}{A : Set ℓ} {n : ℕ} (xs ys : 𝕊i A n) → xs =𝕊 ys → head𝕊 xs ≡ head𝕊 ys
 =𝕊-head xs ys p = p izero
 
 =𝕊-tail𝕊 : ∀{ℓ}{A : Set ℓ}{n : ℕ} {xs ys : 𝕊i A (suc n)} → xs =𝕊 ys → tail𝕊 xs =𝕊 tail𝕊 ys

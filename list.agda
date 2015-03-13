@@ -34,13 +34,30 @@ infixr 5 _shorter_ _longer_
 [_] : ∀ {ℓ} {A : Set ℓ} → A → 𝕃 A
 [ x ] = x :: []
 
+is-empty : ∀{ℓ}{A : Set ℓ} → 𝕃 A → 𝔹
+is-empty [] = tt
+is-empty (_ :: _) = ff
+
 tail : ∀ {ℓ} {A : Set ℓ} → 𝕃 A → 𝕃 A
 tail [] = []
 tail (x :: xs) = xs
 
+head : ∀{ℓ}{A : Set ℓ} → (l : 𝕃 A) → is-empty l ≡ ff → A
+head [] ()
+head (x :: xs) _ = x
+
+last : ∀{ℓ}{A : Set ℓ} → (l : 𝕃 A) → is-empty l ≡ ff → A
+last [] ()
+last (x :: []) _ = x
+last (x :: (y :: xs)) _ = last (y :: xs) refl
+
 _++_ : ∀ {ℓ} {A : Set ℓ} → 𝕃 A → 𝕃 A → 𝕃 A
 []        ++ ys = ys
 (x :: xs) ++ ys = x :: (xs ++ ys)
+
+concat : ∀{ℓ}{A : Set ℓ} → 𝕃 (𝕃 A) → 𝕃 A
+concat [] = []
+concat (l :: ls) = l ++ concat ls
 
 repeat : ∀{ℓ}{A : Set ℓ} → ℕ → A → 𝕃 A
 repeat 0 a = []
@@ -108,10 +125,6 @@ list-any pred (x :: xs) = pred x || list-any pred xs
 list-and : (l : 𝕃 𝔹) → 𝔹
 list-and [] = tt
 list-and (x :: xs) = x && (list-and xs)
-
-is-empty : ∀{ℓ}{A : Set ℓ} → 𝕃 A → 𝔹
-is-empty [] = tt
-is-empty (_ :: _) = ff
 
 list-max : ∀{ℓ}{A : Set ℓ} (lt : A → A → 𝔹) → 𝕃 A → A → A
 list-max lt [] x = x

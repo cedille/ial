@@ -42,8 +42,8 @@ infixr 5 _+𝕊ℕ_ _⋎_
 --------------------------------------------------
 -- basic operations
 --------------------------------------------------
-head : ∀{ℓ}{A : Set ℓ}{n : ℕ} → 𝕊i A n → A
-head s = s izero
+head𝕊 : ∀{ℓ}{A : Set ℓ}{n : ℕ} → 𝕊i A n → A
+head𝕊 s = s izero
 
 tail𝕊 : ∀{ℓ}{A : Set ℓ}{n : ℕ} → 𝕊i A (suc n) → 𝕊i A n
 tail𝕊 s o = s (isuc o)
@@ -62,13 +62,13 @@ nth𝕊 n xs = xs (ℕ-to-ℕi n)
 
 -- return a vector of all the elements in a depth-bounded stream
 𝕊-to-𝕍 : ∀{ℓ}{A : Set ℓ} {n : ℕ} → 𝕊i A n → 𝕍 A (suc n)
-𝕊-to-𝕍{n = 0} xs = [ head xs ]𝕍
-𝕊-to-𝕍{n = suc n} xs = (head xs) :: (𝕊-to-𝕍 (tail𝕊 xs))
+𝕊-to-𝕍{n = 0} xs = [ head𝕊 xs ]𝕍
+𝕊-to-𝕍{n = suc n} xs = (head𝕊 xs) :: (𝕊-to-𝕍 (tail𝕊 xs))
 
 -- take n elements from a stream with depth-bound n
 take : ∀{ℓ}{A : Set ℓ} → (n : ℕ) → 𝕊i A n → 𝕍 A n
 take 0 xs = []
-take (suc n) xs = (head xs) :: (take n (tail𝕊 xs))
+take (suc n) xs = (head𝕊 xs) :: (take n (tail𝕊 xs))
 
 --------------------------------------------------
 -- constructing basic streams
@@ -91,23 +91,23 @@ nats = nats-from 0
 --------------------------------------------------
 
 foldl : ∀{ℓ ℓ'}{A : Set ℓ}{B : Set ℓ'} → B → (B → A → B) → {n : ℕ} → 𝕊i A n → 𝕊i B n
-foldl b _f_ xs izero = (b f (head xs))
-foldl b _f_ xs (isuc o) = (foldl (b f (head xs)) _f_ (tail𝕊 xs) o)
+foldl b _f_ xs izero = (b f (head𝕊 xs))
+foldl b _f_ xs (isuc o) = (foldl (b f (head𝕊 xs)) _f_ (tail𝕊 xs) o)
 
 map𝕊 : ∀ {ℓ ℓ'} {A : Set ℓ} {B : Set ℓ'} → (A → B) → {n : ℕ} → 𝕊i A n → 𝕊i B n
-map𝕊 f xs izero = (f (head xs))
+map𝕊 f xs izero = (f (head𝕊 xs))
 map𝕊 f xs (isuc o) = (map𝕊 f (tail𝕊 xs) o)
 
 zipWith : ∀ {ℓ ℓ' ℓ''} {A : Set ℓ}{B : Set ℓ'}{C : Set ℓ''} → 
             (A → B → C) → {n : ℕ} → 𝕊i A n → 𝕊i B n → 𝕊i C n
-zipWith _f_ xs ys izero = (head xs) f (head ys)
+zipWith _f_ xs ys izero = (head𝕊 xs) f (head𝕊 ys)
 zipWith _f_ xs ys (isuc o) = zipWith _f_ (tail𝕊 xs) (tail𝕊 ys) o
 
 _+𝕊ℕ_ : {n : ℕ} → 𝕊i ℕ n → 𝕊i ℕ n → 𝕊i ℕ n
 _+𝕊ℕ_ = zipWith _+_ 
 
 _⋎_ : ∀ {ℓ} {A : Set ℓ} → {n : ℕ} → 𝕊i A n → 𝕊i A n → {k : ℕ} → k ≤ 2 * n ≡ tt → 𝕊i A k
-(xs ⋎ ys) p izero = (head xs) 
-(xs ⋎ ys) p (isuc izero) = (head ys)
+(xs ⋎ ys) p izero = (head𝕊 xs) 
+(xs ⋎ ys) p (isuc izero) = (head𝕊 ys)
 _⋎_ {n = suc n} xs ys {suc (suc k)} p (isuc (isuc o)) rewrite +suc n (n + 0) = ((tail𝕊 xs) ⋎ (tail𝕊 ys)) p o
 _⋎_ {n = 0} xs ys {suc (suc k)} () _

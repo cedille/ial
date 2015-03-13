@@ -13,6 +13,14 @@ imp-tt : ∀ (b : 𝔹) → b imp tt ≡ tt
 imp-tt ff = refl
 imp-tt tt = refl
 
+&&-tt : ∀ (b : 𝔹) → b && tt ≡ b
+&&-tt tt = refl
+&&-tt ff = refl
+
+||-ff : ∀ (b : 𝔹) → b || ff ≡ b
+||-ff tt = refl
+||-ff ff = refl
+
 imp-same : ∀ (b : 𝔹) → b imp b ≡ tt
 imp-same ff = refl
 imp-same tt = refl
