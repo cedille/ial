@@ -154,3 +154,8 @@ nth : ∀{ℓ}{A : Set ℓ} → ℕ → 𝕃 A → maybe A
 nth _ [] = nothing
 nth 0 (x :: xs) = just x
 nth (suc n) (x :: xs) = nth n xs
+
+-- nats-down N returns N :: (N-1) :: ... :: 0 :: []
+nats-down : ℕ → 𝕃 ℕ
+nats-down 0 = [ 0 ]
+nats-down (suc x) = suc x :: nats-down x

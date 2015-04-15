@@ -103,6 +103,10 @@ imp-mp {ff} {tt} p q = refl
 &&-intro{ff}{tt} () _
 &&-intro{ff}{ff} () _
 
+||-intro1 : ∀ {b1 b2 : 𝔹} → b1 ≡ tt → b1 || b2 ≡ tt
+||-intro1 {tt} p = refl
+||-intro1 {ff} ()
+
 &&-elim : ∀ {b1 b2 : 𝔹} → b1 && b2 ≡ tt → b1 ≡ tt ∧ b2 ≡ tt 
 &&-elim{tt}{tt} _ = refl , refl
 &&-elim{ff}{_} ()

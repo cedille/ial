@@ -5,4 +5,4 @@ open import eq
 open import string
 
 postulate
-  =string-refl : ∀(x : string) → x =string x ≡ tt
+  =string-refl : (s : string) → s =string s ≡ tt

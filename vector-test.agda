@@ -1,6 +1,7 @@
 module vector-test where
 
 open import bool
+open import nat
 open import list
 open import vector
 
@@ -18,3 +19,6 @@ test-vector3 = (tt :: tt :: tt :: []) ::
 
 test-vector-append : 𝕍 𝔹 8
 test-vector-append = test-vector ++𝕍 test-vector
+
+test-set-vector : 𝕍 Set 3
+test-set-vector = ℕ :: 𝔹 :: (𝔹 → 𝔹) :: []

@@ -25,7 +25,7 @@ private
   primStringFromList : 𝕃 char → string
   primStringEquality : string → string → 𝔹
 
-
+-- see string-thms.agda for some axioms about the above primitive functions
 
 ----------------------------------------------------------------------
 -- syntax
@@ -51,6 +51,7 @@ string-to-𝕃char = primStringToList
 
 _=string_ : string → string → 𝔹
 _=string_ = primStringEquality
+
 
 char-to-string : char → string
 char-to-string c = 𝕃char-to-string [ c ]
