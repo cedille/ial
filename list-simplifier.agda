@@ -1,6 +1,7 @@
 module list-simplifier where
 
 open import bool
+open import compose
 open import eq
 open import empty
 open import level
@@ -17,17 +18,6 @@ data 𝕃term : Set → Set lone where
   𝕃term-cons : {A : Set} → A → 𝕃term A → 𝕃term A
   𝕃term-nil : {A : Set} → 𝕃term A
 
-data 𝕃term-app-view {A : Set} : 𝕃term A → Set lone where
-  yes-𝕃term-app : ∀{t1 t2 : 𝕃term A} → 𝕃term-app-view (𝕃term-app t1 t2)
-  no-𝕃term-app : ∀{t : 𝕃term A} → (∀{t1 t2 : 𝕃term A} → t ≢ 𝕃term-app t1 t2) → 𝕃term-app-view t
-
-get-𝕃term-app-view : ∀{A : Set} → (t : 𝕃term A) → 𝕃term-app-view t
-get-𝕃term-app-view (𝕃term-app t1 t2) = yes-𝕃term-app 
-get-𝕃term-app-view (𝕃term-list _) = no-𝕃term-app (λ ())
-get-𝕃term-app-view (𝕃term-map _ _) = no-𝕃term-app (λ ())
-get-𝕃term-app-view (𝕃term-cons _ _) = no-𝕃term-app (λ ())
-get-𝕃term-app-view 𝕃term-nil = no-𝕃term-app (λ ())
-
 𝕃term⟦_⟧ : {A : Set} → 𝕃term A → 𝕃 A
 𝕃term⟦ 𝕃term-list l ⟧ = l
 𝕃term⟦ 𝕃term-app t1 t2 ⟧ = 𝕃term⟦ t1 ⟧ ++ 𝕃term⟦ t2 ⟧
@@ -35,24 +25,63 @@ get-𝕃term-app-view 𝕃term-nil = no-𝕃term-app (λ ())
 𝕃term⟦ 𝕃term-cons x t ⟧ = x :: 𝕃term⟦ t ⟧ 
 𝕃term⟦ 𝕃term-nil ⟧ = []
 
-𝕃term-step-app : {A : Set} → (t1 t2 : 𝕃term A) → 𝕃term-app-view t1 → 𝕃term A
-𝕃term-step-app t1 t2 (no-𝕃term-app p) = 𝕃term-app t1 t2
-𝕃term-step-app (𝕃term-app t1a t1b) t2 yes-𝕃term-app = 𝕃term-app t1a (𝕃term-app t1b t2)
+𝕃term-dev-step : {A : Set}(t : 𝕃term A) → 𝕃term A
+𝕃term-dev-step (𝕃term-app (𝕃term-app t1a t1b) t2) = 𝕃term-app t1a (𝕃term-app t1b t2) 
+𝕃term-dev-step (𝕃term-app (𝕃term-cons x t1) t2) = 𝕃term-cons x (𝕃term-app t1 t2) 
+𝕃term-dev-step (𝕃term-app 𝕃term-nil t2) = t2 
+𝕃term-dev-step (𝕃term-app (𝕃term-list l) t2) = 𝕃term-app (𝕃term-list l) t2
+𝕃term-dev-step (𝕃term-app (𝕃term-map f t1) t2) = 𝕃term-app (𝕃term-map f t1) t2
+𝕃term-dev-step (𝕃term-list l) = 𝕃term-list l 
+𝕃term-dev-step (𝕃term-map f (𝕃term-app t1 t2)) = 𝕃term-app (𝕃term-map f t1) (𝕃term-map f t2) 
+𝕃term-dev-step (𝕃term-map f (𝕃term-list l)) = 𝕃term-list (map f l) 
+𝕃term-dev-step (𝕃term-map f (𝕃term-map g t)) = 𝕃term-map (f ∘ g) t 
+𝕃term-dev-step (𝕃term-map f (𝕃term-cons x t)) = 𝕃term-cons (f x) (𝕃term-map f t)
+𝕃term-dev-step (𝕃term-map f 𝕃term-nil) = 𝕃term-nil 
+𝕃term-dev-step (𝕃term-cons x t) = 𝕃term-cons x t 
+𝕃term-dev-step 𝕃term-nil = 𝕃term-nil 
 
-𝕃term-step : {A : Set} → 𝕃term A → 𝕃term A
-𝕃term-step (𝕃term-app t1 t2) with get-𝕃term-app-view t1
-𝕃term-step (𝕃term-app t1 t2) | no-𝕃term-app p = 𝕃term-app t1 t2
-𝕃term-step (𝕃term-app (𝕃term-app t1a t1b) t2) | yes-𝕃term-app = 𝕃term-app t1a (𝕃term-app t1b t2)
-𝕃term-step (𝕃term-list l) = 𝕃term-list l
-𝕃term-step (𝕃term-map f t) = 𝕃term-map f t
-𝕃term-step (𝕃term-cons x t) = 𝕃term-cons x t
-𝕃term-step 𝕃term-nil = 𝕃term-nil
+𝕃term-dev : {A : Set}(t : 𝕃term A) → 𝕃term A
+𝕃term-dev (𝕃term-list l) = 𝕃term-list l 
+𝕃term-dev (𝕃term-app t1 t2) = 𝕃term-dev-step (𝕃term-app (𝕃term-dev t1) (𝕃term-dev t2))
+𝕃term-dev (𝕃term-map f t1) = 𝕃term-dev-step (𝕃term-map f (𝕃term-dev t1))
+𝕃term-dev (𝕃term-cons x t1) = 𝕃term-dev-step (𝕃term-cons x (𝕃term-dev t1))
+𝕃term-dev 𝕃term-nil = 𝕃term-nil 
 
-𝕃term-step-sound : {A : Set}(t : 𝕃term A) → 𝕃term⟦ t ⟧ ≡ 𝕃term⟦ 𝕃term-step t ⟧
-𝕃term-step-sound (𝕃term-app t1 t2) with get-𝕃term-app-view t1 
-𝕃term-step-sound (𝕃term-app t1 t2) | no-𝕃term-app q = refl
-𝕃term-step-sound (𝕃term-app (𝕃term-app t1a t1b) t2) | yes-𝕃term-app rewrite ++-assoc 𝕃term⟦ t1a ⟧ 𝕃term⟦ t1b ⟧ 𝕃term⟦ t2 ⟧ = refl
-𝕃term-step-sound (𝕃term-list l) = refl
-𝕃term-step-sound (𝕃term-map f t) = refl
-𝕃term-step-sound (𝕃term-cons x t) = refl
-𝕃term-step-sound (𝕃term-nil) = refl
+𝕃term-dev-step-sound : {A : Set}(t : 𝕃term A) → 𝕃term⟦ t ⟧ ≡ 𝕃term⟦ 𝕃term-dev-step t ⟧
+𝕃term-dev-step-sound (𝕃term-app (𝕃term-app t1a t1b) t2) = ++-assoc 𝕃term⟦ t1a ⟧ 𝕃term⟦ t1b ⟧ 𝕃term⟦ t2 ⟧
+𝕃term-dev-step-sound (𝕃term-app (𝕃term-cons x t1) t2) = refl
+𝕃term-dev-step-sound (𝕃term-app 𝕃term-nil t2) = refl
+𝕃term-dev-step-sound (𝕃term-app (𝕃term-list l) t2) = refl
+𝕃term-dev-step-sound (𝕃term-app (𝕃term-map f t1) t2) = refl
+𝕃term-dev-step-sound (𝕃term-list l) = refl
+𝕃term-dev-step-sound (𝕃term-map f (𝕃term-app t1 t2)) = map-append f 𝕃term⟦ t1 ⟧ 𝕃term⟦ t2 ⟧
+𝕃term-dev-step-sound (𝕃term-map f (𝕃term-list l)) = refl
+𝕃term-dev-step-sound (𝕃term-map f (𝕃term-map g t)) = map-compose f g 𝕃term⟦ t ⟧
+𝕃term-dev-step-sound (𝕃term-map f (𝕃term-cons x t)) = refl
+𝕃term-dev-step-sound (𝕃term-map f 𝕃term-nil) = refl
+𝕃term-dev-step-sound (𝕃term-cons x t) = refl
+𝕃term-dev-step-sound 𝕃term-nil = refl
+
+𝕃term-dev-sound : {A : Set}(t : 𝕃term A) → 𝕃term⟦ t ⟧ ≡ 𝕃term⟦ 𝕃term-dev t ⟧
+𝕃term-dev-sound (𝕃term-list l) = refl
+𝕃term-dev-sound (𝕃term-app t1 t2) 
+  rewrite sym (𝕃term-dev-step-sound (𝕃term-app (𝕃term-dev t1) (𝕃term-dev t2))) | 𝕃term-dev-sound t1 | 𝕃term-dev-sound t2 = refl
+𝕃term-dev-sound (𝕃term-map f t1)
+  rewrite sym (𝕃term-dev-step-sound (𝕃term-map f (𝕃term-dev t1))) | 𝕃term-dev-sound t1 = refl
+𝕃term-dev-sound (𝕃term-cons x t1) rewrite 𝕃term-dev-sound t1 = refl
+𝕃term-dev-sound 𝕃term-nil = refl
+
+list-simplifier-test1 : ∀{A B : Set}(f : A → B)(l1 l2 : 𝕃 A) → (map f l1 ++ map f l2) ≡ map f (l1 ++ l2)
+list-simplifier-test1 f l1 l2 = sym (𝕃term-dev-sound (𝕃term-map f (𝕃term-app (𝕃term-list l1) (𝕃term-list l2))))
+
+list-simplifier-test2 : ∀{A B : Set}(f : A → B)(l1 l2 l3 : 𝕃 A) → (map f l1 ++ map f l2) ++ map f l3 ≡ map f (l1 ++ l2 ++ l3)
+list-simplifier-test2 f l1 l2 l3 
+  rewrite 𝕃term-dev-sound (𝕃term-app (𝕃term-app (𝕃term-map f (𝕃term-list l1)) (𝕃term-map f (𝕃term-list l2)))
+                            (𝕃term-map f (𝕃term-list l3))) 
+  | 𝕃term-dev-sound (𝕃term-map f (𝕃term-app (𝕃term-list l1) (𝕃term-app (𝕃term-list l2) (𝕃term-list l3)))) 
+  | 𝕃term-dev-sound (𝕃term-map f (𝕃term-app (𝕃term-list l2) (𝕃term-list l3))) = {!!}
+
+
+
+{-with 
+list-simplifier-test1 f l1 l2 l3 | t , p = {!!} -}

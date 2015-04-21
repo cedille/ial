@@ -2,12 +2,12 @@ module list-thms where
 
 open import bool
 open import bool-thms
+open import compose
 open import list
 open import nat
 open import nat-thms
 open import product-thms
 open import logic
-
 
 ++[] : ∀{ℓ}{A : Set ℓ} → (l : 𝕃 A) → l ++ [] ≡ l
 ++[] [] = refl
@@ -29,8 +29,8 @@ map-append f [] l2 = refl
 map-append f (x :: xs) l2 rewrite map-append f xs l2 = refl
 
 map-compose : ∀ {ℓ ℓ' ℓ''} {A : Set ℓ} {B : Set ℓ'}{C : Set ℓ''} → 
-             (f : A → B) (g : B → C) (l : 𝕃 A) → 
-             map g (map f l) ≡ map (λ x → g (f x)) l
+             (f : B → C) (g : A → B) (l : 𝕃 A) → 
+             map f (map g l) ≡ map (f ∘ g) l
 map-compose f g [] = refl
 map-compose f g (x :: xs) rewrite map-compose f g xs = refl
 

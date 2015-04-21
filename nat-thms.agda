@@ -7,6 +7,7 @@ open import eq
 open import nat
 open import neq
 open import product
+open import product-thms
 open import sum
 
 --------------------------------------------------
@@ -387,6 +388,13 @@ suc<<{n = n} p = <-trans{n} (<-suc n) p
 ... | q rewrite p = 𝔹-contra (sym q)
 <∸ {suc x}{0} p = refl
 <∸ {suc x}{suc y} p = <∸{x}{y} p
+
+<∸suc : ∀ {x y : ℕ} → (y < x ≡ tt) → Σ ℕ (λ n → x ∸ y ≡ suc n)
+<∸suc{x}{y} p with keep (x ∸ y)
+<∸suc{x}{y} p | 0 , r with <∸{x}{y} p
+<∸suc{x}{y} p | 0 , r | q rewrite r with q
+<∸suc{x}{y} p | 0 , r | q | ()
+<∸suc{x}{y} p | suc n , r = n , r
 
 ∸suc : ∀ {x y z : ℕ } → y < x ≡ tt → x ∸ (y + (suc z)) < x ∸ y ≡ tt
 ∸suc{x}{y}{z} p rewrite ∸+{x}{y}{suc z} = ∸< {x ∸ y} (<∸{x}{y} p)
