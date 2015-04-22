@@ -1,8 +1,11 @@
 ROOTS=  bool bool-test bool-thms bool-thms2 bool-kleene \
 	braun-tree \
+        bst \
 	char \
 	datatypes \
 	eq \
+        int \
+	integer \
 	io io-test io-test2 \
 	level \
 	list list-test list-thms list-merge-sort list-merge-sort-test \

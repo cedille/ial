@@ -23,23 +23,28 @@ The library is set up so there are no name conflicts between modules
 stream and stream2 or nat-division and nat-division2, and there might
 be name conflicts in such cases).
 
-3. Credits
+3. Browsing the library
+
+You can get some overview of what is in the library by following
+imports from lib.agda (this is the main entry point for the library).
+
+4. Credits
 
 The library is mostly written by myself, but it also includes some
 contributions from John Bodeen and from undergraduates who took my
-Programming Language Concepts class, Spring 2014.
+Programming Language Concepts class, Spring 2014 and 2015.
 
-4. Releases
+5. Releases
 
 Released versions of the library can be found at
 
 https://svn.divms.uiowa.edu/repos/clc/projects/agda/ial-releases
 
-5. License
+6. License
 
 This library is currently provided under the MIT License, see LICENSE.txt.
 
-6. Documentation
+7. Documentation
 
 There is no formal documentation currently, besides comments in the files.
 

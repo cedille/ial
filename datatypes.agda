@@ -3,6 +3,7 @@ module datatypes where
 open import bool public
 open import bool-to-string public
 open import char public
+open import integer public
 open import list public
 open import list-to-string public
 open import level public
