@@ -102,7 +102,7 @@ module test2 {A B : Set}(f : A → B)(l1 l2 l3 : 𝕃 A) where
   test-tp = 𝕃⟦ lhs ⟧ ≡ 𝕃⟦ rhs ⟧
 
   test : test-tp
-  test rewrite (𝕃term-devn-sound lhs 2) = refl
+  test = 𝕃term-devn-sound lhs 2
 
 
 {-

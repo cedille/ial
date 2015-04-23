@@ -137,6 +137,12 @@ tt-imp : ∀ (b : 𝔹) → tt imp b ≡ b
 tt-imp tt = refl
 tt-imp ff = refl
 
+imp-antisymm : ∀ {b1 b2 : 𝔹} → b1 imp b2 ≡ tt → b2 imp b1 ≡ tt → b1 ≡ b2
+imp-antisymm{tt}{tt} p q = refl
+imp-antisymm{tt}{ff} () q 
+imp-antisymm{ff}{tt} p ()
+imp-antisymm{ff}{ff} p q = refl
+
 ff-xor : ∀ (b : 𝔹) → ff xor b ≡ b
 ff-xor tt = refl
 ff-xor ff = refl
@@ -156,3 +162,62 @@ xor-distrib-&& tt tt = refl
 xor-distrib-&& tt ff = refl
 xor-distrib-&& ff tt = refl
 xor-distrib-&& ff ff = refl
+
+xor~hop : ∀ (a b : 𝔹) → ~ a xor b ≡ a xor ~ b
+xor~hop tt tt = refl
+xor~hop tt ff = refl
+xor~hop ff tt = refl
+xor~hop ff ff = refl
+
+xor-comm : ∀ (b1 b2 : 𝔹) → b1 xor b2 ≡ b2 xor b1
+xor-comm tt tt = refl
+xor-comm tt ff = refl
+xor-comm ff tt = refl
+xor-comm ff ff = refl
+
+xor-assoc : (b1 b2 b3 : 𝔹) → b1 xor (b2 xor b3) ≡ (b1 xor b2) xor b3
+xor-assoc tt tt tt = refl
+xor-assoc tt tt ff = refl
+xor-assoc tt ff tt = refl
+xor-assoc tt ff ff = refl
+xor-assoc ff tt tt = refl
+xor-assoc ff tt ff = refl
+xor-assoc ff ff tt = refl
+xor-assoc ff ff ff = refl
+
+xor-anti-idem : (b : 𝔹) → b xor b ≡ ff
+xor-anti-idem tt = refl
+xor-anti-idem ff = refl
+
+xor-≡ : {b1 b2 : 𝔹} → b1 xor b2 ≡ ff → b1 ≡ b2
+xor-≡ {tt} {tt} p = refl
+xor-≡ {tt} {ff} ()
+xor-≡ {ff} {tt} ()
+xor-≡ {ff} {ff} p = refl
+
+nor-not : ∀ (b : 𝔹) → b nor b ≡ ~ b
+nor-not tt = refl
+nor-not ff = refl
+
+nor-or : ∀ (b1 b2 : 𝔹) → (b1 nor b2) nor (b1 nor b2) ≡ b1 || b2
+nor-or tt b2 = refl
+nor-or ff tt = refl
+nor-or ff ff = refl
+
+nor-and : ∀ (b1 b2 : 𝔹) → (b1 nor b1) nor (b2 nor b2) ≡ b1 && b2
+nor-and tt tt = refl
+nor-and tt ff = refl
+nor-and ff b2 = refl
+
+nor-comm : ∀ (b1 b2 : 𝔹) → b1 nor b2 ≡ b2 nor b1
+nor-comm tt tt = refl
+nor-comm tt ff = refl
+nor-comm ff tt = refl
+nor-comm ff ff = refl
+
+nand-comm : ∀ (b1 b2 : 𝔹) → b1 nand b2 ≡ b2 nand b1
+nand-comm tt tt = refl
+nand-comm tt ff = refl
+nand-comm ff tt = refl
+nand-comm ff ff = refl
+

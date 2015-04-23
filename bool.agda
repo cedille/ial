@@ -76,3 +76,6 @@ tt nand tt = ff
 tt nand ff = tt
 ff nand tt = tt
 ff nand ff = tt
+
+_nor_ : 𝔹 → 𝔹 → 𝔹
+x nor y = ~ (x || y)

@@ -330,6 +330,12 @@ suc<<{n = n} p = <-trans{n} (<-suc n) p
 <tt : ∀ {x y : ℕ} → x < y ≡ tt → y ≤ x ≡ ff
 <tt{x}{y} p rewrite <-not-=ℕ{x}{y} p | <-not->{x}{y} p = refl
 
+≤-antisym : ∀{x y : ℕ} → x ≤ y ≡ tt → y ≤ x ≡ tt → x ≡ y
+≤-antisym{x}{y} p q with ||-split {x < y} p 
+≤-antisym{x}{y} p q | inj₁ u rewrite <tt{x} u with q
+≤-antisym{x}{y} p q | inj₁ u | ()
+≤-antisym{x}{y} p q | inj₂ u = =ℕ-to-≡ u
+
 --------------------------------------------------
 -- monotonicity properties of < and ≤ℕ
 --------------------------------------------------
