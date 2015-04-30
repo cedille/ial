@@ -109,3 +109,7 @@ length-filter p (x :: l) | ff =
 ::-injective : ∀{ℓ}{A : Set ℓ}{x y : A}{xs ys : 𝕃 A} → 
                x :: xs ≡ y :: ys → x ≡ y ∧ xs ≡ ys
 ::-injective refl = refl , refl
+
+concat-thm : ∀{ℓ}{A : Set ℓ}(ls1 ls2 : 𝕃 (𝕃 A)) → concat (ls1 ++ ls2) ≡ (concat ls1) ++ (concat ls2)
+concat-thm [] ls2 = refl
+concat-thm (ls1 :: ls2) ls3 rewrite concat-thm ls2 ls3 = sym (++-assoc ls1 (concat ls2) (concat ls3))
