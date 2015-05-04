@@ -49,5 +49,5 @@ format f = format-h [] (format-cover (string-to-𝕃char f))
 format-type-test : ℕ → string → string → string → string
 format-type-test = format "%n% of the %ss are in the %s %s"
 
-format-test1 : format "%n% of the %ss are in the %s" 25 "dog" "doghouse" ≡ "25% of the dogs are in the doghouse"
+format-test1 : format "%n% of the %ss are in the %s %s" 25 "dog" "toasty" "doghouse" ≡ "25% of the dogs are in the toasty doghouse"
 format-test1 = refl
