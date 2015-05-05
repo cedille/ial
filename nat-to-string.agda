@@ -6,7 +6,7 @@ open import eq
 open import list
 open import maybe
 open import nat
-open import nat-division
+open import nat-division2
 open import nat-thms
 open import product
 open import string
