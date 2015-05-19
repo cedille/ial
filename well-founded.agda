@@ -13,11 +13,11 @@ open import sum
 -- types
 ----------------------------------------------------------------------
 
-data WfStruct {ℓ ℓ'} {A : Set ℓ} (_<_ : A → A → Set ℓ') : A → Set (ℓ ⊔ ℓ') where
-  WfStep : ∀ {x : A} → (∀ {y : A} → y < x → WfStruct _<_ y) → WfStruct _<_ x
+data Wf {ℓ ℓ'} {A : Set ℓ} (_<_ : A → A → Set ℓ') : A → Set (ℓ ⊔ ℓ') where
+  pfWf : ∀ {x : A} → (∀ {y : A} → y < x → Wf _<_ y) → Wf _<_ x
 
-WfStructBool : ∀ {ℓ}{A : Set ℓ} (_<_ : A → A → 𝔹) → A → Set ℓ 
-WfStructBool{ℓ}{A} _<_ x = WfStruct{ℓ}{lzero} (λ (x y : A) → (x < y) ≡ tt) x
+WfBool : ∀ {ℓ}{A : Set ℓ} (_<_ : A → A → 𝔹) → A → Set ℓ 
+WfBool{ℓ}{A} _<_ x = Wf{ℓ}{lzero} (λ (x y : A) → (x < y) ≡ tt) x
 
 ----------------------------------------------------------------------
 -- theorems
@@ -26,13 +26,30 @@ WfStructBool{ℓ}{A} _<_ x = WfStruct{ℓ}{lzero} (λ (x y : A) → (x < y) ≡ 
 ------------------------------
 -- course of values on <
 ------------------------------
-wf-< : ∀ (n : ℕ) → WfStructBool _<_ n
-wf-< n = WfStep (lem n)
-  where lem : ∀ x → ∀ {y} → y < x ≡ tt → WfStructBool _<_ y
+wf-< : ∀ (n : ℕ) → WfBool _<_ n
+wf-< n = pfWf (lem n)
+  where lem : ∀ x → ∀ {y} → y < x ≡ tt → WfBool _<_ y
         lem 0 {0} () 
         lem 0 {suc y} () 
         lem (suc x) {y} p with <-drop {y} p 
         ... | inj₁ u rewrite u = wf-< x
         ... | inj₂ u = lem x u
 
+ack : ℕ → ℕ → ℕ
+ack zero = _+_ 1
+ack (suc m) = helper
+  where helper : ℕ → ℕ
+        helper (suc n) = ack m (helper n)
+        helper zero = ack m 1
+
+module lexcomb (ℓ ℓ' ℓ1 ℓ2 : level)(A : Set ℓ)(B : Set ℓ')(_<A_ : A → A → Set ℓ1)(_<B_ : B → B → Set ℓ2) where
+  
+  _<lex_ : A × B → A × B → Set (ℓ ⊔ ℓ1 ⊔ ℓ2)
+  (a , b) <lex (a' , b') = a <A a' ∨ (a ≡ a' ∧ b <B b')
+
+  <lex-wf : {a : A} → Wf _<A_ a → ((b : B) → Wf _<B_ b) → {b : B} → Wf _<lex_ (a , b)
+  <lex-wf {a} (pfWf fA) wB {b} = pfWf (helper (wB b))
+     where helper : {b : B} → Wf _<B_ b → {y : A × B} → y <lex (a , b) → Wf _<lex_ y
+           helper _ {a' , b'} (inj₁ u) = <lex-wf (fA u) wB
+           helper (pfWf fB) {a' , b'} (inj₂ (u , u')) rewrite u = pfWf (helper (fB u'))
 

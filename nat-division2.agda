@@ -25,9 +25,9 @@ div-result : ℕ → ℕ → Set
 div-result x d = Σ ℕ (λ q → Σ ℕ (λ r → q * d + r ≡ x))
 
 -- this uses well-founded induction.  The approach in nat-division.agda is simpler.
-div-helper : ∀ (x : ℕ) → WfStructBool _<_ x → (y : ℕ) → y =ℕ 0 ≡ ff → div-result x y
+div-helper : ∀ (x : ℕ) → WfBool _<_ x → (y : ℕ) → y =ℕ 0 ≡ ff → div-result x y
 div-helper x wfx 0 () 
-div-helper x (WfStep fx) (suc y) _ with 𝔹-dec (x =ℕ 0)
+div-helper x (pfWf fx) (suc y) _ with 𝔹-dec (x =ℕ 0)
 ... | inj₁ u = 0 , 0 , sym (=ℕ-to-≡ u)
 ... | inj₂ u with 𝔹-dec (x < (suc y))
 ... | inj₁ v = 0 , (x , refl)
