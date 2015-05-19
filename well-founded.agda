@@ -13,6 +13,8 @@ open import sum
 -- types
 ----------------------------------------------------------------------
 
+{- Wf _<_ a means that the _<_ relation is well-founded below a.  That
+   is, there are no infinite chains ... < a2 < a1 < a starting with a. -}
 data Wf {ℓ ℓ'} {A : Set ℓ} (_<_ : A → A → Set ℓ') : A → Set (ℓ ⊔ ℓ') where
   pfWf : ∀ {x : A} → (∀ {y : A} → y < x → Wf _<_ y) → Wf _<_ x
 
@@ -35,18 +37,17 @@ wf-< n = pfWf (lem n)
         ... | inj₁ u rewrite u = wf-< x
         ... | inj₂ u = lem x u
 
-ack : ℕ → ℕ → ℕ
-ack zero = _+_ 1
-ack (suc m) = helper
-  where helper : ℕ → ℕ
-        helper (suc n) = ack m (helper n)
-        helper zero = ack m 1
 
+------------------------------
+-- lexicographic combination
+------------------------------
 module lexcomb (ℓ ℓ' ℓ1 ℓ2 : level)(A : Set ℓ)(B : Set ℓ')(_<A_ : A → A → Set ℓ1)(_<B_ : B → B → Set ℓ2) where
   
   _<lex_ : A × B → A × B → Set (ℓ ⊔ ℓ1 ⊔ ℓ2)
   (a , b) <lex (a' , b') = a <A a' ∨ (a ≡ a' ∧ b <B b')
 
+  {- If _<A_ is well-founded below a and if _<B_ is well-founded below every b, then
+     _<lex_ is well-founded below (a , b) -}
   <lex-wf : {a : A} → Wf _<A_ a → ((b : B) → Wf _<B_ b) → {b : B} → Wf _<lex_ (a , b)
   <lex-wf {a} (pfWf fA) wB {b} = pfWf (helper (wB b))
      where helper : {b : B} → Wf _<B_ b → {y : A × B} → y <lex (a , b) → Wf _<lex_ y

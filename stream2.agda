@@ -54,9 +54,9 @@ data 𝕊 {ℓ}(A : Set ℓ) : ℕ → Set ℓ where
 
 {- This is a helper function for ensure.  It does course-of-values
    recursion on n ∸ n'. -}
-ensureh : ∀{ℓ}{A : Set ℓ}{n : ℕ} → (n' : ℕ) → WfStructBool _<_ (n' ∸ n) → 𝕊 A n → 
+ensureh : ∀{ℓ}{A : Set ℓ}{n : ℕ} → (n' : ℕ) → WfBool _<_ (n' ∸ n) → 𝕊 A n → 
           Σ ℕ λ n'' → n' ≤ n'' ≡ tt ∧ 𝕊 A n''
-ensureh{A = A} n' (WfStep fx) (mk𝕊{k = k}{n} pre f) with 𝔹-dec (n' ≤ k + n)
+ensureh{A = A} n' (pfWf fx) (mk𝕊{k = k}{n} pre f) with 𝔹-dec (n' ≤ k + n)
 ... | inj₁ p = ( k + n , p , (mk𝕊{k = k}{n} pre f))
 ... | inj₂ p with f n pre 
 ... | ( k' , l) with (l ++𝕍 pre) | ≤ff{n'} p

@@ -11,7 +11,7 @@ ROOTS=  bool bool-test bool-thms bool-thms2 bool-kleene \
 	list list-test list-thms list-merge-sort list-merge-sort-test \
 	logic \
 	maybe maybe-thms \
-	nat nat-thms nat-division nat-division2 nat-to-string nat-tests \
+	nat nat-thms nat-division nat-division-wf nat-to-string nat-tests \
 	neq \
 	negation \
 	product product-thms \

@@ -6,15 +6,15 @@ open import eq
 open import list
 open import maybe
 open import nat
-open import nat-division2
+open import nat-division-wf
 open import nat-thms
 open import product
 open import string
 open import well-founded
 
-ℕ-to-digitsh : (x : ℕ) → WfStructBool _<_ x → 𝕃 ℕ
+ℕ-to-digitsh : (x : ℕ) → WfBool _<_ x → 𝕃 ℕ
 ℕ-to-digitsh 0 _ = []
-ℕ-to-digitsh (suc x) (WfStep fx) with (suc x) ÷ 10 ! refl
+ℕ-to-digitsh (suc x) (pfWf fx) with (suc x) ÷ 10 ! refl
 ... | q , r , p = r :: (ℕ-to-digitsh q (fx (÷<{10}{q}{r}{x} refl p)))
 
 ℕ-to-digits : ℕ → 𝕃 ℕ

@@ -1,4 +1,4 @@
-module nat-division2 where
+module nat-division-wf where
 
 open import bool
 open import bool-thms
