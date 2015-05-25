@@ -1,28 +1,26 @@
+{- This file describes properties of computable relations. -}
+
 open import bool
+open import level
 open import eq
 open import product
 open import product-thms
 
-module relations (A : Set) (_≤A_ : A → A → 𝔹) where
+module relations {ℓ ℓ' : level}{A : Set ℓ} (_≤A_ : A → A → Set ℓ') where
 
-total : Set
-total = ∀ {a b : A} → a ≤A b ≡ ff → b ≤A a ≡ tt
+reflexive : Set (ℓ ⊔ ℓ')
+reflexive = ∀ {a : A} → a ≤A a 
 
-transitive : Set
-transitive = ∀ {a b c : A} → a ≤A b ≡ tt → b ≤A c ≡ tt → a ≤A c ≡ tt
+transitive : Set (ℓ ⊔ ℓ')
+transitive = ∀ {a b c : A} → a ≤A b → b ≤A c → a ≤A c
 
-reflexive : Set
-reflexive = ∀ {a : A} → a ≤A a ≡ tt
+preorder : Set (ℓ ⊔ ℓ')
+preorder = reflexive ∧ transitive
 
-total-reflexive : total → reflexive
-total-reflexive tot {a} with keep (a ≤A a)
-total-reflexive tot {a} | tt , p = p
-total-reflexive tot {a} | ff , p = tot p
+_iso_ : A → A → Set ℓ'
+d iso d' = d ≤A d' ∧ d' ≤A d
 
-_iso_ : A → A → 𝔹
-d iso d' = d ≤A d' && d' ≤A d
-
-iso-intro : ∀{x y : A} → x ≤A y ≡ tt → y ≤A x ≡ tt → x iso y ≡ tt
-iso-intro p1 p2 rewrite p1 | p2 = refl
+iso-intro : ∀{x y : A} → x ≤A y → y ≤A x → x iso y 
+iso-intro p1 p2 = p1 , p2
 
 

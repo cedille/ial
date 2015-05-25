@@ -1,6 +1,7 @@
 ROOTS=  bool bool-test bool-thms bool-thms2 bool-kleene \
 	braun-tree \
         bst \
+        combinators \
 	char \
 	datatypes \
 	eq \
@@ -16,12 +17,11 @@ ROOTS=  bool bool-test bool-thms bool-thms2 bool-kleene \
 	negation \
 	product product-thms \
 	runtime-only \
-	stream stream-test stream-thms \
-	stream2 stream2-test \
 	sum sum-thms \
 	tree tree-test \
 	trie \
-	vector vector-test
+	vector vector-test \
+        well-founded
 
 SOURCES=$(ROOTS:=.agda)
 DEPS=$(ROOTS:%=deps/%.deps)

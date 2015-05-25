@@ -19,7 +19,7 @@ nat = ℕ
 
 infixl 10 _*_
 infixl 9 _+_ _∸_
-infixl 8 _<_ _=ℕ_ _≤_
+infixl 8 _<_ _=ℕ_ _≤_ _>_ _≥_
 
 -- pragmas to get decimal notation:
 
@@ -78,6 +78,12 @@ _ =ℕ _ = ff
 
 _≤_ : ℕ → ℕ → 𝔹
 x ≤ y = (x < y) || x =ℕ y
+
+_>_ : ℕ → ℕ → 𝔹
+a > b = b < a
+
+_≥_ : ℕ → ℕ → 𝔹
+a ≥ b = b ≤ a
 
 min : ℕ → ℕ → ℕ
 min x y = if x < y then x else y

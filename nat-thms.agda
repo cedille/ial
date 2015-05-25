@@ -176,6 +176,12 @@ iszerosum2 (suc x) y _ = refl
 <≤ : ∀ {n m : ℕ} → n < m ≡ tt → n ≤ m ≡ tt
 <≤ {n}{m} p rewrite p = refl
 
+≤+1 : ∀(x y : ℕ) → x ≤ x + y ≡ tt
+≤+1 zero zero = refl
+≤+1 zero (suc y) = refl
+≤+1 (suc x) zero rewrite +0 x | =ℕ-refl x | ||-tt (x < x) = refl
+≤+1 (suc x) (suc y) = ≤+1 x (suc y)
+
 --------------------------------------------------
 -- ordering properties of < and ≤ℕ
 --------------------------------------------------

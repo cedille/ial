@@ -12,7 +12,6 @@ open import nat public
 open import nat-division public
 open import nat-to-string public
 open import product public
-open import stream public
 open import string public
 open import sum public
 open import tree public

@@ -6,14 +6,14 @@ open import eq
 open import maybe
 open import product
 open import product-thms
-open import relations using (transitive ; total)
+open import bool-relations using (transitive ; total)
 
 module bst (A : Set) (_≤A_ : A → A → 𝔹)
-           (≤A-trans : transitive A _≤A_)
-           (≤A-total : total A _≤A_) where
+           (≤A-trans : transitive _≤A_)
+           (≤A-total : total _≤A_) where
 
-open import relations A _≤A_ hiding (transitive ; total)
-open import minmax A _≤A_ ≤A-trans ≤A-total
+open import bool-relations _≤A_ hiding (transitive ; total)
+open import minmax _≤A_ ≤A-trans ≤A-total
 
 data bst : A → A → Set where
   bst-leaf : ∀ {l u : A} → l ≤A u ≡ tt → bst l u
@@ -23,11 +23,11 @@ data bst : A → A → Set where
                bst l u
 
 -- find a node which is isomorphic (_=A_) to d and return it; or else return nothing
-bst-search : ∀{l u : A}(d : A) → bst l u → maybe (Σ A (λ d' → d iso d' ≡ tt))
+bst-search : ∀{l u : A}(d : A) → bst l u → maybe (Σ A (λ d' → d iso𝔹 d' ≡ tt))
 bst-search d (bst-leaf _) = nothing
 bst-search d (bst-node d' L R _ _) with keep (d ≤A d')
 bst-search d (bst-node d' L R _ _) | tt , p1 with keep (d' ≤A d) 
-bst-search d (bst-node d' L R _ _) | tt , p1 | tt , p2 = just (d' , iso-intro p1 p2)
+bst-search d (bst-node d' L R _ _) | tt , p1 | tt , p2 = just (d' , iso𝔹-intro p1 p2)
 bst-search d (bst-node d' L R _ _) | tt , p1 | ff , p2 = bst-search d L
 bst-search d (bst-node d' L R _ _) | ff , p1 = bst-search d R
 

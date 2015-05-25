@@ -3,14 +3,14 @@ open import bool-thms2
 open import eq
 open import product
 open import product-thms
-open import relations
+open import bool-relations
 
-module minmax (A : Set) (_≤A_ : A → A → 𝔹)
-              (≤A-trans : transitive A _≤A_)
-              (≤A-total : total A _≤A_) where
+module minmax {A : Set} (_≤A_ : A → A → 𝔹)
+              (≤A-trans : transitive _≤A_)
+              (≤A-total : total _≤A_) where
 
-≤A-refl : reflexive A _≤A_ 
-≤A-refl = total-reflexive A _≤A_ ≤A-total
+≤A-refl : reflexive _≤A_ 
+≤A-refl = total-reflexive _≤A_ ≤A-total
 
 min : A → A → A
 min = λ x y → if x ≤A y then x else y
