@@ -2,7 +2,7 @@ module list-thms where
 
 open import bool
 open import bool-thms
-open import compose
+open import functions
 open import list
 open import nat
 open import nat-thms

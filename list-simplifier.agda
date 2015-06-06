@@ -1,7 +1,8 @@
 module list-simplifier where
 
+open import level
 open import bool
-open import compose
+open import functions
 open import eq
 open import empty
 open import level
