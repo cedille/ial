@@ -12,7 +12,7 @@ come from Agda's standard library.
 
 2. Using the library 
 
-This library is known to work with Agda 2.4.2.2/2.4.2.1.
+This library is known to work with Agda 2.4.2.3/2.4.2.2/2.4.2.1.
 
 In Agda, you can include the whole library by importing lib.agda.  
 
