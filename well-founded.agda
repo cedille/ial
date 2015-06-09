@@ -73,3 +73,27 @@ module measure {ℓ ℓ' ℓ1 ℓ2 : level}{A : Set ℓ}{B : Set ℓ'}(_>A_ : A 
   measure->{a} (pfWf fM) = pfWf h
     where h : {y : A} → a >A y → Wf _>A_ y
           h{y} p = measure-> (fM (preservem p))
+
+------------------------------
+-- Newman's Lemma
+------------------------------
+
+{- Newman's Lemma says that local confluence implies confluence for
+   terminating elements of the relation (the usual formulation speaks
+   about these properties for the whole relation, not just elements,
+   but this is an obvious refinement). -}
+
+module newman {ℓ ℓ' : level}{A : Set ℓ}(_>A_ : A → A → Set ℓ')
+              (lc : ∀{a b c : A} → a >A b → a >A c → ∃ A (λ d → b >A d ∧ c >A d)) where
+
+  open import relations _>A_ using (_tc_ ; tc-step ; tc-trans)
+
+{-  In progress...
+
+  the_lemma : ∀{a b c : A} → Wf _>A_ a → a tc b → a tc c → ∃ A (λ d → b tc d ∧ c tc d)
+  the_lemma w (tc-step u) (tc-step v) with lc u v 
+  the_lemma w (tc-step u) (tc-step v) | d , u' , v' = d , tc-step u' , tc-step v'
+  the_lemma w (tc-step u) (tc-trans v1 v2) = {!!}
+  the_lemma w (tc-trans u1 u2) (tc-step v) = {!!}
+  the_lemma w (tc-trans u1 u2) (tc-trans v1 v2) = {!!}
+-}
