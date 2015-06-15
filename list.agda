@@ -4,7 +4,8 @@ open import bool
 open import eq
 open import maybe
 open import nat
-
+open import unit
+open import product
 
 ----------------------------------------------------------------------
 -- datatypes
@@ -54,6 +55,11 @@ last (x :: (y :: xs)) _ = last (y :: xs) refl
 _++_ : ∀ {ℓ} {A : Set ℓ} → 𝕃 A → 𝕃 A → 𝕃 A
 []        ++ ys = ys
 (x :: xs) ++ ys = x :: (xs ++ ys)
+
+-- The hom part of the list functor.
+list-funct : {A B : Set} → (A → B) → (𝕃 A → 𝕃 B)
+list-funct f [] = []
+list-funct f (x :: l) = f x :: list-funct f l
 
 concat : ∀{ℓ}{A : Set ℓ} → 𝕃 (𝕃 A) → 𝕃 A
 concat [] = []
@@ -116,6 +122,10 @@ x shorter y = y longer x
 list-all : ∀{ℓ}{A : Set ℓ}(pred : A → 𝔹)(l : 𝕃 A) → 𝔹
 list-all pred [] = tt
 list-all pred (x :: xs) = pred x && list-all pred xs
+
+all-pred : {X : Set} → (X → Set) → 𝕃 X → Set
+all-pred f [] = ⊤
+all-pred f (x₁ :: xs) = (f x₁) ∧ (all-pred f xs) 
 
 -- return tt iff at least one element in the list satisfies the given predicate pred.
 list-any : ∀{ℓ}{A : Set ℓ}(pred : A → 𝔹)(l : 𝕃 A) → 𝔹

@@ -113,3 +113,15 @@ length-filter p (x :: l) | ff =
 concat-thm : ∀{ℓ}{A : Set ℓ}(ls1 ls2 : 𝕃 (𝕃 A)) → concat (ls1 ++ ls2) ≡ (concat ls1) ++ (concat ls2)
 concat-thm [] ls2 = refl
 concat-thm (ls1 :: ls2) ls3 rewrite concat-thm ls2 ls3 = sym (++-assoc ls1 (concat ls2) (concat ls3))
+
+-- This holds as long as we have the equations p₁ and p₂.  We know
+-- that these equations are consistant to adopt, because they are
+-- equivalent up and an isomorphism, and hence, by univalence they are
+-- consistent as equations.  The respective isomorphisms can be found
+-- in products-thms.agda.
+all-pred-append : ∀{X : Set}{f : X → Set}{l₁ l₂}
+  → (p₁ : ∀{ℓ}{A : Set ℓ} → A ≡ (⊤ ∧ A))
+  → (p₂ : ∀{ℓ}{A B C : Set ℓ} →  (A ∧ (B ∧ C)) ≡ ((A ∧ B) ∧ C))
+  → all-pred f (l₁ ++ l₂) ≡ ((all-pred f l₁) ∧ (all-pred f l₂))
+all-pred-append {l₁ = []} {l₂} p₁ p₂ = p₁
+all-pred-append {X}{f}{x :: l₁} {l₂} p₁ p₂ rewrite all-pred-append {X}{f}{l₁ = l₁} {l₂} p₁ p₂ = p₂ 
