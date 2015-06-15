@@ -4,6 +4,7 @@ ROOTS=  bool bool-test bool-thms bool-thms2 bool-kleene \
         combinators \
 	char \
 	datatypes \
+        functions \
 	eq \
         int \
 	integer \
