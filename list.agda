@@ -56,11 +56,6 @@ _++_ : ∀ {ℓ} {A : Set ℓ} → 𝕃 A → 𝕃 A → 𝕃 A
 []        ++ ys = ys
 (x :: xs) ++ ys = x :: (xs ++ ys)
 
--- The hom part of the list functor.
-list-funct : {A B : Set} → (A → B) → (𝕃 A → 𝕃 B)
-list-funct f [] = []
-list-funct f (x :: l) = f x :: list-funct f l
-
 concat : ∀{ℓ}{A : Set ℓ} → 𝕃 (𝕃 A) → 𝕃 A
 concat [] = []
 concat (l :: ls) = l ++ concat ls
@@ -72,6 +67,10 @@ repeat (suc n) a = a :: (repeat n a)
 map : ∀ {ℓ ℓ'} {A : Set ℓ} {B : Set ℓ'} → (A → B) → 𝕃 A → 𝕃 B
 map f []        = []
 map f (x :: xs) = f x :: map f xs
+
+-- The hom part of the list functor.
+list-funct : {A B : Set} → (A → B) → (𝕃 A → 𝕃 B)
+list-funct f l = map f l
 
 {- (maybe-map f xs) returns (just ys) if f returns (just y_i) for each
    x_i in the list xs.  Otherwise, (maybe-map f xs) returns nothing. -}
