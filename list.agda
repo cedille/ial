@@ -168,3 +168,9 @@ nth (suc n) (x :: xs) = nth n xs
 nats-down : ℕ → 𝕃 ℕ
 nats-down 0 = [ 0 ]
 nats-down (suc x) = suc x :: nats-down x
+
+zip : ∀{ℓ₁ ℓ₂}{A : Set ℓ₁}{B : Set ℓ₂} → 𝕃 A → 𝕃 B → 𝕃 (A × B)
+zip [] [] = []
+zip [] (x :: l₂) = []
+zip (x :: l₁) [] = []
+zip (x :: l₁) (y :: l₂) = (x , y) :: zip l₁ l₂
