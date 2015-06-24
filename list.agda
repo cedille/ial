@@ -174,3 +174,8 @@ zip [] [] = []
 zip [] (x :: l₂) = []
 zip (x :: l₁) [] = []
 zip (x :: l₁) (y :: l₂) = (x , y) :: zip l₁ l₂
+
+unzip : ∀{ℓ₁ ℓ₂}{A : Set ℓ₁}{B : Set ℓ₂} → 𝕃 (A × B) → (𝕃 A × 𝕃 B)
+unzip [] = ([] , [])
+unzip ((x , y) :: ps) with unzip ps
+... | (xs , ys) = x :: xs , y :: ys
