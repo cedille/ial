@@ -1,11 +1,14 @@
 module list where
 
+open import level
 open import bool
 open import eq
 open import maybe
 open import nat
 open import unit
 open import product
+open import empty
+open import sum
 
 ----------------------------------------------------------------------
 -- datatypes
@@ -179,3 +182,18 @@ unzip : ∀{ℓ₁ ℓ₂}{A : Set ℓ₁}{B : Set ℓ₂} → 𝕃 (A × B) →
 unzip [] = ([] , [])
 unzip ((x , y) :: ps) with unzip ps
 ... | (xs , ys) = x :: xs , y :: ys
+
+map-⊎ : {ℓ₁ ℓ₂ ℓ₃ : Level} → {A : Set ℓ₁}{B : Set ℓ₂}{C : Set ℓ₃} → (A → C) → (B → C) → 𝕃 (A ⊎ B) → 𝕃 C
+map-⊎ f g [] = []
+map-⊎ f g (inj₁ x :: l) = f x :: map-⊎ f g l
+map-⊎ f g (inj₂ y :: l) = g y :: map-⊎ f g l
+
+proj-⊎₁ : {ℓ ℓ' : Level}{A : Set ℓ}{B : Set ℓ'} → 𝕃 (A ⊎ B) → (𝕃 A)
+proj-⊎₁ [] = []
+proj-⊎₁ (inj₁ x :: l) = x :: proj-⊎₁ l
+proj-⊎₁ (inj₂ y :: l) = proj-⊎₁ l
+
+proj-⊎₂ : {ℓ ℓ' : Level}{A : Set ℓ}{B : Set ℓ'} → 𝕃 (A ⊎ B) → (𝕃 B)
+proj-⊎₂ [] = []
+proj-⊎₂ (inj₁ x :: l) = proj-⊎₂ l
+proj-⊎₂ (inj₂ y :: l) = y :: proj-⊎₂ l

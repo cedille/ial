@@ -4,7 +4,7 @@ open import level
 open import bool
 open import eq
 open import maybe
-open import list
+open import product
 
 ----------------------------------------------------------------------
 -- datatypes
@@ -65,8 +65,3 @@ extract-inj₂≡ refl = refl
 ≡⊎-to-= eqa eqb dropa dropb (inj₂ b) (inj₂ b') p = dropb b b' (extract-inj₂≡ p)
 ≡⊎-to-= eqa eqb dropa dropb (inj₁ a) (inj₂ b) ()
 ≡⊎-to-= eqa eqb dropa dropb (inj₂ b) (inj₁ a) ()
-
-map-⊎ : {ℓ₁ ℓ₂ ℓ₃ : Level} → {A : Set ℓ₁}{B : Set ℓ₂}{C : Set ℓ₃} → (A → C) → (B → C) → 𝕃 (A ⊎ B) → 𝕃 C
-map-⊎ f g [] = []
-map-⊎ f g (inj₁ x :: l) = f x :: map-⊎ f g l
-map-⊎ f g (inj₂ y :: l) = g y :: map-⊎ f g l
