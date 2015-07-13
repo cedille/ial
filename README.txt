@@ -34,6 +34,8 @@ The library is mostly written by myself, but it also includes some
 contributions from John Bodeen and from undergraduates who took my
 Programming Language Concepts class, Spring 2014 and 2015.
 
+Harley Eades has also made contributions Summer 2015.
+
 5. Releases
 
 Released versions of the library can be found at
