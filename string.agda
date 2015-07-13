@@ -6,7 +6,6 @@ open import char
 open import list
 open import nat
 open import unit
-open import trustme
 
 ----------------------------------------------------------------------
 -- datatypes
@@ -77,9 +76,4 @@ string-concat-sep sep (s1 :: ss) with ss
 ... | [] = s1
 ... | s2 :: ss' = s1 ^ sep ^ (string-concat-sep sep ss)
 
-=string-to-≡ : (a b : string) → a =string b ≡ tt → a ≡ b
-=string-to-≡ a b p = primTrustMe
-
-≡string-to-= : (a b : string) → a ≡ b → a =string b ≡ tt
-≡string-to-= a b p = primTrustMe
 

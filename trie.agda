@@ -26,6 +26,12 @@ cal-insert ((c' , a') :: l) c a with c =char c'
 ... | tt = (c , a) :: l
 ... | ff = (c' , a') :: (cal-insert l c a)
 
+cal-remove : ∀ {A : Set} → cal A → char → cal A
+cal-remove [] _ = []
+cal-remove ((c , a) :: l) c' with c =char c'
+... | tt = cal-remove l c'
+... | ff = (c , a) :: cal-remove l c'
+
 cal-add : ∀{A : Set} → cal A → char → A → cal A
 cal-add l c a = (c , a) :: l
 
@@ -61,6 +67,15 @@ trie-insert-h (Node odata ts) (c :: cs) x | nothing =
 
 trie-insert : ∀{A : Set} → trie A → string → A → trie A
 trie-insert t s x = trie-insert-h t (string-to-𝕃char s) x
+
+trie-remove-h : ∀{A : Set} → trie A → 𝕃 char → trie A
+trie-remove-h (Node odata ts) (c :: cs) with cal-lookup ts c
+trie-remove-h (Node odata ts) (c :: cs) | nothing = Node odata ts
+trie-remove-h (Node odata ts) (c :: cs) | just t = Node odata (cal-insert ts c (trie-remove-h t cs))
+trie-remove-h (Node odata ts) [] = Node nothing ts
+
+trie-remove : ∀{A : Set} → trie A → string → trie A
+trie-remove t s = trie-remove-h t (string-to-𝕃char s) 
 
 trie-to-string-h : ∀{A : Set} → string → (A → string) → trie A → 𝕃 char → string
 cal-trie-to-string-h : ∀{A : Set} → string → (A → string) → cal (trie A) → 𝕃 char → string

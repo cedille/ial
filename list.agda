@@ -61,7 +61,8 @@ _++_ : ∀ {ℓ} {A : Set ℓ} → 𝕃 A → 𝕃 A → 𝕃 A
 
 concat : ∀{ℓ}{A : Set ℓ} → 𝕃 (𝕃 A) → 𝕃 A
 concat [] = []
-concat (l :: ls) = l ++ concat ls
+concat (l :: []) = l
+concat (l :: (l' :: ls)) = l ++ concat (l' :: ls)
 
 repeat : ∀{ℓ}{A : Set ℓ} → ℕ → A → 𝕃 A
 repeat 0 a = []

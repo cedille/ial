@@ -91,6 +91,11 @@ multi++-assoc : ∀{ℓ}{A : Set ℓ} → (Ls : 𝕃 (𝕃 A)) → (l0 : 𝕃 A)
 multi++-assoc [] l' rewrite ++[] l' = refl
 multi++-assoc (l :: ls) l' rewrite ++-assoc l (foldr _++_ [] ls) l' | multi++-assoc ls l' = refl
 
+concat-foldr : ∀{ℓ}{A : Set ℓ} → (ls : 𝕃 (𝕃 A)) → (l : 𝕃 A) → concat ls ++ l ≡ foldr _++_ l ls
+concat-foldr [] l = refl
+concat-foldr (l' :: []) l = refl
+concat-foldr (l' :: (l'' :: ls)) l rewrite ++-assoc l' (concat (l'' :: ls)) l | concat-foldr (l'' :: ls) l = refl
+
 longer-trans : ∀{ℓ}{A : Set ℓ}(l1 l2 l3 : 𝕃 A) → 
                 l1 longer l2 ≡ tt →
                 l2 longer l3 ≡ tt →
@@ -119,9 +124,11 @@ length-filter p (x :: l) | ff =
                x :: xs ≡ y :: ys → x ≡ y ∧ xs ≡ ys
 ::-injective refl = refl , refl
 
-concat-thm : ∀{ℓ}{A : Set ℓ}(ls1 ls2 : 𝕃 (𝕃 A)) → concat (ls1 ++ ls2) ≡ (concat ls1) ++ (concat ls2)
-concat-thm [] ls2 = refl
-concat-thm (ls1 :: ls2) ls3 rewrite concat-thm ls2 ls3 = sym (++-assoc ls1 (concat ls2) (concat ls3))
+concat-++ : ∀{ℓ}{A : Set ℓ}(ls1 ls2 : 𝕃 (𝕃 A)) → concat (ls1 ++ ls2) ≡ (concat ls1) ++ (concat ls2)
+concat-++ [] ls2 = refl
+concat-++ (l :: []) [] rewrite ++[] l = refl
+concat-++ (l :: []) (l' :: ls2) = refl
+concat-++ (l :: l' :: ls1) ls2 rewrite ++-assoc l (concat (l' :: ls1)) (concat ls2) | concat-++ (l' :: ls1) ls2 = refl
 
 -- This holds as long as we have the equations p₁ and p₂.  We know
 -- that these equations are consistant to adopt, because they are

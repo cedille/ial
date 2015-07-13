@@ -81,17 +81,17 @@ allh𝕍 p (x :: xs) n = p n x && allh𝕍 p xs (suc n)
 all𝕍 : ∀ {ℓ} {A : Set ℓ}{n : ℕ}(p : ℕ → A → 𝔹) → 𝕍 A n → 𝔹
 all𝕍 p v = allh𝕍 p v 0
 
-𝕍-to-list : ∀ {ℓ} {A : Set ℓ}{n : ℕ} → 𝕍 A n → 𝕃 A
-𝕍-to-list [] = []
-𝕍-to-list (x :: xs) = x :: (𝕍-to-list xs)
+𝕍-to-𝕃 : ∀ {ℓ} {A : Set ℓ}{n : ℕ} → 𝕍 A n → 𝕃 A
+𝕍-to-𝕃 [] = []
+𝕍-to-𝕃 (x :: xs) = x :: (𝕍-to-𝕃 xs)
 
-list-to-𝕍 : ∀ {ℓ} {A : Set ℓ} → 𝕃 A → Σ ℕ (λ n → 𝕍 A n)
-list-to-𝕍 [] = (0 , [])
-list-to-𝕍 (x :: xs) with list-to-𝕍 xs
+𝕃-to-𝕍 : ∀ {ℓ} {A : Set ℓ} → 𝕃 A → Σ ℕ (λ n → 𝕍 A n)
+𝕃-to-𝕍 [] = (0 , [])
+𝕃-to-𝕍 (x :: xs) with 𝕃-to-𝕍 xs
 ... | (n , v) = (suc n , x :: v)
 
 {- turn the given 𝕍 into a string by calling f on each element, and separating the elements
    with the given separator string -}
 𝕍-to-string : ∀ {ℓ} {A : Set ℓ}{n : ℕ} → (f : A → string) → (separator : string) → 𝕍 A n → string
-𝕍-to-string f sep v = 𝕃-to-string f sep (𝕍-to-list v)
+𝕍-to-string f sep v = 𝕃-to-string f sep (𝕍-to-𝕃 v)
 

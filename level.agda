@@ -9,6 +9,7 @@ open Agda.Primitive public
 
 level = Level
 
+lone : level
 lone = lsuc lzero
 
 record Lift {a ℓ} (A : Set a) : Set (a ⊔ ℓ) where
