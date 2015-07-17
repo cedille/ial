@@ -8,7 +8,7 @@ open import nat
 open import nat-thms
 open import product
 open import sum
-open import well-founded
+open import termination
 
 ----------------------------------------------------------------------
 -- syntax
@@ -25,9 +25,9 @@ div-result : ℕ → ℕ → Set
 div-result x d = Σ ℕ (λ q → Σ ℕ (λ r → q * d + r ≡ x))
 
 -- this uses well-founded induction.  The approach in nat-division.agda is simpler.
-div-helper : ∀ (x : ℕ) → Wf𝔹 _>_ x → (y : ℕ) → y =ℕ 0 ≡ ff → div-result x y
-div-helper x wfx 0 () 
-div-helper x (pfWf fx) (suc y) _ with 𝔹-dec (x =ℕ 0)
+div-helper : ∀ (x : ℕ) → ↓𝔹 _>_ x → (y : ℕ) → y =ℕ 0 ≡ ff → div-result x y
+div-helper x ↓x 0 () 
+div-helper x (pf↓ fx) (suc y) _ with 𝔹-dec (x =ℕ 0)
 ... | inj₁ u = 0 , 0 , sym (=ℕ-to-≡ u)
 ... | inj₂ u with 𝔹-dec (x < (suc y))
 ... | inj₁ v = 0 , (x , refl)
@@ -42,7 +42,7 @@ div-helper x (pfWf fx) (suc y) _ with 𝔹-dec (x =ℕ 0)
                      | +perm2 (q * (suc y)) r y = p'''
 
 _÷_!_ : (x : ℕ) → (y : ℕ) → y =ℕ 0 ≡ ff → div-result x y
-x ÷ y ! p = div-helper x (wf-> x) y p
+x ÷ y ! p = div-helper x (↓-> x) y p
 
 _÷_!!_ : ℕ → (y : ℕ) → y =ℕ 0 ≡ ff → ℕ × ℕ
 x ÷ y !! p with x ÷ y ! p

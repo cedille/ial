@@ -1,5 +1,7 @@
 module list-thms where
 
+-- see list-thms2 for more 
+
 open import bool
 open import bool-thms
 open import functions
@@ -120,6 +122,16 @@ length-filter p (x :: l) | tt = length-filter p l
 length-filter p (x :: l) | ff = 
   ≤-trans{length (filter p l)} (length-filter p l) (≤-suc (length l))
 
+filter-++ : ∀{ℓ}{A : Set ℓ}(p : A → 𝔹)(l1 l2 : 𝕃 A) → filter p (l1 ++ l2) ≡ filter p l1 ++ filter p l2
+filter-++ p [] l2 = refl
+filter-++ p (x :: l1) l2 with p x 
+filter-++ p (x :: l1) l2 | tt rewrite (filter-++ p l1 l2) = refl
+filter-++ p (x :: l1) l2 | ff rewrite (filter-++ p l1 l2) = refl
+
+remove-++ : ∀{ℓ}{A : Set ℓ}(eq : A → A → 𝔹)(a : A)(l1 l2 : 𝕃 A) → 
+            remove eq a (l1 ++ l2) ≡ remove eq a l1 ++ remove eq a l2
+remove-++ eq a l1 l2 = filter-++ (λ x → ~ (eq a x)) l1 l2
+
 ::-injective : ∀{ℓ}{A : Set ℓ}{x y : A}{xs ys : 𝕃 A} → 
                x :: xs ≡ y :: ys → x ≡ y ∧ xs ≡ ys
 ::-injective refl = refl , refl
@@ -161,3 +173,4 @@ map-proj-⊎₁-[] : ∀{ℓ ℓ'}{A : Set ℓ}{B : Set ℓ'} → (l : 𝕃 B)
   → proj-⊎₁ {_}{_}{A}{B} (map inj₂ l) ≡ []
 map-proj-⊎₁-[] [] = refl
 map-proj-⊎₁-[] {_}{_}{A}{B} (x :: l) rewrite map-proj-⊎₁-[] {_}{_}{A}{B} l = refl
+

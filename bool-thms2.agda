@@ -112,6 +112,10 @@ imp-mp {ff} {tt} p q = refl
 &&-elim{ff}{_} ()
 &&-elim{tt}{ff} ()
 
+||-elim : ∀ {b1 b2 : 𝔹} → b1 || b2 ≡ tt → b1 ≡ tt ∨ b2 ≡ tt
+||-elim {tt} refl = inj₁ refl
+||-elim {ff} refl = inj₂ refl
+
 ~-cong : ∀ {b b' : 𝔹} → b ≡ b' → ~ b ≡ ~ b'
 ~-cong refl = refl
 

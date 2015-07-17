@@ -23,8 +23,3 @@ d iso d' = d ≥A d' ∧ d' ≥A d
 iso-intro : ∀{x y : A} → x ≥A y → y ≥A x → x iso y 
 iso-intro p1 p2 = p1 , p2
 
-data _tc_ : A → A → Set (ℓ ⊔ ℓ') where
-  tc-step : ∀{a b : A} → a ≥A b → a tc b
-  tc-trans : ∀{a b c : A} → a tc b → b tc c → a tc c
-
-

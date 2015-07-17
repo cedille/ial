@@ -279,6 +279,9 @@ suc<<{n = n} p = <-trans{n} (<-suc n) p
 <+{x}{suc 0} p = <-suc x
 <+{x}{suc (suc y)} p = <-trans{x}{(suc y) + x}{suc ((suc y) + x)} (<+{x}{suc y} refl) (<-suc ((suc y) + x))
 
+<+2 : ∀ {x y : ℕ} → x < (suc y) + x ≡ tt
+<+2{x}{y} = <+{x}{suc y} refl
+
 <-iter-suc-trans-t-h : (n : ℕ) → (x : ℕ) → (accum : ℕ) → Set
 <-iter-suc-trans-t-h 0 x accum = x < accum ≡ tt
 <-iter-suc-trans-t-h (suc n) x accum = <-iter-suc-trans-t-h n x (suc accum)

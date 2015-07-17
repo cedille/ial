@@ -19,10 +19,10 @@ ROOTS=  bool bool-test bool-thms bool-thms2 bool-kleene \
 	product product-thms \
 	runtime-only \
 	sum sum-thms \
-	tree tree-test \
+	termination \
+        tree tree-test \
 	trie \
 	vector vector-test \
-        well-founded
 
 SOURCES=$(ROOTS:=.agda)
 DEPS=$(ROOTS:%=deps/%.deps)

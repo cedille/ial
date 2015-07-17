@@ -139,6 +139,10 @@ list-and : (l : 𝕃 𝔹) → 𝔹
 list-and [] = tt
 list-and (x :: xs) = x && (list-and xs)
 
+list-or : (l : 𝕃 𝔹) → 𝔹
+list-or [] = ff
+list-or (x :: l) = x || list-or l
+
 list-max : ∀{ℓ}{A : Set ℓ} (lt : A → A → 𝔹) → 𝕃 A → A → A
 list-max lt [] x = x
 list-max lt (y :: ys) x = list-max lt ys (if lt y x then x else y)
@@ -155,6 +159,10 @@ filter : ∀{ℓ}{A : Set ℓ} → (A → 𝔹) → 𝕃 A → 𝕃 A
 filter p [] = []
 filter p (x :: xs) = let r = filter p xs in 
                      if p x then x :: r else r
+
+-- remove all elements equal to the given one
+remove : ∀{ℓ}{A : Set ℓ}(eq : A → A → 𝔹)(a : A)(l : 𝕃 A) → 𝕃 A
+remove eq a l = filter (λ x → ~ (eq a x)) l
 
 {- nthTail n l returns the part of the list after the first n elements, 
    or [] if the list has fewer than n elements -}
