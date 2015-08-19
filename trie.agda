@@ -78,13 +78,13 @@ trie-remove : ∀{A : Set} → trie A → string → trie A
 trie-remove t s = trie-remove-h t (string-to-𝕃char s) 
 
 trie-to-string-h : ∀{A : Set} → string → (A → string) → trie A → 𝕃 char → string
-cal-trie-to-string-h : ∀{A : Set} → string → (A → string) → cal (trie A) → 𝕃 char → string
+trie-cal-to-string-h : ∀{A : Set} → string → (A → string) → cal (trie A) → 𝕃 char → string
 trie-to-string-h sep d (Node (just x) c) prev-str = 
-  (𝕃char-to-string (reverse prev-str)) ^ sep ^ (d x) ^ "\n" ^ (cal-trie-to-string-h sep d c prev-str)
-trie-to-string-h sep d (Node nothing c) prev-str = cal-trie-to-string-h sep d c prev-str
-cal-trie-to-string-h sep d [] prev-str = ""
-cal-trie-to-string-h sep d ((c , t) :: cs) prev-str = 
-  (trie-to-string-h sep d t (c :: prev-str)) ^ (cal-trie-to-string-h sep d cs prev-str)
+  (𝕃char-to-string (reverse prev-str)) ^ sep ^ (d x) ^ "\n" ^ (trie-cal-to-string-h sep d c prev-str)
+trie-to-string-h sep d (Node nothing c) prev-str = trie-cal-to-string-h sep d c prev-str
+trie-cal-to-string-h sep d [] prev-str = ""
+trie-cal-to-string-h sep d ((c , t) :: cs) prev-str = 
+  (trie-to-string-h sep d t (c :: prev-str)) ^ (trie-cal-to-string-h sep d cs prev-str)
 
 {- trie-to-string sep d t returns a string representation of the trie t, 
    where each mapping from string s to data x is printed as
@@ -94,14 +94,21 @@ trie-to-string : ∀{A : Set} → string → (A → string) → trie A → strin
 trie-to-string sep d t = trie-to-string-h sep d t []
 
 trie-mappings-h : ∀{A : Set} → trie A → 𝕃 char → 𝕃 (string × A)
-cal-trie-mappings-h : ∀{A : Set} → cal (trie A) → 𝕃 char → 𝕃 (string × A)
-trie-mappings-h (Node (just x) c) prev-str = (𝕃char-to-string (reverse prev-str) , x) :: (cal-trie-mappings-h c prev-str)
-trie-mappings-h (Node nothing c) prev-str = (cal-trie-mappings-h c prev-str)
-cal-trie-mappings-h [] prev-str = []
-cal-trie-mappings-h ((c , t) :: cs) prev-str = trie-mappings-h t (c :: prev-str) ++ (cal-trie-mappings-h cs prev-str)
+trie-cal-mappings-h : ∀{A : Set} → cal (trie A) → 𝕃 char → 𝕃 (string × A)
+trie-mappings-h (Node (just x) c) prev-str = (𝕃char-to-string (reverse prev-str) , x) :: (trie-cal-mappings-h c prev-str)
+trie-mappings-h (Node nothing c) prev-str = (trie-cal-mappings-h c prev-str)
+trie-cal-mappings-h [] prev-str = []
+trie-cal-mappings-h ((c , t) :: cs) prev-str = trie-mappings-h t (c :: prev-str) ++ (trie-cal-mappings-h cs prev-str)
 
 trie-mappings : ∀{A : Set} → trie A → 𝕃 (string × A)
 trie-mappings t = trie-mappings-h t []
+
+trie-nonempty : ∀{A : Set} → trie A → 𝔹
+trie-cal-nonempty : ∀{A : Set} → cal (trie A) → 𝔹
+trie-nonempty (Node (just x) t) = tt
+trie-nonempty (Node nothing c) = trie-cal-nonempty c
+trie-cal-nonempty [] = ff
+trie-cal-nonempty ((a , t) :: c) = trie-nonempty t || trie-cal-nonempty c
 
 ----------------------------------------------------------------------
 -- stringset

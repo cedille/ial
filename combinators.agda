@@ -129,7 +129,7 @@ contains-var s (var s') = s =string s'
 λ*-binds : ∀(s : string)(v : varcomb) → contains-var s (λ* s v) ≡ ff
 λ*-binds s S = refl
 λ*-binds s K = refl
-λ*-binds s (app c1 c2) = rewrite λ*-binds s c1 | λ*-binds s c2 = refl
+λ*-binds s (app c1 c2) rewrite λ*-binds s c1 | λ*-binds s c2 = refl
 λ*-binds s (var s') with keep (s =string s')
 λ*-binds s (var s') | tt , p rewrite p = refl
 λ*-binds s (var s') | ff , p rewrite p = p

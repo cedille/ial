@@ -73,3 +73,7 @@ ite-arg f ff x y = refl
 &&-combo : {p1 p2 : 𝔹} → p1 ≡ tt → p2 ≡ tt → p1 && p2 ≡ tt
 &&-combo{tt} pr1 pr2 = pr2
 &&-combo{ff} pr1 pr2 = 𝔹-contra pr1
+
+&&-ff : ∀(b : 𝔹) → b && ff ≡ ff
+&&-ff tt = refl
+&&-ff ff = refl

@@ -37,8 +37,7 @@ bt-remove-min (bt-node a (bt-node a1 l1 r1 u1) (bt-node a2 l2 r2 u2) u) with bt-
 bt-remove-min (bt-node a (bt-node a1 l1 r1 u1) (bt-node a2 l2 r2 u2) u) | a1' , l' 
   with if a1' <A a2  then (a1' , a2) else (a2 , a1')
 bt-remove-min (bt-node a (bt-node{n1}{m1} a1 l1 r1 u1) (bt-node{n2}{m2} _ l2 r2 u2) u) | _ , l' | smaller , other 
-  rewrite +suc (n1 + m1) (n2 + m2) | +comm (n1 + m1) (n2 + m2) =
-  a , bt-node smaller (bt-node other l2 r2 u2) l' (lem u) 
+  rewrite +suc (n1 + m1) (n2 + m2) | +comm (n1 + m1) (n2 + m2) = a , bt-node smaller (bt-node other l2 r2 u2) l' (lem u) 
   where lem : ∀{x y} → suc x ≡ y ∨ suc x ≡ suc y → y ≡ x ⊎ y ≡ suc x
         lem (inj₁ p) = inj₂ (sym p)
         lem (inj₂ p) = inj₁ (sym (suc-inj p))

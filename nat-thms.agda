@@ -61,19 +61,19 @@ open import sum
 
 *distribr : ∀ (x y z : ℕ) → (x + y) * z ≡ x * z + y * z
 *distribr zero y z = refl
-*distribr (suc x) y z rewrite *distribr x y z | +assoc z (x * z) (y * z) = refl
+*distribr (suc x) y z rewrite *distribr x y z = +assoc z (x * z) (y * z) 
 
 *distribl : ∀ (x y z : ℕ) → x * (y + z) ≡ x * y + x * z
 *distribl 0 y z = refl
 *distribl (suc x) y z rewrite *distribl x y z | +assoc (y + z) (x * y) (x * z) | +assoc (y + x * y) z (x * z) | +comm (y + z) (x * y) | +assoc (x * y) y z | +comm (x * y) y = refl
 
-*assoc : ∀ (x y z : ℕ) → x * (y * z) ≡ (x * y) * z
-*assoc zero y z = refl
-*assoc (suc x) y z rewrite *assoc x y z | *distribr y (x * y) z = refl
-
 *comm : ∀ (x y : ℕ) → x * y ≡ y * x
 *comm zero y rewrite *0 y = refl
 *comm (suc x) y rewrite *suc y x | *comm x y = refl
+
+*assoc : ∀ (x y z : ℕ) → x * (y * z) ≡ (x * y) * z
+*assoc zero y z = refl
+*assoc (suc x) y z rewrite *assoc x y z | *distribr y (x * y) z = refl
 
 --------------------------------------------------
 -- basic properties of pred
@@ -109,7 +109,16 @@ pred+ (suc x) y p = refl
 
 =ℕ-refl : ∀ (x : ℕ) → (x =ℕ x) ≡ tt
 =ℕ-refl 0 = refl
-=ℕ-refl (suc x) rewrite (=ℕ-refl x) = refl
+=ℕ-refl (suc x) = (=ℕ-refl x)
+
+=ℕ-to-≡ : ∀ {x y : ℕ} → x =ℕ y ≡ tt → x ≡ y
+=ℕ-to-≡ {0} {0} u = refl
+=ℕ-to-≡ {suc x} {0} ()
+=ℕ-to-≡ {0} {suc y} ()
+=ℕ-to-≡ {suc x} {suc y} u rewrite =ℕ-to-≡ {x} {y} u = refl
+
+=ℕ-from-≡ : ∀ {x y : ℕ} → x ≡ y → x =ℕ y ≡ tt
+=ℕ-from-≡ {x} refl = =ℕ-refl x
 
 =ℕ-sym : ∀ (x y : ℕ) → (x =ℕ y) ≡ (y =ℕ x)
 =ℕ-sym 0 0 = refl
@@ -120,15 +129,6 @@ pred+ (suc x) y p = refl
 =ℕ-suc : ∀ (x : ℕ) → suc x =ℕ x ≡ ff
 =ℕ-suc 0 = refl
 =ℕ-suc (suc x) = =ℕ-suc x
-
-=ℕ-to-≡ : ∀ {x y : ℕ} → x =ℕ y ≡ tt → x ≡ y
-=ℕ-to-≡ {0} {0} u = refl
-=ℕ-to-≡ {suc x} {0} ()
-=ℕ-to-≡ {0} {suc y} ()
-=ℕ-to-≡ {suc x} {suc y} u rewrite =ℕ-to-≡ {x} {y} u = refl
-
-=ℕ-from-≡ : ∀ {x y : ℕ} → x ≡ y → x =ℕ y ≡ tt
-=ℕ-from-≡ {x} {y} u rewrite u = =ℕ-refl y
 
 <-suc : ∀ (n : ℕ) → n < suc n ≡ tt
 <-suc 0 = refl

@@ -10,18 +10,19 @@ ROOTS=  bool bool-test bool-thms bool-thms2 bool-kleene \
 	integer \
 	io io-test io-test2 \
 	level \
-	list list-test list-thms list-merge-sort list-merge-sort-test \
+	list list-test list-thms list-thms2 list-merge-sort list-merge-sort-test \
 	logic \
 	maybe maybe-thms \
-	nat nat-thms nat-division nat-division-wf nat-to-string nat-tests \
+	nat nat-thms nat-division nat-division-wf nat-to-string nat-tests nat-nonzero \
 	neq \
 	negation \
 	product product-thms \
 	runtime-only \
+	string string-format \
 	sum sum-thms \
 	termination \
         tree tree-test \
-	trie \
+	trie trie-thms \
 	vector vector-test \
 
 SOURCES=$(ROOTS:=.agda)

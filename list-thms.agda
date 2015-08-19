@@ -174,3 +174,10 @@ map-proj-⊎₁-[] : ∀{ℓ ℓ'}{A : Set ℓ}{B : Set ℓ'} → (l : 𝕃 B)
 map-proj-⊎₁-[] [] = refl
 map-proj-⊎₁-[] {_}{_}{A}{B} (x :: l) rewrite map-proj-⊎₁-[] {_}{_}{A}{B} l = refl
 
+is-empty-++ : ∀{ℓ}{A : Set ℓ}(l1 l2 : 𝕃 A) → is-empty (l1 ++ l2) ≡ is-empty l1 && is-empty l2
+is-empty-++ [] l2 = refl
+is-empty-++ (x :: l1) l2 = refl
+
+is-empty-ff-length : ∀{ℓ}{A : Set ℓ}(l : 𝕃 A) → is-empty l ≡ ff → length l =ℕ 0 ≡ ff
+is-empty-ff-length [] ()
+is-empty-ff-length (x :: l) p = refl
