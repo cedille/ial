@@ -95,8 +95,9 @@ multi++-assoc (l :: ls) l' rewrite ++-assoc l (foldr _++_ [] ls) l' | multi++-as
 
 concat-foldr : ∀{ℓ}{A : Set ℓ} → (ls : 𝕃 (𝕃 A)) → (l : 𝕃 A) → concat ls ++ l ≡ foldr _++_ l ls
 concat-foldr [] l = refl
-concat-foldr (l' :: []) l = refl
-concat-foldr (l' :: (l'' :: ls)) l rewrite ++-assoc l' (concat (l'' :: ls)) l | concat-foldr (l'' :: ls) l = refl
+concat-foldr (l' :: ls) l rewrite ++-assoc l' (concat ls) l | concat-foldr ls l = refl
+
+--concat-foldr (l' :: (l'' :: ls)) l rewrite ++-assoc l' (concat (l'' :: ls)) l | concat-foldr (l'' :: ls) l = refl
 
 longer-trans : ∀{ℓ}{A : Set ℓ}(l1 l2 l3 : 𝕃 A) → 
                 l1 longer l2 ≡ tt →
@@ -138,9 +139,7 @@ remove-++ eq a l1 l2 = filter-++ (λ x → ~ (eq a x)) l1 l2
 
 concat-++ : ∀{ℓ}{A : Set ℓ}(ls1 ls2 : 𝕃 (𝕃 A)) → concat (ls1 ++ ls2) ≡ (concat ls1) ++ (concat ls2)
 concat-++ [] ls2 = refl
-concat-++ (l :: []) [] rewrite ++[] l = refl
-concat-++ (l :: []) (l' :: ls2) = refl
-concat-++ (l :: l' :: ls1) ls2 rewrite ++-assoc l (concat (l' :: ls1)) (concat ls2) | concat-++ (l' :: ls1) ls2 = refl
+concat-++ (l :: ls) ls2 rewrite concat-++ ls ls2 = sym (++-assoc l (concat ls) (concat ls2))
 
 -- This holds as long as we have the equations p₁ and p₂.  We know
 -- that these equations are consistant to adopt, because they are
