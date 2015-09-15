@@ -380,6 +380,12 @@ suc<<{n = n} p = <-trans{n} (<-suc n) p
 ... | inj₁ u = <-trans {x ∸ y} u (<-suc x)
 ... | inj₂ u rewrite (=ℕ-to-≡ {x ∸ y} u) = <-suc x
 
+∸<1 : ∀ {x y : ℕ} → x ∸ y < suc x ≡ tt
+∸<1 {zero} {zero} = refl
+∸<1 {zero} {suc y} = refl
+∸<1 {suc x} {zero} = <-suc x
+∸<1 {suc x} {suc y} = <-trans {x ∸ y}{suc x} (∸<1 {x} {y}) (<-suc x)
+
 +∸1 : ∀ {x y : ℕ} → x < y ≡ tt → x + (y ∸ x) ≡ y
 +∸1{0} p = refl
 +∸1{suc x}{0} ()
