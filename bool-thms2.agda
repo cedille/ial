@@ -13,6 +13,14 @@ imp-tt : ∀ (b : 𝔹) → b imp tt ≡ tt
 imp-tt ff = refl
 imp-tt tt = refl
 
+imp-ff : ∀ (b : 𝔹) → b imp ff ≡ ~ b
+imp-ff tt = refl
+imp-ff ff = refl
+
+tt-imp : ∀ (b : 𝔹) → tt imp b ≡ b
+tt-imp tt = refl
+tt-imp ff = refl
+
 &&-tt : ∀ (b : 𝔹) → b && tt ≡ b
 &&-tt tt = refl
 &&-tt ff = refl
@@ -20,10 +28,6 @@ imp-tt tt = refl
 ||-ff : ∀ (b : 𝔹) → b || ff ≡ b
 ||-ff tt = refl
 ||-ff ff = refl
-
-imp-same : ∀ (b : 𝔹) → b imp b ≡ tt
-imp-same ff = refl
-imp-same tt = refl
 
 &&-contra : ∀ (b : 𝔹) → b && ~ b ≡ ff
 &&-contra ff = refl
@@ -81,16 +85,6 @@ imp-same tt = refl
 ||-over-&&-r ff tt tt = refl
 ||-over-&&-r ff ff tt = refl
 
-imp-to-|| : ∀ (b1 b2 : 𝔹) → (b1 imp b2) ≡ (~ b1 || b2)
-imp-to-|| ff _ = refl
-imp-to-|| tt _ = refl
-
-imp-mp : ∀ {b b' : 𝔹} → b imp b' ≡ tt → b ≡ tt → b' ≡ tt 
-imp-mp {tt} {tt} p refl = refl
-imp-mp {ff} {ff} p q = q
-imp-mp {tt} {ff} p q = p
-imp-mp {ff} {tt} p q = refl
-
 &&-cong₁ : ∀ {b1 b1' b2 : 𝔹} → b1 ≡ b1' → b1 && b2 ≡ b1' && b2
 &&-cong₁ refl = refl
 
@@ -133,13 +127,22 @@ ite-cong₃ b x refl = refl
 &&-split {ff}{tt} ()
 &&-split {ff}{ff} p = inj₁ refl
 
-imp-ff : ∀ (b : 𝔹) → b imp ff ≡ ~ b
-imp-ff tt = refl
-imp-ff ff = refl
+-----------------------------------
+-- Theorems about imp
+-----------------------------------
+imp-same : ∀ (b : 𝔹) → b imp b ≡ tt
+imp-same ff = refl
+imp-same tt = refl
 
-tt-imp : ∀ (b : 𝔹) → tt imp b ≡ b
-tt-imp tt = refl
-tt-imp ff = refl
+imp-to-|| : ∀ (b1 b2 : 𝔹) → (b1 imp b2) ≡ (~ b1 || b2)
+imp-to-|| ff _ = refl
+imp-to-|| tt _ = refl
+
+imp-mp : ∀ {b b' : 𝔹} → b imp b' ≡ tt → b ≡ tt → b' ≡ tt 
+imp-mp {tt} {tt} p refl = refl
+imp-mp {ff} {ff} p q = q
+imp-mp {tt} {ff} p q = p
+imp-mp {ff} {tt} p q = refl
 
 imp-antisymm : ∀ {b1 b2 : 𝔹} → b1 imp b2 ≡ tt → b2 imp b1 ≡ tt → b1 ≡ b2
 imp-antisymm{tt}{tt} p q = refl
@@ -147,6 +150,9 @@ imp-antisymm{tt}{ff} () q
 imp-antisymm{ff}{tt} p ()
 imp-antisymm{ff}{ff} p q = refl
 
+-----------------------------------
+-- Theorems about xor
+-----------------------------------
 ff-xor : ∀ (b : 𝔹) → ff xor b ≡ b
 ff-xor tt = refl
 ff-xor ff = refl
@@ -198,6 +204,10 @@ xor-≡ {tt} {tt} p = refl
 xor-≡ {tt} {ff} ()
 xor-≡ {ff} {tt} ()
 xor-≡ {ff} {ff} p = refl
+
+-----------------------------------
+-- Theorems about nor, nand
+-----------------------------------
 
 nor-not : ∀ (b : 𝔹) → b nor b ≡ ~ b
 nor-not tt = refl

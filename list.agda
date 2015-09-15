@@ -61,8 +61,7 @@ _++_ : ∀ {ℓ} {A : Set ℓ} → 𝕃 A → 𝕃 A → 𝕃 A
 
 concat : ∀{ℓ}{A : Set ℓ} → 𝕃 (𝕃 A) → 𝕃 A
 concat [] = []
-concat (l :: []) = l
-concat (l :: (l' :: ls)) = l ++ concat (l' :: ls)
+concat (l :: ls) = l ++ concat ls
 
 repeat : ∀{ℓ}{A : Set ℓ} → ℕ → A → 𝕃 A
 repeat 0 a = []
@@ -206,3 +205,8 @@ proj-⊎₂ : {ℓ ℓ' : Level}{A : Set ℓ}{B : Set ℓ'} → 𝕃 (A ⊎ B) �
 proj-⊎₂ [] = []
 proj-⊎₂ (inj₁ x :: l) = proj-⊎₂ l
 proj-⊎₂ (inj₂ y :: l) = y :: proj-⊎₂ l
+
+drop-nothing : ∀{ℓ}{A : Set ℓ} → 𝕃 (maybe A) → 𝕃 A
+drop-nothing [] = []
+drop-nothing (nothing :: aa) = drop-nothing aa
+drop-nothing (just a :: aa) = a :: drop-nothing aa

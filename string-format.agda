@@ -46,8 +46,11 @@ format-h s empty-format = 𝕃char-to-string s
 format : (f : string) → format-t f
 format f = format-h [] (format-cover (string-to-𝕃char f))
 
-format-type-test : ℕ → string → string → string → string
-format-type-test = format "%n% of the %ss are in the %s %s"
+format-type-test : Set
+format-type-test = format-t "%n% of the %ss are in the %s %s"
 
-format-test1 : format "%n% of the %ss are in the %s %s" 25 "dog" "toasty" "doghouse" ≡ "25% of the dogs are in the toasty doghouse"
-format-test1 = refl
+format-test : string
+format-test = format "%n% of the %ss are in the %s %s" 25 "dog" "toasty" "doghouse"
+
+format-test-lem : format-test ≡ "25% of the dogs are in the toasty doghouse"
+format-test-lem = refl

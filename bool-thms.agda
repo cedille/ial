@@ -3,7 +3,6 @@ module bool-thms where
 open import bool
 open import eq
 open import sum
-open import product
 
 ~~-elim : ∀ (b : 𝔹) → ~ ~ b ≡ b
 ~~-elim tt = refl
@@ -58,9 +57,6 @@ ite-arg f ff x y = refl
 𝔹-dec : ∀ (b : 𝔹) → b ≡ tt ⊎ b ≡ ff
 𝔹-dec tt = inj₁ refl
 𝔹-dec ff = inj₂ refl
-
-𝔹-inspect : ∀ (b : 𝔹) → Σ 𝔹 (λ b' → b ≡ b')
-𝔹-inspect b = b , refl
 
 &&-snd : {p1 p2 : 𝔹} → p1 && p2 ≡ tt → p2 ≡ tt
 &&-snd{tt} p = p

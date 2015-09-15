@@ -154,25 +154,25 @@ all-pred-append : ∀{X : Set}{f : X → Set}{l₁ l₂}
 all-pred-append {l₁ = []} {l₂} p₁ p₂ = p₁
 all-pred-append {X}{f}{x :: l₁} {l₂} p₁ p₂ rewrite all-pred-append {X}{f}{l₁ = l₁} {l₂} p₁ p₂ = p₂ 
 
-map-proj-⊎₁ : ∀{ℓ ℓ'}{A : Set ℓ}{B : Set ℓ'} → (l : 𝕃 A)
-  → proj-⊎₁ {_}{_}{A}{B} (map inj₁ l) ≡ l
+map-proj-⊎₁ : ∀{ℓ ℓ'}{A : Set ℓ}{B : Set ℓ'} → (l : 𝕃 A) → 
+                proj-⊎₁ {A = A}{B} (map inj₁ l) ≡ l
 map-proj-⊎₁ [] = refl
-map-proj-⊎₁ {_}{_}{A}{B} (x :: l) rewrite map-proj-⊎₁ {_}{_}{A}{B} l = refl
+map-proj-⊎₁ {A = A}{B} (x :: l) rewrite map-proj-⊎₁ {A = A}{B} l = refl
 
-map-proj-⊎₂ : ∀{ℓ ℓ'}{A : Set ℓ}{B : Set ℓ'} → (l : 𝕃 B)
-  → proj-⊎₂ {_}{_}{A}{B} (map inj₂ l) ≡ l
+map-proj-⊎₂ : ∀{ℓ ℓ'}{A : Set ℓ}{B : Set ℓ'} → (l : 𝕃 B) → 
+                proj-⊎₂ {A = A}{B} (map inj₂ l) ≡ l
 map-proj-⊎₂ [] = refl
-map-proj-⊎₂ {_}{_}{A}{B} (x :: l) rewrite map-proj-⊎₂ {_}{_}{A}{B} l = refl
+map-proj-⊎₂ {A = A}{B} (x :: l) rewrite map-proj-⊎₂ {A = A}{B} l = refl
 
-map-proj-⊎₂-[] : ∀{ℓ ℓ'}{A : Set ℓ}{B : Set ℓ'} → (l : 𝕃 A)
-  → proj-⊎₂ {_}{_}{A}{B} (map inj₁ l) ≡ []
+map-proj-⊎₂-[] : ∀{ℓ ℓ'}{A : Set ℓ}{B : Set ℓ'} → (l : 𝕃 A) → 
+                  proj-⊎₂ {A = A}{B} (map inj₁ l) ≡ []
 map-proj-⊎₂-[] [] = refl
-map-proj-⊎₂-[] {_}{_}{A}{B} (x :: l) rewrite map-proj-⊎₂-[] {_}{_}{A}{B} l = refl
+map-proj-⊎₂-[] {A = A}{B} (x :: l) rewrite map-proj-⊎₂-[] {A = A}{B} l = refl
 
-map-proj-⊎₁-[] : ∀{ℓ ℓ'}{A : Set ℓ}{B : Set ℓ'} → (l : 𝕃 B)
-  → proj-⊎₁ {_}{_}{A}{B} (map inj₂ l) ≡ []
+map-proj-⊎₁-[] : ∀{ℓ ℓ'}{A : Set ℓ}{B : Set ℓ'} → (l : 𝕃 B) → 
+                  proj-⊎₁ {A = A}{B} (map inj₂ l) ≡ []
 map-proj-⊎₁-[] [] = refl
-map-proj-⊎₁-[] {_}{_}{A}{B} (x :: l) rewrite map-proj-⊎₁-[] {_}{_}{A}{B} l = refl
+map-proj-⊎₁-[] {A = A}{B} (x :: l) rewrite map-proj-⊎₁-[] {A = A}{B} l = refl
 
 is-empty-++ : ∀{ℓ}{A : Set ℓ}(l1 l2 : 𝕃 A) → is-empty (l1 ++ l2) ≡ is-empty l1 && is-empty l2
 is-empty-++ [] l2 = refl

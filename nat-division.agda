@@ -14,7 +14,7 @@ open import sum
 div-result : ℕ → ℕ → Set 
 div-result x d = Σ ℕ (λ q → Σ ℕ (λ r → q * d + r ≡ x))
 
--- we use an upper bound n on the dividend x.  For an alternative approach, see nat-division2.agda.
+-- we use an upper bound n on the dividend x.  For an alternative approach, see nat-division-wf.agda.
 divh : (n : ℕ) → (x : ℕ) → (y : ℕ) → x ≤ n ≡ tt → y =ℕ 0 ≡ ff → div-result x y
 divh 0 0 y p1 p2 = 0 , 0 , refl
 divh 0 (suc x) y () p2 

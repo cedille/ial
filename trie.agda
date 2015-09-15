@@ -123,5 +123,8 @@ stringset-contains ss s = trie-contains ss s
 stringset-insert : stringset → string → stringset
 stringset-insert ss s = trie-insert ss s triv
 
+stringset-insert𝕃 : stringset → 𝕃 char → stringset
+stringset-insert𝕃 ss s = trie-insert-h ss s triv
+
 empty-stringset : stringset
 empty-stringset = empty-trie

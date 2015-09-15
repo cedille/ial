@@ -22,7 +22,7 @@ infixl 10 _÷_!_
 
 {- a div-result for dividend x and divisor d consists of the quotient q, remainder r, and a proof that q * d + r = x -}
 div-result : ℕ → ℕ → Set 
-div-result x d = Σ ℕ (λ q → Σ ℕ (λ r → q * d + r ≡ x))
+div-result x y = Σ ℕ (λ q → Σ ℕ (λ r → q * y + r ≡ x))
 
 -- this uses well-founded induction.  The approach in nat-division.agda is simpler.
 div-helper : ∀ (x : ℕ) → ↓𝔹 _>_ x → (y : ℕ) → y =ℕ 0 ≡ ff → div-result x y
