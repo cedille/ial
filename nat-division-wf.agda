@@ -25,35 +25,19 @@ infixl 10 _÷_!_
 div-result : ℕ → ℕ → Set 
 div-result x y = Σ ℕ (λ q → Σ ℕ (λ r → q * y + r ≡ x))
 
-{-
 -- this uses well-founded induction.  The approach in nat-division.agda is simpler.
 div-helper : ∀ (x : ℕ) → ↓𝔹 _>_ x → (y : ℕ) → y =ℕ 0 ≡ ff → div-result x y
 div-helper x ↓x 0 () 
 div-helper 0 (pf↓ fx) (suc y) _ = 0 , 0 , refl
 div-helper (suc x) (pf↓ fx) (suc y) _ with keep (x < y) 
 div-helper (suc x) (pf↓ fx) (suc y) _ | tt , p = 0 , suc x , refl
-div-helper (suc x) (pf↓ fx) (suc y) _ | ff , p with div-helper (x ∸ y) (fx (∸<1 {x} {y})) (suc y) refl
-div-helper (suc x) (pf↓ fx) (suc y) _ | ff , p | q , r , u = suc q , r , {!∸eq-swap{x}{y}{q * suc y + r} (<ff p) u!}
--}
-
-
--- this uses well-founded induction.  The approach in nat-division.agda is simpler.
-div-helper : ∀ (x : ℕ) → ↓𝔹 _>_ x → (y : ℕ) → y =ℕ 0 ≡ ff → div-result x y
-div-helper x ↓x 0 () 
-div-helper x (pf↓ fx) (suc y) _ with 𝔹-dec (x =ℕ 0)
-... | inj₁ u = 0 , 0 , sym (=ℕ-to-≡ u)
-... | inj₂ u with 𝔹-dec (x < (suc y))
-... | inj₁ v = 0 , (x , refl)
-... | inj₂ v with (div-helper (x ∸ (suc y)) (fx (∸< {x} u)) (suc y) refl)
-... | q , r , p with <ff {x} v 
-... | p' with ∸eq-swap{x}{suc y}{q * (suc y) + r} p' p 
-... | p'' = (suc q) , (r , lem p'')
-   where lem : q * (suc y) + r + suc y ≡ x → suc (y + q * suc y + r) ≡ x
-         lem p''' rewrite                        
-                       +suc (q * (suc y) + r) y 
-                     | +comm y (q * (suc y)) 
-                     | +perm2 (q * (suc y)) r y = p'''
-
+div-helper (suc x) (pf↓ fx) (suc y) _ | ff , p 
+  with div-helper (x ∸ y) (fx (∸<1 {x} {y})) (suc y) refl
+div-helper (suc x) (pf↓ fx) (suc y) _ | ff , p | q , r , u = 
+  suc q , r , lem{q * suc y} (∸eq-swap{x}{y}{q * suc y + r} (<ff{x} p) u)
+  where lem : ∀ {a b c : ℕ} → a + b + c ≡ x → suc (c + a + b) ≡ suc x 
+        lem{a}{b}{c} p' rewrite +comm c a | sym (+assoc a c b) 
+                              | +comm c b | +assoc a b c | p' = refl
 
 _÷_!_ : (x : ℕ) → (y : ℕ) → y =ℕ 0 ≡ ff → div-result x y
 x ÷ y ! p = div-helper x (↓-> x) y p

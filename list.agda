@@ -77,13 +77,13 @@ list-funct f l = map f l
 
 {- (maybe-map f xs) returns (just ys) if f returns (just y_i) for each
    x_i in the list xs.  Otherwise, (maybe-map f xs) returns nothing. -}
-maybe-map : ∀ {ℓ ℓ'} {A : Set ℓ} {B : Set ℓ'} → (A → maybe B) → 𝕃 A → maybe (𝕃 B)
-maybe-map f []       = just []
-maybe-map f (x :: xs) with f x
-maybe-map f (x :: xs) | nothing = nothing
-maybe-map f (x :: xs) | just y with maybe-map f xs
-maybe-map f (x :: xs) | just y | nothing = nothing
-maybe-map f (x :: xs) | just y | just ys = just (y :: ys)
+𝕃maybe-map : ∀ {ℓ ℓ'} {A : Set ℓ} {B : Set ℓ'} → (A → maybe B) → 𝕃 A → maybe (𝕃 B)
+𝕃maybe-map f []       = just []
+𝕃maybe-map f (x :: xs) with f x
+𝕃maybe-map f (x :: xs) | nothing = nothing
+𝕃maybe-map f (x :: xs) | just y with 𝕃maybe-map f xs
+𝕃maybe-map f (x :: xs) | just y | nothing = nothing
+𝕃maybe-map f (x :: xs) | just y | just ys = just (y :: ys)
 
 foldr : ∀{ℓ ℓ'}{A : Set ℓ}{B : Set ℓ'} → (A → B → B) → B → 𝕃 A → B
 foldr f b [] = b

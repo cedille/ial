@@ -77,6 +77,17 @@ trie-remove-h (Node odata ts) [] = Node nothing ts
 trie-remove : ∀{A : Set} → trie A → string → trie A
 trie-remove t s = trie-remove-h t (string-to-𝕃char s) 
 
+
+
+trie-map : ∀{A B : Set} → (A → B) → trie A → trie B
+trie-cal-map : ∀{A B : Set} → (A → B) → cal (trie A) → cal (trie B)
+trie-map f (Node x x₁) = Node (maybe-map f x) (trie-cal-map f x₁)
+trie-cal-map f [] = []
+trie-cal-map f ((c , t) :: cs) = 
+  (c , trie-map f t) :: trie-cal-map f cs 
+
+
+
 trie-to-string-h : ∀{A : Set} → string → (A → string) → trie A → 𝕃 char → string
 trie-cal-to-string-h : ∀{A : Set} → string → (A → string) → cal (trie A) → 𝕃 char → string
 trie-to-string-h sep d (Node (just x) c) prev-str = 
@@ -115,7 +126,7 @@ trie-cal-nonempty ((a , t) :: c) = trie-nonempty t || trie-cal-nonempty c
 ----------------------------------------------------------------------
 
 stringset : Set
-stringset = trie ⊤
+stringset = trie ⊤ 
 
 stringset-contains : stringset → string → 𝔹
 stringset-contains ss s = trie-contains ss s

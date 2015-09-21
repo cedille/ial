@@ -106,6 +106,14 @@ tt-imp ff = refl
 &&-elim{ff}{_} ()
 &&-elim{tt}{ff} ()
 
+&&-elim1 : ∀ {b1 b2 : 𝔹} → b1 && b2 ≡ tt → b1 ≡ tt
+&&-elim1 p with &&-elim p
+&&-elim1 _ | p , _ = p
+
+&&-elim2 : ∀ {b1 b2 : 𝔹} → b1 && b2 ≡ tt → b2 ≡ tt
+&&-elim2{b1} p with &&-elim{b1} p
+&&-elim2 _ | _ , p = p
+
 ||-elim : ∀ {b1 b2 : 𝔹} → b1 || b2 ≡ tt → b1 ≡ tt ∨ b2 ≡ tt
 ||-elim {tt} refl = inj₁ refl
 ||-elim {ff} refl = inj₂ refl
