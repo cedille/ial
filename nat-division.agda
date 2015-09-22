@@ -49,6 +49,7 @@ data log-result (x : ℕ)(b : ℕ) : Set where
   pos-power : (e : ℕ) → (r : ℕ) → b pow e + r ≡ x → log-result x b
   no-power : x < b ≡ tt → log-result x b
 
+{-
 -- we use an upper bound n on x.  
 logh : (n : ℕ) → (x : ℕ) → (b : ℕ) → x ≤ n ≡ tt → x =ℕ 0 ≡ ff → b =ℕ 0 ≡ ff → log-result x b
 logh 0 0 y p1 () p3 
@@ -66,4 +67,4 @@ logh (suc n) (suc x) (suc b) p1 p2 p3 | suc q , r , pa , pb | pos-power e r₁ x
 logh (suc n) (suc x) (suc b) p1 p2 p3 | suc q , r , pa , pb | no-power x₁ = {!!}
 -}
 log : (x : ℕ) → (b : ℕ) → x =ℕ 0 ≡ ff → b =ℕ 0 ≡ ff → log-result x b
-log x b p2 p3 = logh x x b (≤-refl x) p2 p3
+log x b p2 p3 = logh x x b (≤-refl x) p2 p3-}
