@@ -88,7 +88,7 @@ pred+ 0 y ()
 pred+ (suc x) y p = refl
 
 --------------------------------------------------
--- basic properties of <, ≤, and =ℕ, iszero
+-- properties of <, ≤, and =ℕ, iszero
 --------------------------------------------------
 
 <-0 : ∀ (x : ℕ) → x < 0 ≡ ff
@@ -182,6 +182,9 @@ iszerosum2 (suc x) y _ = refl
 ≤+1 (suc x) zero rewrite +0 x | =ℕ-refl x | ||-tt (x < x) = refl
 ≤+1 (suc x) (suc y) = ≤+1 x (suc y)
 
+≤+2 : ∀(x y : ℕ) → y ≤ x + y ≡ tt
+≤+2 x y rewrite +comm x y = ≤+1 y x
+
 --------------------------------------------------
 -- ordering properties of < and ≤ℕ
 --------------------------------------------------
@@ -274,6 +277,10 @@ suc<<{n = n} p = <-trans{n} (<-suc n) p
 ≤-suc-trans{0}{suc y} _ = refl
 ≤-suc-trans{suc x}{suc y} p = ≤-suc-trans{x}{y} p
 
+-------------------------------------------------------------
+-- more properties relating <, ≤ with arithmetic operations
+-------------------------------------------------------------
+
 <+ : ∀ {x y : ℕ} → y =ℕ 0 ≡ ff → x < y + x ≡ tt
 <+{y = 0} ()
 <+{x}{suc 0} p = <-suc x
@@ -310,6 +317,10 @@ suc<<{n = n} p = <-trans{n} (<-suc n) p
 
 <=ℕff2 : ∀ (x : ℕ) → 1 < x ≡ tt → x =ℕ 0 ≡ ff
 <=ℕff2 x p = <=ℕff x (<-trans{0}{1}{x} refl p)
+
+*≤ : ∀(x y : ℕ) → x ≤ x * (suc y) ≡ tt
+*≤ zero y = refl
+*≤ (suc x) y = ≤-trans {x} (*≤ x y) (≤+2 y (x * suc y))
 
 --------------------------------------------------
 -- relationships between ≤ and <

@@ -44,6 +44,11 @@ postulate
 =char-sym c1 c2 | ff , p | tt , p' rewrite =char-to-≡ c2 c1 p' = refl
 =char-sym c1 c2 | ff , p | ff , p' rewrite p | p' = refl
 
+postulate
+  _<char_ : char → char → 𝔹
+  
+{-# COMPILED _<char_ (<)   #-}
+
 ----------------------------------------------------------------------
 -- defined operations
 ----------------------------------------------------------------------
