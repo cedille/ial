@@ -10,6 +10,10 @@ open import functions
 keep : ∀{ℓ}{A : Set ℓ} → (x : A) → Σ A (λ y → x ≡ y)
 keep x = ( x , refl )
 
+,inj : ∀{ℓ ℓ'}{A : Set ℓ}{B : Set ℓ'}{a a' : A}{b b' : B} → 
+        a , b ≡ a' , b' → a ≡ a' ∧ b ≡ b'
+,inj refl = refl , refl
+
 eta-× : ∀{ℓ₁ ℓ₂ ℓ₃}{A : Set ℓ₁}{B : Set ℓ₂}{C : Set ℓ₃}{h : A × B → C}
   → (extensionality {ℓ₁ ⊔ ℓ₂}{ℓ₃})
   → (λ c → h (fst c , snd c)) ≡ h
