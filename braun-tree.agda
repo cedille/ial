@@ -67,6 +67,9 @@ bt-delete-min (bt-node a (bt-node{n}{m} a1 l1 r1 u1) (bt-node{n'}{m'} a2 l2 r2 u
         lem{n}{m}{n'}{m'} (inj₁ x) = inj₂ (sym x)
         lem (inj₂ y) = inj₁ (sym (suc-inj y))
 
+bt-remove-min : ∀ {p : ℕ} → braun-tree (suc p) → A × braun-tree p
+bt-remove-min (bt-node a l r u) = a , bt-delete-min (bt-node a l r u)
+
 ----------------------------------------------------------------------
 -- this version stores data at the leaves instead of at the nodes
 ----------------------------------------------------------------------
