@@ -77,16 +77,12 @@ trie-remove-h (Node odata ts) [] = Node nothing ts
 trie-remove : ∀{A : Set} → trie A → string → trie A
 trie-remove t s = trie-remove-h t (string-to-𝕃char s) 
 
-
-
 trie-map : ∀{A B : Set} → (A → B) → trie A → trie B
 trie-cal-map : ∀{A B : Set} → (A → B) → cal (trie A) → cal (trie B)
 trie-map f (Node x x₁) = Node (maybe-map f x) (trie-cal-map f x₁)
 trie-cal-map f [] = []
 trie-cal-map f ((c , t) :: cs) = 
   (c , trie-map f t) :: trie-cal-map f cs 
-
-
 
 trie-to-string-h : ∀{A : Set} → string → (A → string) → trie A → 𝕃 char → string
 trie-cal-to-string-h : ∀{A : Set} → string → (A → string) → cal (trie A) → 𝕃 char → string
@@ -114,6 +110,10 @@ trie-cal-mappings-h ((c , t) :: cs) prev-str = trie-mappings-h t (c :: prev-str)
 trie-mappings : ∀{A : Set} → trie A → 𝕃 (string × A)
 trie-mappings t = trie-mappings-h t []
 
+-- return a list of all the strings which have associated data in the trie
+trie-strings : ∀{A : Set} → trie A → 𝕃 string 
+trie-strings t = map fst (trie-mappings t)
+
 trie-nonempty : ∀{A : Set} → trie A → 𝔹
 trie-cal-nonempty : ∀{A : Set} → cal (trie A) → 𝔹
 trie-nonempty (Node (just x) t) = tt
@@ -139,3 +139,7 @@ stringset-insert𝕃 ss s = trie-insert-h ss s triv
 
 empty-stringset : stringset
 empty-stringset = empty-trie
+
+stringset-insert* : stringset → 𝕃 string → stringset
+stringset-insert* s [] = s
+stringset-insert* s (x :: xs) = stringset-insert (stringset-insert* s xs) x

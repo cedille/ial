@@ -45,26 +45,4 @@ _÷_mod_ : ℕ → (y : ℕ) → y =ℕ 0 ≡ ff → ℕ
 x ÷ y mod p with x ÷ y ! p
 ... | q , r , p' = r
 
-data log-result (x : ℕ)(b : ℕ) : Set where
-  pos-power : (e : ℕ) → (r : ℕ) → b pow e + r ≡ x → log-result x b
-  no-power : x < b ≡ tt → log-result x b
 
-{-
--- we use an upper bound n on x.  
-logh : (n : ℕ) → (x : ℕ) → (b : ℕ) → x ≤ n ≡ tt → x =ℕ 0 ≡ ff → b =ℕ 0 ≡ ff → log-result x b
-logh 0 0 y p1 () p3 
-logh 0 (suc x) b () p2 p3
-logh (suc n) (suc x) 0 _ _ ()
-logh (suc n) 0 0 _ _ ()
-logh (suc n) 0 (suc b) p1 () p3 
-logh (suc n) (suc x) (suc b) p1 p2 p3 with (suc x) ÷ (suc b) ! p3
-logh (suc n) (suc x) (suc b) p1 p2 p3 | 0 , r , pa , pb rewrite pa = no-power pb
-logh (suc n) (suc x) (suc b) p1 p2 p3 | (suc q) , r , pa , pb 
-  rewrite sym (suc-inj{b + q * (suc b) + r} pa) = {!  !}
-{-
-with logh n (suc q) (suc b) {!!} refl p3
-logh (suc n) (suc x) (suc b) p1 p2 p3 | suc q , r , pa , pb | pos-power e r₁ x₁ = {!!}
-logh (suc n) (suc x) (suc b) p1 p2 p3 | suc q , r , pa , pb | no-power x₁ = {!!}
--}
-log : (x : ℕ) → (b : ℕ) → x =ℕ 0 ≡ ff → b =ℕ 0 ≡ ff → log-result x b
-log x b p2 p3 = logh x x b (≤-refl x) p2 p3-}

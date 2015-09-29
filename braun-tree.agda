@@ -28,19 +28,44 @@ bt-insert a (bt-node{n}{m} a' l r _) | inj₁ p | (a1 , a2)
 bt-insert a (bt-node{n}{m} a' l r _) | inj₂ p | (a1 , a2) = 
   (bt-node a1 (bt-insert a2 r) l (inj₁ (sym p)))
 
-bt-remove-min : ∀ {p : ℕ} → braun-tree (suc p) → A × braun-tree p
-bt-remove-min (bt-node a bt-empty bt-empty u) = a , bt-empty
-bt-remove-min (bt-node a bt-empty (bt-node _ _ _ _) (inj₁ ()))
-bt-remove-min (bt-node a bt-empty (bt-node _ _ _ _) (inj₂ ()))
-bt-remove-min (bt-node a (bt-node{n'}{m'} a' l' r' u') bt-empty u) rewrite +0 (n' + m') = a , bt-node a' l' r' u'
-bt-remove-min (bt-node a (bt-node a1 l1 r1 u1) (bt-node a2 l2 r2 u2) u) with bt-remove-min (bt-node a1 l1 r1 u1) 
-bt-remove-min (bt-node a (bt-node a1 l1 r1 u1) (bt-node a2 l2 r2 u2) u) | a1' , l' 
-  with if a1' <A a2  then (a1' , a2) else (a2 , a1')
-bt-remove-min (bt-node a (bt-node{n1}{m1} a1 l1 r1 u1) (bt-node{n2}{m2} _ l2 r2 u2) u) | _ , l' | smaller , other 
-  rewrite +suc (n1 + m1) (n2 + m2) | +comm (n1 + m1) (n2 + m2) = a , bt-node smaller (bt-node other l2 r2 u2) l' (lem u) 
-  where lem : ∀{x y} → suc x ≡ y ∨ suc x ≡ suc y → y ≡ x ⊎ y ≡ suc x
-        lem (inj₁ p) = inj₂ (sym p)
-        lem (inj₂ p) = inj₁ (sym (suc-inj p))
+bt-replace-min : ∀{n : ℕ} → A → braun-tree (suc n) → braun-tree (suc n)
+bt-replace-min a (bt-node _ bt-empty bt-empty u) = (bt-node a bt-empty bt-empty u)
+bt-replace-min a (bt-node _ bt-empty (bt-node _ _ _ _) (inj₁ ()))
+bt-replace-min a (bt-node _ bt-empty (bt-node _ _ _ _) (inj₂ ()))
+bt-replace-min a (bt-node _ (bt-node _ _ _ _) bt-empty (inj₁ ()))
+bt-replace-min a (bt-node a' (bt-node x l r u) bt-empty (inj₂ y)) with a <A x
+bt-replace-min a (bt-node a' (bt-node x l r u) bt-empty (inj₂ y)) | tt = (bt-node a (bt-node x l r u) bt-empty (inj₂ y))
+bt-replace-min a (bt-node a' (bt-node x l r u) bt-empty (inj₂ y)) | ff = 
+ (bt-node x (bt-replace-min a (bt-node x l r u)) bt-empty (inj₂ y))
+bt-replace-min a (bt-node a' (bt-node x l r u) (bt-node x' l' r' u') v) with a <A x && a <A x' 
+bt-replace-min a (bt-node a' (bt-node x l r u) (bt-node x' l' r' u') v) | tt = 
+ (bt-node a (bt-node x l r u) (bt-node x' l' r' u') v)
+bt-replace-min a (bt-node a' (bt-node x l r u) (bt-node x' l' r' u') v) | ff with x <A x'  
+bt-replace-min a (bt-node a' (bt-node x l r u) (bt-node x' l' r' u') v) | ff | tt = 
+ (bt-node x (bt-replace-min a (bt-node x l r u)) (bt-node x' l' r' u') v)
+bt-replace-min a (bt-node a' (bt-node x l r u) (bt-node x' l' r' u') v) | ff | ff = 
+ (bt-node x' (bt-node x l r u) (bt-replace-min a (bt-node x' l' r' u')) v)
+
+{- thanks to Matías Giovannini for the excellent post
+     http://alaska-kamtchatka.blogspot.com/2010/02/braun-trees.html
+   explaining how to do delete -}
+bt-delete-min : ∀ {p : ℕ} → braun-tree (suc p) → braun-tree p
+bt-delete-min (bt-node a bt-empty bt-empty u) = bt-empty
+bt-delete-min (bt-node a bt-empty (bt-node _ _ _ _) (inj₁ ()))
+bt-delete-min (bt-node a bt-empty (bt-node _ _ _ _) (inj₂ ()))
+bt-delete-min (bt-node a (bt-node{n'}{m'} a' l' r' u') bt-empty u) rewrite +0 (n' + m') = bt-node a' l' r' u'
+bt-delete-min (bt-node a (bt-node{n}{m} a1 l1 r1 u1) (bt-node{n'}{m'} a2 l2 r2 u2) u) 
+  rewrite +suc(n + m)(n' + m') | +suc n (m + (n' + m')) | +comm(n + m)(n' + m') = 
+  if (a1 <A a2) then
+    (bt-node a1 (bt-node a2 l2 r2 u2)
+      (bt-delete-min (bt-node a1 l1 r1 u1)) (lem{n}{m}{n'}{m'} u))
+  else
+    (bt-node a2 (bt-replace-min a1 (bt-node a2 l2 r2 u2))
+      (bt-delete-min (bt-node a1 l1 r1 u1)) (lem{n}{m}{n'}{m'} u))
+  where lem : {n m n' m' : ℕ} → suc (n + m) ≡ suc (n' + m') ∨ suc (n + m) ≡ suc (suc (n' + m')) → 
+              suc (n' + m') ≡ n + m ⊎ suc (n' + m') ≡ suc (n + m)
+        lem{n}{m}{n'}{m'} (inj₁ x) = inj₂ (sym x)
+        lem (inj₂ y) = inj₁ (sym (suc-inj y))
 
 ----------------------------------------------------------------------
 -- this version stores data at the leaves instead of at the nodes

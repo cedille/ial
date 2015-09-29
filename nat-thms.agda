@@ -43,6 +43,12 @@ open import sum
 +perm2 : ∀ (x y z : ℕ) → (x + y) + z ≡ (x + z) + y
 +perm2 x y z rewrite sym (+assoc x y z) | +comm y z | +assoc x z y = refl
 
++≡0 : ∀ {x y : ℕ} → x + y ≡ 0 → x ≡ 0 ∧ y ≡ 0
++≡0{zero}{zero} p = refl , refl
++≡0{zero}{suc y} ()
++≡0{suc x}{zero} ()
++≡0{suc x}{suc y} ()
+
 --------------------------------------------------
 -- properties of multiplication
 --------------------------------------------------

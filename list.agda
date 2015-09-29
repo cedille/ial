@@ -93,7 +93,7 @@ length : ∀{ℓ}{A : Set ℓ} → 𝕃 A → ℕ
 length [] = 0
 length (x :: xs) = suc (length xs)
 
-reverse-helper : ∀ {ℓ}{A : Set ℓ} → (𝕃 A) → (𝕃 A) → 𝕃 A
+reverse-helper : ∀ {ℓ}{A : Set ℓ} → 𝕃 A → 𝕃 A → 𝕃 A
 reverse-helper h [] = h
 reverse-helper h (x :: xs) = reverse-helper (x :: h) xs
 

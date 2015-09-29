@@ -11,6 +11,7 @@ open import maybe public
 open import nat public
 open import nat-division public
 open import nat-to-string public
+open import nat-log public
 open import product public
 open import string public
 open import sum public

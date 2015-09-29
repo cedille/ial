@@ -20,7 +20,8 @@ open import logic
 ++-assoc [] l2 l3 = refl
 ++-assoc (x :: xs) l2 l3 rewrite ++-assoc xs l2 l3 = refl
 
-length-++ : ∀{ℓ}{A : Set ℓ}(l1 l2 : 𝕃 A) → length (l1 ++ l2) ≡ (length l1) + (length l2)
+length-++ : ∀{ℓ}{A : Set ℓ}(l1 l2 : 𝕃 A) → 
+            length (l1 ++ l2) ≡ (length l1) + (length l2)
 length-++ [] l2 = refl
 length-++ (h :: t) l2 rewrite length-++ t l2 = refl
 
