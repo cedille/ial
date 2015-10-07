@@ -179,6 +179,13 @@ iszerosum2 : ∀ (x y : ℕ) → iszero x ≡ ff → iszero(x + y) ≡ ff
 iszerosum2 0 y ()
 iszerosum2 (suc x) y _ = refl
 
+iszeromult : ∀ (x y : ℕ) → iszero x ≡ ff → iszero y ≡ ff → 
+               iszero (x * y) ≡ ff
+iszeromult zero zero () q 
+iszeromult zero (suc y) () q
+iszeromult (suc x) zero p ()
+iszeromult (suc x) (suc y) p q = refl
+
 <≤ : ∀ {n m : ℕ} → n < m ≡ tt → n ≤ m ≡ tt
 <≤ {n}{m} p rewrite p = refl
 
@@ -190,6 +197,16 @@ iszerosum2 (suc x) y _ = refl
 
 ≤+2 : ∀(x y : ℕ) → y ≤ x + y ≡ tt
 ≤+2 x y rewrite +comm x y = ≤+1 y x
+
+-- a theorem about quotients q, divisors d, and remainders r
+÷< : ∀ {d q r x : ℕ} → 1 < d ≡ tt → q * d + r ≡ suc x → q < suc x ≡ tt
+÷<{0} () p
+÷<{suc 0} () p
+÷<{suc (suc d)}{0} u p = refl
+÷<{suc (suc d)}{suc q}{r}{0} u ()
+÷<{suc (suc d)}{suc q}{r}{suc x} u p with suc-inj{suc (d + q * suc (suc d) + r)}{suc x} p
+... | p' rewrite sym (+suc (d + q * suc (suc d)) r) | +comm d (q * suc (suc d)) 
+               | sym (+assoc (q * (suc (suc d))) d (suc r)) = ÷<{suc (suc d)}{q}{d + suc r}{x} refl p'  
 
 --------------------------------------------------
 -- ordering properties of < and ≤ℕ

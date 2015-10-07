@@ -76,4 +76,5 @@ string-concat-sep sep (s1 :: ss) with ss
 ... | [] = s1
 ... | s2 :: ss' = s1 ^ sep ^ (string-concat-sep sep ss)
 
-
+string-concat-sep-map : ∀{A : Set} → (separator : string) → (A → string) → 𝕃 A → string
+string-concat-sep-map sep f l = string-concat-sep sep (map f l)

@@ -29,10 +29,20 @@ data ℤ : Set where
 -1ℤ : ℤ
 -1ℤ = mkℤ 1 ff
 
+abs-val : ℤ → ℕ
+abs-val (mkℤ n _) = n
+
+is-evenℤ : ℤ → 𝔹
+is-evenℤ (mkℤ n _) = is-even n
+
+is-oddℤ : ℤ → 𝔹
+is-oddℤ (mkℤ n _) = is-odd n
+
 {- subtract the second natural number from the first, returning an integer.
    This is mostly a helper for _+ℤ_ -}
 diffℤ : ℕ → ℕ → ℤ
 diffℤ n m with ℕ-trichotomy n m 
+
 diffℤ n m | inj₁ p with <∸suc{m}{n} p               -- n < m
 diffℤ n m | inj₁ p | x , _ = mkℤ (suc x) ff
 diffℤ n m | inj₂ (inj₁ p) = mkℤ 0 triv              -- n = m 

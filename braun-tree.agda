@@ -18,9 +18,12 @@ data braun-tree : (n : ℕ) → Set ℓ where
             n ≡ m ∨ n ≡ suc m → 
             braun-tree (suc (n + m))
 
+
 {- we will keep smaller (_<A_) elements closer to the root of the Braun tree as we insert -}
 bt-insert : ∀ {n : ℕ} → A → braun-tree n → braun-tree (suc n)
+
 bt-insert a bt-empty = bt-node a bt-empty bt-empty (inj₁ refl)
+
 bt-insert a (bt-node{n}{m} a' l r p) 
   rewrite +comm n m with p | if a <A a' then (a , a') else (a' , a)
 bt-insert a (bt-node{n}{m} a' l r _) | inj₁ p | (a1 , a2) 
@@ -54,16 +57,19 @@ bt-delete-min (bt-node a bt-empty bt-empty u) = bt-empty
 bt-delete-min (bt-node a bt-empty (bt-node _ _ _ _) (inj₁ ()))
 bt-delete-min (bt-node a bt-empty (bt-node _ _ _ _) (inj₂ ()))
 bt-delete-min (bt-node a (bt-node{n'}{m'} a' l' r' u') bt-empty u) rewrite +0 (n' + m') = bt-node a' l' r' u'
-bt-delete-min (bt-node a (bt-node{n}{m} a1 l1 r1 u1) (bt-node{n'}{m'} a2 l2 r2 u2) u) 
-  rewrite +suc(n + m)(n' + m') | +suc n (m + (n' + m')) | +comm(n + m)(n' + m') = 
-  if (a1 <A a2) then
-    (bt-node a1 (bt-node a2 l2 r2 u2)
-      (bt-delete-min (bt-node a1 l1 r1 u1)) (lem{n}{m}{n'}{m'} u))
+bt-delete-min (bt-node a
+                (bt-node{n}{m} x l1 r1 u1)
+                (bt-node{n'}{m'} x' l2 r2 u2) u) 
+  rewrite +suc(n + m)(n' + m') | +suc n (m + (n' + m')) 
+        | +comm(n + m)(n' + m') = 
+  if (x <A x') then
+    (bt-node x (bt-node x' l2 r2 u2)
+      (bt-delete-min (bt-node x l1 r1 u1)) (lem{n}{m}{n'}{m'} u))
   else
-    (bt-node a2 (bt-replace-min a1 (bt-node a2 l2 r2 u2))
-      (bt-delete-min (bt-node a1 l1 r1 u1)) (lem{n}{m}{n'}{m'} u))
+    (bt-node x' (bt-replace-min x (bt-node x' l2 r2 u2))
+      (bt-delete-min (bt-node x l1 r1 u1)) (lem{n}{m}{n'}{m'} u))
   where lem : {n m n' m' : ℕ} → suc (n + m) ≡ suc (n' + m') ∨ suc (n + m) ≡ suc (suc (n' + m')) → 
-              suc (n' + m') ≡ n + m ⊎ suc (n' + m') ≡ suc (n + m)
+              suc (n' + m') ≡ n + m ∨ suc (n' + m') ≡ suc (n + m)
         lem{n}{m}{n'}{m'} (inj₁ x) = inj₂ (sym x)
         lem (inj₂ y) = inj₁ (sym (suc-inj y))
 

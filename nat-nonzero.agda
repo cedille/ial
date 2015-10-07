@@ -4,16 +4,17 @@ module nat-nonzero where
 open import bool
 open import eq
 open import nat
+open import nat-thms
 open import product
 
 ℕ⁺ : Set
 ℕ⁺ = Σ ℕ (λ n → iszero n ≡ ff)
 
 suc⁺ : ℕ⁺ → ℕ⁺ 
-suc⁺ (zero , ())
-suc⁺ (suc n1 , p) = suc (suc n1) , refl
+suc⁺ (x , p) = (suc x , refl)
 
 _+⁺_ : ℕ⁺ → ℕ⁺ → ℕ⁺
-(zero , ()) +⁺ n2 
-(1 , p1) +⁺ y = suc⁺ y
-(suc (suc n1) , p1) +⁺ y = suc⁺ ((suc n1 , refl) +⁺ y)
+(x , p) +⁺ (y , q) = x + y , iszerosum2 x y p
+
+_*⁺_ : ℕ⁺ → ℕ⁺ → ℕ⁺
+(x , p) *⁺ (y , q) = (x * y , iszeromult x y p q)

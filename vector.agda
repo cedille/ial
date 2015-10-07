@@ -15,7 +15,7 @@ open import string
 
 data 𝕍 {ℓ} (A : Set ℓ) : ℕ → Set ℓ where
   [] : 𝕍 A 0
-  _::_ : {n : ℕ} (x : A) (xs : 𝕍 A n) → 𝕍 A (suc n)
+  _::_ : {n : ℕ} → A → 𝕍 A n → 𝕍 A (suc n)
 
 vector = 𝕍
 
@@ -34,7 +34,7 @@ infixr 6 _::_ _++𝕍_
 
 _++𝕍_ : ∀ {ℓ} {A : Set ℓ}{n m : ℕ} → 𝕍 A n → 𝕍 A m → 𝕍 A (n + m)
 []        ++𝕍 ys = ys
-(x :: xs) ++𝕍 ys = x :: (xs ++𝕍 ys)
+(x :: xs) ++𝕍 ys = x :: xs ++𝕍 ys
 
 head𝕍 : ∀ {ℓ} {A : Set ℓ}{n : ℕ} → 𝕍 A (suc n) → A
 head𝕍 (x :: _) = x
