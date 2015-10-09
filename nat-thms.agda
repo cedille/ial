@@ -609,3 +609,14 @@ factorial-nonzero (suc x) rewrite iszerosum (factorial x) (x * factorial x) | fa
 
 +inj2 : ∀ {x y z : ℕ} → x + z ≡ y + z → x ≡ y
 +inj2 {x} {y} {z} p rewrite +comm x z | +comm y z = +inj1 {z} {x} {y} p
+
+--------------------------------------------------
+-- properties of is-even, is-odd
+--------------------------------------------------
+
+even~odd : ∀ (x : ℕ) → is-even x ≡ ~ is-odd x
+odd~even : ∀ (x : ℕ) → is-odd x ≡ ~ is-even x
+even~odd zero = refl
+even~odd (suc x) = odd~even x
+odd~even zero = refl
+odd~even (suc x) = even~odd x
