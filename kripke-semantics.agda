@@ -2,8 +2,10 @@ module kripke-semantics where
 
 open import level
 open import bool
+open import closures
 open import empty
 open import eq
+open import level
 open import list
 open import list-thms
 open import nat
@@ -23,8 +25,8 @@ ctxt : Set
 ctxt = 𝕃 formula
 
 data _⊢_ : ctxt → formula → Set where
-  assume : ∀{Γ f} → (f :: Γ) ⊢ f
-  weaken : ∀{Γ f f'} → Γ ⊢ f → (f' :: Γ) ⊢ f
+  Assume : ∀{Γ f} → (f :: Γ) ⊢ f
+  Weaken : ∀{Γ f f'} → Γ ⊢ f → (f' :: Γ) ⊢ f
   ImpliesI : ∀{f1 f2 Γ} → (f1 :: Γ) ⊢ f2 → Γ ⊢ (Implies f1 f2)
   ImpliesE : ∀{f1 f2 Γ} → Γ ⊢ (Implies f1 f2) → Γ ⊢ f1 → Γ ⊢ f2
   TrueI : ∀ {Γ} → Γ ⊢ True
@@ -32,7 +34,7 @@ data _⊢_ : ctxt → formula → Set where
   AndE : ∀(b : 𝔹){f1 f2 Γ} → Γ ⊢ (And f1 f2) → Γ ⊢ (if b then f1 else f2)
 
 sample-pf : [] ⊢ Implies ($ "p") (And ($ "p") ($ "p"))
-sample-pf = ImpliesI{$ "p"} (AndI (assume{[]}) (assume))
+sample-pf = ImpliesI{$ "p"} (AndI (Assume{[]}) (Assume))
 
 record struct : Set1 where
   field W         : Set -- a set of worlds
@@ -128,8 +130,8 @@ _⊩_ : ctxt → formula → Set1
 Γ ⊩ f = ∀{k : struct}{w : W k} → k , w ⊨ctxt Γ → k , w ⊨ f
 
 Soundness : ∀{Γ : ctxt}{f : formula} → Γ ⊢ f → Γ ⊩ f
-Soundness assume g = fst g
-Soundness (weaken p) g = Soundness p (snd g)
+Soundness Assume g = fst g
+Soundness (Weaken p) g = Soundness p (snd g)
 Soundness{Γ} (ImpliesI p) g r u' = Soundness p (u' , mono⊨ctxt r g)
 Soundness (ImpliesE p p') {k} g = (Soundness p g) (reflR k) (Soundness p' g)
 Soundness TrueI g = triv
@@ -145,16 +147,16 @@ data _≼_ : 𝕃 formula → 𝕃 formula → Set where
 ≼-trans u ≼-refl = u
 ≼-trans u (≼-cons u') = ≼-cons (≼-trans u u') 
 
-weaken≼ : ∀ {Γ Γ'}{f : formula} → Γ ≼ Γ' → Γ ⊢ f → Γ' ⊢ f
-weaken≼ ≼-refl p = p
-weaken≼ (≼-cons d) p = weaken (weaken≼ d p)
+Weaken≼ : ∀ {Γ Γ'}{f : formula} → Γ ≼ Γ' → Γ ⊢ f → Γ' ⊢ f
+Weaken≼ ≼-refl p = p
+Weaken≼ (≼-cons d) p = Weaken (Weaken≼ d p)
 
 U : struct
 U = record { W = ctxt ;
              R = _≼_ ;
              preorderR = ≼-refl , ≼-trans ;
              V = λ Γ n → Γ ⊢ $ n ;
-             monoV = λ d p → weaken≼ d p }
+             monoV = λ d p → Weaken≼ d p }
 
 CompletenessU : ∀{f : formula}{Γ : W U} → U , Γ ⊨ f → Γ ⊢ f 
 SoundnessU : ∀{f : formula}{Γ : W U} → Γ ⊢ f → U , Γ ⊨ f
@@ -164,15 +166,15 @@ CompletenessU {And f f'} u = AndI (CompletenessU{f} (fst u)) (CompletenessU{f'} 
 CompletenessU {Implies f f'}{Γ} u = 
   ImpliesI 
     (CompletenessU {f'} 
-      (u (≼-cons ≼-refl) (SoundnessU {f} (assume {Γ}))))
+      (u (≼-cons ≼-refl) (SoundnessU {f} (Assume {Γ}))))
 SoundnessU {$ x} p = p
 SoundnessU {True} p = triv
 SoundnessU {And f f'} p = SoundnessU{f} (AndE tt p) , SoundnessU{f'} (AndE ff p)
-SoundnessU {Implies f f'} p r u = SoundnessU (ImpliesE (weaken≼ r p) (CompletenessU {f} u))
+SoundnessU {Implies f f'} p r u = SoundnessU (ImpliesE (Weaken≼ r p) (CompletenessU {f} u))
 
 ctxt-id : ∀{Γ : ctxt} → U , Γ ⊨ctxt Γ
 ctxt-id{[]} = triv
-ctxt-id{f :: Γ} = SoundnessU{f} assume , mono⊨ctxt (≼-cons ≼-refl) (ctxt-id {Γ}) 
+ctxt-id{f :: Γ} = SoundnessU{f} Assume , mono⊨ctxt (≼-cons ≼-refl) (ctxt-id {Γ}) 
 
 Completeness : ∀{Γ : ctxt}{f : formula} → Γ ⊩ f → Γ ⊢ f 
 Completeness{Γ} p = CompletenessU (p{U}{Γ} (ctxt-id{Γ}))
@@ -195,21 +197,22 @@ module tests where
   a' = nbe a
 
   b : [] ⊢ True
-  b = ImpliesE (ImpliesE (ImpliesI (ImpliesI (assume))) TrueI) TrueI
+  b = ImpliesE (ImpliesE (ImpliesI (ImpliesI (Assume))) TrueI) TrueI
   b' = nbe b
 
   c : [] ⊢ (Implies ($ "p") ($ "p"))
-  c = ImpliesI (ImpliesE (ImpliesI assume) assume)
+  c = ImpliesI (ImpliesE (ImpliesI Assume) Assume)
   c' = nbe c
 
   d : [ $ "q" ] ⊢ (Implies ($ "p") ($ "q"))
-  d = ImpliesI (ImpliesE (ImpliesI (weaken (weaken assume))) assume)
+  d = ImpliesI (ImpliesE (ImpliesI (Weaken (Weaken Assume))) Assume)
   d' = nbe d
 
   e : [] ⊢ (Implies (And ($ "p") ($ "q")) (And ($ "p") ($ "q")))
-  e = ImpliesI assume
+  e = ImpliesI Assume
   e' = nbe e
 
   f : [] ⊢ (Implies (Implies ($ "p") ($ "q")) (Implies ($ "p") ($ "q")))
-  f = ImpliesI assume
+  f = ImpliesI Assume
   f' = nbe f
+

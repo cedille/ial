@@ -42,7 +42,6 @@ is-oddℤ (mkℤ n _) = is-odd n
    This is mostly a helper for _+ℤ_ -}
 diffℤ : ℕ → ℕ → ℤ
 diffℤ n m with ℕ-trichotomy n m 
-
 diffℤ n m | inj₁ p with <∸suc{m}{n} p               -- n < m
 diffℤ n m | inj₁ p | x , _ = mkℤ (suc x) ff
 diffℤ n m | inj₂ (inj₁ p) = mkℤ 0 triv              -- n = m 

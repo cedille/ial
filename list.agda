@@ -50,6 +50,10 @@ head : ∀{ℓ}{A : Set ℓ} → (l : 𝕃 A) → is-empty l ≡ ff → A
 head [] ()
 head (x :: xs) _ = x
 
+head2 : ∀{ℓ}{A : Set ℓ} → (l : 𝕃 A) → maybe A
+head2 [] = nothing
+head2 (a :: _) = just a
+
 last : ∀{ℓ}{A : Set ℓ} → (l : 𝕃 A) → is-empty l ≡ ff → A
 last [] ()
 last (x :: []) _ = x
