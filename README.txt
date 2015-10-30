@@ -1,5 +1,4 @@
 The Iowa Agda Library (IAL)
-Development Version
 Aaron Stump
 
 1. About the library
@@ -31,16 +30,19 @@ imports from lib.agda (this is the main entry point for the library).
 4. Credits
 
 The library is mostly written by myself, but it also includes some
-contributions from John Bodeen and from undergraduates who took my
-Programming Language Concepts class, Spring 2014 and 2015.
-
-Harley Eades has also made contributions Summer 2015.
+contributions from John Bodeen, Harley Eades, and undergraduates who
+took my Programming Language Concepts class, Spring 2014 and 2015,
+especially Tom Werner.
 
 5. Releases
 
 Released versions of the library can be found at
 
 https://svn.divms.uiowa.edu/repos/clc/projects/agda/ial-releases
+
+The development version is at
+
+https://svn.divms.uiowa.edu/repos/clc/projects/agda/ial
 
 6. License
 
@@ -50,8 +52,6 @@ This library is currently provided under the MIT License, see LICENSE.txt.
 
 There is no formal documentation currently, besides comments in the files.
 
-I have described some of the library in my book in progress, "Verified
-Functional Programming in Agda".  The current draft is available at
-
-https://svn.divms.uiowa.edu/repos/clc/projects/agda/book/
+Much of the library is described in my book, "Verified Functional
+Programming in Agda", to be published 2016 with ACM Books.
 
