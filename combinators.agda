@@ -117,9 +117,6 @@ trans-Cong2 : ∀(a : varcomb) {b b' : varcomb} → b ↝vc+ b' → (app a b) �
 trans-Cong2 a (tc-trans d1 d2) = (tc-trans (trans-Cong2 a d1) (trans-Cong2 a d2))
 trans-Cong2 a (tc-step d) = tc-step (↝Cong2 a d)
 
-lift : ∀{v1 v2 } → v1 ↝vc v2 → v1 ↝vc+ v2
-lift p = tc-step p
-
 contains-var : string → varcomb → 𝔹
 contains-var s S = ff
 contains-var s K = ff
@@ -135,12 +132,12 @@ contains-var s (var s') = s =string s'
 λ*-binds s (var s') | ff , p rewrite p = p
 
 λ*-↝ : ∀ (v1 v2 : varcomb)(s : string) → (app (λ* s v1) v2) ↝vc+ (subst v2 s v1)
-λ*-↝ S v2 s = lift (↝K S v2)
-λ*-↝ K v2 s = lift (↝K K v2)
+λ*-↝ S v2 s = tc-step (↝K S v2)
+λ*-↝ K v2 s = tc-step (↝K K v2)
 λ*-↝ (app c1 c2) v2 s = 
   (tc-trans (tc-step (↝S (λ* s c1) (λ* s c2) v2))
   (tc-trans (trans-Cong1 (app (λ* s c2) v2) (λ*-↝ c1 v2 s))
     (trans-Cong2 (subst v2 s c1) (λ*-↝ c2 v2 s))))
 λ*-↝ (var s') v2 s with s =string s'
 λ*-↝ (var s') v2 s | tt = id↝ v2
-λ*-↝ (var s') v2 s | ff = lift (↝K (var s') v2)
+λ*-↝ (var s') v2 s | ff = tc-step (↝K (var s') v2)

@@ -132,7 +132,7 @@ _⊩_ : ctxt → formula → Set1
 Soundness : ∀{Γ : ctxt}{f : formula} → Γ ⊢ f → Γ ⊩ f
 Soundness Assume g = fst g
 Soundness (Weaken p) g = Soundness p (snd g)
-Soundness{Γ} (ImpliesI p) g r u' = Soundness p (u' , mono⊨ctxt r g)
+Soundness (ImpliesI p) g r u' = Soundness p (u' , mono⊨ctxt r g)
 Soundness (ImpliesE p p') {k} g = (Soundness p g) (reflR k) (Soundness p' g)
 Soundness TrueI g = triv
 Soundness (AndI p p') g = (Soundness p g , Soundness p' g)

@@ -42,12 +42,10 @@ is-emptyʳ-≡ (_ ʳ) ()
 𝕃ʳ-simp-step ((t1a ++ʳ t1b) ++ʳ t2) = t1a ++ʳ (t1b ++ʳ t2) 
 𝕃ʳ-simp-step ((x ::ʳ t1) ++ʳ t2) = x ::ʳ (t1 ++ʳ t2) 
 𝕃ʳ-simp-step ([]ʳ ++ʳ t2) = t2 
-𝕃ʳ-simp-step ((l ʳ) ++ʳ t2) with is-emptyʳ t2 
-𝕃ʳ-simp-step ((l ʳ) ++ʳ t2) | tt = l ʳ 
-𝕃ʳ-simp-step ((l ʳ) ++ʳ t2) | ff = ((l ʳ) ++ʳ t2)
-𝕃ʳ-simp-step ((mapʳ f t1) ++ʳ t2) with is-emptyʳ t2 
-𝕃ʳ-simp-step ((mapʳ f t1) ++ʳ t2) | tt = mapʳ f t1
-𝕃ʳ-simp-step ((mapʳ f t1) ++ʳ t2) | ff = ((mapʳ f t1) ++ʳ t2)
+𝕃ʳ-simp-step ((l ʳ) ++ʳ t2) = 
+  if is-emptyʳ t2 then l ʳ else ((l ʳ) ++ʳ t2)
+𝕃ʳ-simp-step ((mapʳ f t1) ++ʳ t2) = 
+  if is-emptyʳ t2 then mapʳ f t1 else ((mapʳ f t1) ++ʳ t2)
 𝕃ʳ-simp-step (mapʳ f (t1 ++ʳ t2)) = (mapʳ f t1) ++ʳ (mapʳ f t2) 
 𝕃ʳ-simp-step (mapʳ f (l ʳ)) = (map f l) ʳ 
 𝕃ʳ-simp-step (mapʳ f (mapʳ g t)) = mapʳ (f ∘ g) t 
