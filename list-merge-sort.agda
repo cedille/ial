@@ -8,19 +8,16 @@ open import list
 open import nat
 open import nat-thms
 
-merge : {n : ℕ}(l1 l2 : 𝕃 A) → n ≡ length l1 + length l2 → 𝕃 A
-merge [] ys p = ys
-merge xs [] p = xs
-merge{0}(x :: xs) (y :: ys) ()
-merge{suc n} (x :: xs) (y :: ys) p with x <A y
-merge{suc n} (x :: xs) (y :: ys) p | tt = x :: (merge{n} xs (y :: ys) (suc-inj{n} p))
-merge{suc n} (x :: xs) (y :: ys) p | ff = y :: (merge{n} (x :: xs) ys lem)
-  where lem : n ≡ suc (length xs + length ys)
-        lem rewrite sym (+suc (length xs) (length ys)) = suc-inj{n} p
+merge : (l1 l2 : 𝕃 A) → 𝕃 A
+merge [] ys = ys
+merge xs [] = xs
+merge (x :: xs) (y :: ys) with x <A y
+merge (x :: xs) (y :: ys) | tt = x :: (merge xs (y :: ys))
+merge (x :: xs) (y :: ys) | ff = y :: (merge (x :: xs) ys)
 
 merge-sort-h : ∀{n : ℕ} → braun-tree' n → 𝕃 A
 merge-sort-h (bt'-leaf a) = [ a ]
-merge-sort-h (bt'-node l r p) = merge (merge-sort-h l) (merge-sort-h r) refl
+merge-sort-h (bt'-node l r p) = merge (merge-sort-h l) (merge-sort-h r)
 
 merge-sort : 𝕃 A → 𝕃 A
 merge-sort [] = []
