@@ -42,14 +42,14 @@ min1-mono : ∀{x x' y : A} → x ≤A x' ≡ tt → min x y ≤A min x' y ≡ t
 min1-mono{x}{x'}{y} p with keep (x ≤A y) | keep (x' ≤A y)
 min1-mono p | tt , q | tt , q' rewrite q | q' = p
 min1-mono p | tt , q | ff , q' rewrite q | q' = q
-min1-mono p | ff , q | tt , q' rewrite q | q' | ≤A-trans p q' with q 
+min1-mono p | ff , q | tt , q' rewrite q | q' | ≤A-trans q' p with q 
 min1-mono p | ff , q | tt , q' | ()
 min1-mono p | ff , q | ff , q' rewrite q | q' = ≤A-refl
 
 min2-mono : ∀{x y y' : A} → y ≤A y' ≡ tt → min x y ≤A min x y' ≡ tt
 min2-mono{x}{y}{y'} p with keep (x ≤A y) | keep (x ≤A y') 
 min2-mono p | tt , q | tt , q' rewrite q | q' = ≤A-refl
-min2-mono p | tt , q | ff , q' rewrite q | q' | ≤A-trans q p with q'
+min2-mono p | tt , q | ff , q' rewrite q | q' | ≤A-trans p q with q'
 min2-mono p | tt , q | ff , q' | ()
 min2-mono p | ff , q | tt , q' rewrite q | q' = ≤A-total q 
 min2-mono p | ff , q | ff , q' rewrite q | q' = p
@@ -57,6 +57,6 @@ min2-mono p | ff , q | ff , q' rewrite q | q' = p
 max2-mono : ∀{x y y' : A} → y ≤A y' ≡ tt → max x y ≤A max x y' ≡ tt
 max2-mono{x}{y}{y'} p with keep (x ≤A y) | keep (x ≤A y')
 max2-mono p | tt , q | tt , q' rewrite q | q' = p
-max2-mono p | tt , q | ff , q' rewrite q | q' = ≤A-trans p (≤A-total q')
+max2-mono p | tt , q | ff , q' rewrite q | q' = ≤A-trans (≤A-total q') p
 max2-mono p | ff , q | tt , q' rewrite q | q' = q'
 max2-mono p | ff , q | ff , q' rewrite q | q' = ≤A-refl
