@@ -1,5 +1,5 @@
-ROOTS=  bool bool-test bool-thms bool-thms2 bool-kleene \
-	braun-tree \
+ROOTS=  bool bool-test bool-thms bool-thms2 bool-kleene bool-to-string \
+	braun-tree braun-tree-test \
         bst \
         combinators \
 	char \
@@ -13,7 +13,7 @@ ROOTS=  bool bool-test bool-thms bool-thms2 bool-kleene \
 	list list-test list-thms list-thms2 list-merge-sort list-merge-sort-test \
 	logic \
 	maybe maybe-thms \
-	nat nat-thms nat-division nat-division-wf nat-to-string nat-tests nat-nonzero nat-log \
+	nat nat-thms nat-division nat-division-wf nat-division-basic nat-to-string nat-tests nat-nonzero nat-log \
 	neq \
 	negation \
 	product product-thms \

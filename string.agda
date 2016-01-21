@@ -31,7 +31,7 @@ private
 ----------------------------------------------------------------------
 
 infixr 6 _^_ 
-infix 5 _=string_
+infix 8 _=string_
 
 
 
@@ -78,3 +78,15 @@ string-concat-sep sep (s1 :: ss) with ss
 
 string-concat-sep-map : ∀{A : Set} → (separator : string) → (A → string) → 𝕃 A → string
 string-concat-sep-map sep f l = string-concat-sep sep (map f l)
+
+escape-string-h : 𝕃 char → 𝕃 char
+escape-string-h ('\n' :: cs) = '\\' :: 'n' :: (escape-string-h cs)
+escape-string-h ('"' :: cs) = '\\' :: '"' :: (escape-string-h cs)
+escape-string-h (c :: cs) = c :: escape-string-h cs
+escape-string-h [] = []
+
+escape-string : string → string
+escape-string s = 𝕃char-to-string( escape-string-h( string-to-𝕃char s ) )
+
+string-length : string → ℕ
+string-length s = length (string-to-𝕃char s)

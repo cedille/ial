@@ -15,8 +15,8 @@ open import logic
 ++[] [] = refl
 ++[] (x :: xs) rewrite ++[] xs = refl
 
-++-assoc : ∀ {ℓ}{A : Set ℓ} (l1 : 𝕃 A)(l2 : 𝕃 A)(l3 : 𝕃 A) → 
-          (l1 ++ l2) ++ l3 ≡ l1 ++ (l2 ++ l3)
+++-assoc : ∀ {ℓ}{A : Set ℓ} (l1 l2 l3 : 𝕃 A) → 
+           (l1 ++ l2) ++ l3 ≡ l1 ++ (l2 ++ l3)
 ++-assoc [] l2 l3 = refl
 ++-assoc (x :: xs) l2 l3 rewrite ++-assoc xs l2 l3 = refl
 

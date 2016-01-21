@@ -134,6 +134,9 @@ stringset-contains ss s = trie-contains ss s
 stringset-insert : stringset → string → stringset
 stringset-insert ss s = trie-insert ss s triv
 
+stringset-remove : stringset → string → stringset
+stringset-remove ss s = trie-remove ss s
+
 stringset-insert𝕃 : stringset → 𝕃 char → stringset
 stringset-insert𝕃 ss s = trie-insert-h ss s triv
 
@@ -143,3 +146,6 @@ empty-stringset = empty-trie
 stringset-insert* : stringset → 𝕃 string → stringset
 stringset-insert* s [] = s
 stringset-insert* s (x :: xs) = stringset-insert (stringset-insert* s xs) x
+
+stringset-strings : ∀{A : Set} → trie A → 𝕃 string
+stringset-strings t = map fst (trie-mappings t)

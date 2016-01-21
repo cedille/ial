@@ -32,19 +32,19 @@ bst-search d (bst-node d' L R _ _) | tt , p1 | ff , p2 = bst-search d L
 bst-search d (bst-node d' L R _ _) | ff , p1 = bst-search d R
 
 bst-dec-lb : ∀ {l l' u' : A} → bst l' u' → l ≤A l' ≡ tt → bst l u'
-bst-dec-lb (bst-leaf p) q = bst-leaf (≤A-trans p q)
-bst-dec-lb (bst-node d L R p1 p2) q = bst-node d L R (≤A-trans p1 q) p2
+bst-dec-lb (bst-leaf p) q = bst-leaf (≤A-trans q p)
+bst-dec-lb (bst-node d L R p1 p2) q = bst-node d L R (≤A-trans q p1) p2
 
 bst-inc-ub : ∀ {l' u' u : A} → bst l' u' → u' ≤A u ≡ tt → bst l' u
-bst-inc-ub (bst-leaf p) q = bst-leaf (≤A-trans q p)
-bst-inc-ub (bst-node d L R p1 p2) q = bst-node d L R p1 (≤A-trans q p2)
+bst-inc-ub (bst-leaf p) q = bst-leaf (≤A-trans p q)
+bst-inc-ub (bst-node d L R p1 p2) q = bst-node d L R p1 (≤A-trans p2 q)
 
 bst-insert : ∀{l u : A}(d : A) → bst l u → bst (min d l) (max d u)
 bst-insert d (bst-leaf p) = bst-node d (bst-leaf ≤A-refl) (bst-leaf ≤A-refl) min-≤1 max-≤1
 bst-insert d (bst-node d' L R p1 p2) with keep (d ≤A d') 
 bst-insert d (bst-node d' L R p1 p2) | tt , p with bst-insert d L
 bst-insert d (bst-node d' L R p1 p2) | tt , p | L' rewrite p = 
-  bst-node d' L' (bst-inc-ub R (≤A-trans max-≤2 p2)) (min2-mono p1) ≤A-refl
+  bst-node d' L' (bst-inc-ub R (≤A-trans p2 max-≤2)) (min2-mono p1) ≤A-refl
 bst-insert d (bst-node d' L R p1 p2) | ff , p with bst-insert d R
 bst-insert d (bst-node d' L R p1 p2) | ff , p | R' rewrite p = 
   bst-node d' (bst-dec-lb L p1) R' min-≤2 (max2-mono p2)

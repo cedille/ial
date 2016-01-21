@@ -8,7 +8,11 @@ open import product-thms
 
 module bool-relations {ℓ : level}{A : Set ℓ} (_≤A_ : A → A → 𝔹) where
 
-open import relations (λ a a' → a' ≤A a ≡ tt) public using (reflexive ; transitive)
+reflexive : Set (ℓ)
+reflexive = ∀ {a : A} → a ≤A a ≡ tt
+
+transitive : Set (ℓ)
+transitive = ∀ {a b c : A} → a ≤A b ≡ tt → b ≤A c ≡ tt → a ≤A c ≡ tt
 
 total : Set ℓ
 total = ∀ {a b : A} → a ≤A b ≡ ff → b ≤A a ≡ tt
