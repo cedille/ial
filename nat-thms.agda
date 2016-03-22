@@ -261,7 +261,7 @@ iszeromult (suc x) (suc y) p q = refl
 <≤-trans : ∀ {x y z : ℕ} → x < y ≡ tt → y ≤ z ≡ tt → x < z ≡ tt
 <≤-trans {x} {y} {z} p1 p2 with ||-split p2
 ... | inj₁ p' = <-trans{x}  p1 p'
-... | inj₂ p' rewrite =ℕ-to-≡ {y} {z} p' = p1
+... | inj₂ p' rewrite sym (=ℕ-to-≡ {y} {z} p') = p1
 
 ≤<-trans : ∀ {x y z : ℕ} → x ≤ y ≡ tt → y < z ≡ tt → x < z ≡ tt
 ≤<-trans {x} {y} {z} p1 p2 with ||-split p1

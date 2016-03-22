@@ -42,6 +42,8 @@ postulate
 
   writeFile : string → string → IO ⊤
 
+  getLine : IO string
+
 private
   data simple-list (A : Set) : Set where
     nil : simple-list A
@@ -72,7 +74,7 @@ private
 {-# COMPILED privTakeDirectory System.FilePath.takeDirectory #-}
 {-# COMPILED privTakeFileName System.FilePath.takeFileName #-}
 {-# COMPILED privCombineFileNames System.FilePath.combine #-}
-
+{-# COMPILED getLine getLine #-}
 
 getArgs : IO (𝕃 string)
 getArgs = privGetArgs >>= (λ args → return (simple-list-to-𝕃 args))
@@ -88,6 +90,11 @@ takeFileName = privTakeFileName
 
 combineFileNames : string → string → string
 combineFileNames = privCombineFileNames
+
+postulate
+  fileIsOlder : string → string → IO 𝔹
+
+{-# COMPILED fileIsOlder (\ s1 s2 -> (System.Directory.getModificationTime s1) >>= \ t1 -> (System.Directory.getModificationTime s2) >>= \ t2 -> return (t1 < t2)) #-}
 
 ----------------------------------------------------------------------
 -- defined operations
