@@ -59,6 +59,7 @@ private
   postulate
     privGetArgs : IO (simple-list string)
     privDoesFileExist : string → IO 𝔹
+    privCreateDirectoryIfMissing : 𝔹 → string → IO ⊤
     privTakeDirectory : string → string
     privTakeFileName : string → string
     privCombineFileNames : string → string → string
@@ -70,6 +71,7 @@ private
 {-# COMPILED privGetArgs System.Environment.getArgs #-}
 {-# IMPORT System.Directory #-}
 {-# COMPILED privDoesFileExist System.Directory.doesFileExist #-}
+{-# COMPILED privCreateDirectoryIfMissing System.Directory.createDirectoryIfMissing #-}
 {-# IMPORT System.FilePath #-}
 {-# COMPILED privTakeDirectory System.FilePath.takeDirectory #-}
 {-# COMPILED privTakeFileName System.FilePath.takeFileName #-}
@@ -81,6 +83,9 @@ getArgs = privGetArgs >>= (λ args → return (simple-list-to-𝕃 args))
 
 doesFileExist : string → IO 𝔹
 doesFileExist = privDoesFileExist
+
+createDirectoryIfMissing : 𝔹 → string → IO ⊤
+createDirectoryIfMissing = privCreateDirectoryIfMissing
 
 takeDirectory : string → string
 takeDirectory = privTakeDirectory
