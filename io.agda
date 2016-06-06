@@ -63,6 +63,7 @@ private
     privTakeDirectory : string → string
     privTakeFileName : string → string
     privCombineFileNames : string → string → string
+    privForceFileRead : string {- the contents of the file, not the file name -} → IO ⊤
 
 {-# COMPILED putStr         putStr                #-}
 {-# COMPILED readFiniteFile readFile #-}
@@ -70,6 +71,7 @@ private
 {-# IMPORT System.Environment #-}
 {-# COMPILED privGetArgs System.Environment.getArgs #-}
 {-# IMPORT System.Directory #-}
+{-# COMPILED privForceFileRead (\ contents -> seq (length contents) (return ())) #-}
 {-# COMPILED privDoesFileExist System.Directory.doesFileExist #-}
 {-# COMPILED privCreateDirectoryIfMissing System.Directory.createDirectoryIfMissing #-}
 {-# IMPORT System.FilePath #-}
@@ -95,6 +97,9 @@ takeFileName = privTakeFileName
 
 combineFileNames : string → string → string
 combineFileNames = privCombineFileNames
+
+forceFileRead : string {- the contents of the file, not the file name -} → IO ⊤
+forceFileRead = privForceFileRead
 
 postulate
   fileIsOlder : string → string → IO 𝔹
