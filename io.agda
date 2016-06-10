@@ -65,6 +65,8 @@ private
     privCombineFileNames : string → string → string
     privForceFileRead : string {- the contents of the file, not the file name -} → IO ⊤
 
+    privGetHomeDirectory : IO string
+
 {-# COMPILED putStr         putStr                #-}
 {-# COMPILED readFiniteFile readFile #-}
 {-# COMPILED writeFile      writeFile             #-}
@@ -79,6 +81,7 @@ private
 {-# COMPILED privTakeFileName System.FilePath.takeFileName #-}
 {-# COMPILED privCombineFileNames System.FilePath.combine #-}
 {-# COMPILED getLine getLine #-}
+{-# COMPILED privGetHomeDirectory System.Directory.getHomeDirectory #-}
 
 getArgs : IO (𝕃 string)
 getArgs = privGetArgs >>= (λ args → return (simple-list-to-𝕃 args))
@@ -100,6 +103,9 @@ combineFileNames = privCombineFileNames
 
 forceFileRead : string {- the contents of the file, not the file name -} → IO ⊤
 forceFileRead = privForceFileRead
+
+getHomeDirectory : IO string
+getHomeDirectory = privGetHomeDirectory
 
 postulate
   fileIsOlder : string → string → IO 𝔹
