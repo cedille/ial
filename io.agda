@@ -109,8 +109,9 @@ getHomeDirectory = privGetHomeDirectory
 
 postulate
   fileIsOlder : string → string → IO 𝔹
-
+  canonicalizePath : string → IO string 
 {-# COMPILED fileIsOlder (\ s1 s2 -> (System.Directory.getModificationTime s1) >>= \ t1 -> (System.Directory.getModificationTime s2) >>= \ t2 -> return (t1 < t2)) #-}
+{-# COMPILED canonicalizePath System.Directory.canonicalizePath #-}
 
 ----------------------------------------------------------------------
 -- defined operations
