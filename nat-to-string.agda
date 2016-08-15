@@ -12,13 +12,25 @@ open import product
 open import string
 open import termination
 
-ℕ-to-digitsh : (base : ℕ) → 1 < base ≡ tt → (x : ℕ) → ↓𝔹 _>_ x → 𝕃 ℕ
-ℕ-to-digitsh _ _ 0 _ = []
-ℕ-to-digitsh base bp (suc x) (pf↓ fx) with (suc x) ÷ base ! (<=ℕff2 base bp)
-... | q , r , p , _ = r :: (ℕ-to-digitsh base bp q (fx (÷<{base}{q}{r}{x} bp p)))
+module slow-ℕ-to-digits where
+  {- this version of ℕ-to-digits is statically shown terminating -- but the termination
+     reasoning makes it pretty slow in practice! -}
+  ℕ-to-digitsh : (base : ℕ) → 1 < base ≡ tt → (x : ℕ) → ↓𝔹 _>_ x → 𝕃 ℕ
+  ℕ-to-digitsh _ _ 0 _ = []
+  ℕ-to-digitsh base bp (suc x) (pf↓ fx) with (suc x) ÷ base ! (<=ℕff2 base bp)
+  ... | q , r , p , _ = r :: (ℕ-to-digitsh base bp q (fx (÷<{base}{q}{r}{x} bp p)))
+
+  ℕ-to-digits : ℕ → 𝕃 ℕ
+  ℕ-to-digits x = reverse (ℕ-to-digitsh 10 refl x (↓-> x))
+
+{-# NO_TERMINATION_CHECK #-}
+ℕ-to-digitsh : (base : ℕ) → 1 < base ≡ tt → (x : ℕ) → 𝕃 ℕ
+ℕ-to-digitsh _ _ 0 = []
+ℕ-to-digitsh base bp (suc x) with (suc x) ÷ base ! (<=ℕff2 base bp)
+... | q , r , p = r :: (ℕ-to-digitsh base bp q)
 
 ℕ-to-digits : ℕ → 𝕃 ℕ
-ℕ-to-digits x = reverse (ℕ-to-digitsh 10 refl x (↓-> x))
+ℕ-to-digits x = reverse (ℕ-to-digitsh 10 refl x)
 
 digit-to-string : ℕ → string
 digit-to-string 0 = "0"
