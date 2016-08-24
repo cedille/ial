@@ -42,6 +42,14 @@ postulate
 
   writeFile : string → string → IO ⊤
 
+  -- set output to UTF-8 for Windows
+  
+  initializeStdoutToUTF8 : IO ⊤
+
+  -- set newline mode for Windows
+  
+  setStdoutNewlineMode : IO ⊤
+
   -- writing to files using Handles
   Handle : Set
   withWritableFile : ∀{r : Set} → string → (Handle → IO r) → IO r
@@ -79,9 +87,12 @@ private
 
     privGetHomeDirectory : IO string
 
+{-# IMPORT Control.DeepSeq #-}
 {-# COMPILED putStr         putStr                #-}
-{-# COMPILED readFiniteFile readFile #-}
-{-# COMPILED writeFile      writeFile             #-}
+{-# COMPILED readFiniteFile (\x -> do inh <- System.IO.openFile x System.IO.ReadMode; System.IO.hSetEncoding inh System.IO.utf8; fileAsString <- System.IO.hGetContents inh; Control.DeepSeq.rnf fileAsString `seq` System.IO.hClose inh; return fileAsString) #-}
+{-# COMPILED writeFile (\path -> (\str -> do outh <- System.IO.openFile path System.IO.WriteMode; System.IO.hSetNewlineMode outh System.IO.noNewlineTranslation; System.IO.hSetEncoding outh System.IO.utf8; System.IO.hPutStr outh str; System.IO.hFlush outh; System.IO.hClose outh; return () )) #-}
+{-# COMPILED initializeStdoutToUTF8  System.IO.hSetEncoding System.IO.stdout System.IO.utf8 #-}
+{-# COMPILED setStdoutNewlineMode System.IO.hSetNewlineMode System.IO.stdout System.IO.universalNewlineMode #-}
 {-# IMPORT System.Environment #-}
 {-# COMPILED privGetArgs System.Environment.getArgs #-}
 {-# IMPORT System.Directory #-}
