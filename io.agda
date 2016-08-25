@@ -50,19 +50,9 @@ postulate
   
   setStdoutNewlineMode : IO ⊤
 
-  -- writing to files using Handles
-  Handle : Set
-  withWritableFile : ∀{r : Set} → string → (Handle → IO r) → IO r
-  hPutStr : Handle → string → IO ⊤  
-  stdout : Handle 
-
   getLine : IO string
 
 {-# IMPORT System.IO #-}
-{-# COMPILED_TYPE Handle System.IO.Handle #-}
-{-# COMPILED withWritableFile  (\ _ f k -> System.IO.withFile f System.IO.WriteMode k)                #-}
-{-# COMPILED hPutStr         System.IO.hPutStr                #-}
-{-# COMPILED stdout         System.IO.stdout                #-}
 
 private
   data simple-list (A : Set) : Set where
