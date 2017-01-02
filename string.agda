@@ -15,7 +15,6 @@ postulate
   string : Set
 
 {-# BUILTIN STRING string #-}
-{-# COMPILED_TYPE string String #-}
 
 private
  primitive

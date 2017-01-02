@@ -23,7 +23,7 @@ module slow-ℕ-to-digits where
   ℕ-to-digits : ℕ → 𝕃 ℕ
   ℕ-to-digits x = reverse (ℕ-to-digitsh 10 refl x (↓-> x))
 
-{-# NO_TERMINATION_CHECK #-}
+{-# TERMINATING #-}
 ℕ-to-digitsh : (base : ℕ) → 1 < base ≡ tt → (x : ℕ) → 𝕃 ℕ
 ℕ-to-digitsh _ _ 0 = []
 ℕ-to-digitsh base bp (suc x) with (suc x) ÷ base ! (<=ℕff2 base bp)

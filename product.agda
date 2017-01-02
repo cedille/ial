@@ -22,8 +22,8 @@ A i× B = Σi A (λ x → B)
 -- syntax
 ----------------------------------------------------------------------
 
-infix 2 Σ-syntax
-infixr 3 _×_ _i×_ _∧_
+infix 1 Σ-syntax
+infixr 2 _×_ _i×_ _∧_
 infixr 4 _,_ 
 infix  4 ,_
 

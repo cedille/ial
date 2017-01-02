@@ -4,7 +4,7 @@ module error where
 open import level
 open import string
 
-infixr 1 _≫=err_ _≫err_
+infixr 0 _≫=err_ _≫err_
 
 data error-t{ℓ}(A : Set ℓ) : Set ℓ where
   no-error : A → error-t A

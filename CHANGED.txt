@@ -1,5 +1,0 @@
-Files that are different here on the dev branch compared
-to both IAL releases both 1.2 and 1.3.
-
-io.agda
-nat-to-string.agda

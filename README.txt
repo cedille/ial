@@ -11,7 +11,19 @@ come from Agda's standard library.
 
 2. Using the library 
 
-This library is known to work with Agda 2.4.2.3/2.4.2.2/2.4.2.1.
+This library has been tested with Agda 2.5.1.2.  If you are
+using an older version of Agda, try version 1.2:
+
+https://svn.divms.uiowa.edu/repos/clc/projects/agda/ial-releases/1.2
+
+Starting with Agda 2.5.1, to use the library you must add it to your
+Agda libraries.  On linux, create the directory ~/.agda, and add a file
+called "libraries" to it, containing the full path to the .agda-lib file
+contained in this directory (for the IAL version 1.3).  Then create
+a file called "defaults", and add the word "ial" to it (no quotes).
+These steps tell Agda where the IAL library is, and that you want to
+include it when opening .agda files in emacs (or with the command-line
+tool).
 
 In Agda, you can include the whole library by importing lib.agda.  
 
@@ -19,7 +31,7 @@ You can compile the whole library by running "make".
 
 The library is set up so there are no name conflicts between modules
 (except sometimes I have several versions of the same module, like
-stream and stream2 or nat-division and nat-division2, and there might
+nat-division and nat-division-wf, and there might
 be name conflicts in such cases).
 
 3. Browsing the library
@@ -53,5 +65,5 @@ This library is currently provided under the MIT License, see LICENSE.txt.
 There is no formal documentation currently, besides comments in the files.
 
 Much of the library is described in my book, "Verified Functional
-Programming in Agda", to be published 2016 with ACM Books.
+Programming in Agda", published 2016 with ACM Books.
 

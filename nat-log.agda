@@ -12,7 +12,7 @@ data log-result (x : ℕ)(b : ℕ) : Set where
   no-power : x < b ≡ tt → log-result x b
 
 -- as a first version, we do not try to prove termination of this function
-{-# NO_TERMINATION_CHECK #-}
+{-# TERMINATING #-}
 log : (x : ℕ) → (b : ℕ) → x =ℕ 0 ≡ ff → b =ℕ 0 ≡ ff → log-result x b
 log x b p1 p2 with x ÷ b ! p2
 log x b p1 p2 | 0 , r , u1 , u2 rewrite u1 = no-power u2

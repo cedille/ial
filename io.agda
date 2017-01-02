@@ -78,23 +78,24 @@ private
     privGetHomeDirectory : IO string
 
 {-# IMPORT Control.DeepSeq #-}
-{-# COMPILED putStr         putStr                #-}
-{-# COMPILED readFiniteFile (\x -> do inh <- System.IO.openFile x System.IO.ReadMode; System.IO.hSetEncoding inh System.IO.utf8; fileAsString <- System.IO.hGetContents inh; Control.DeepSeq.rnf fileAsString `seq` System.IO.hClose inh; return fileAsString) #-}
-{-# COMPILED writeFile (\path -> (\str -> do outh <- System.IO.openFile path System.IO.WriteMode; System.IO.hSetNewlineMode outh System.IO.noNewlineTranslation; System.IO.hSetEncoding outh System.IO.utf8; System.IO.hPutStr outh str; System.IO.hFlush outh; System.IO.hClose outh; return () )) #-}
+{-# IMPORT Data.Text.IO #-}
+{-# COMPILED putStr         Data.Text.IO.putStr                #-}
+{-# COMPILED readFiniteFile (\y -> let x = Data.Text.unpack y in do inh <- System.IO.openFile x System.IO.ReadMode; System.IO.hSetEncoding inh System.IO.utf8; fileAsString <- System.IO.hGetContents inh; Control.DeepSeq.rnf fileAsString `seq` System.IO.hClose inh; return (Data.Text.pack fileAsString)) #-}
+{-# COMPILED writeFile (\path -> (\str -> do outh <- System.IO.openFile (Data.Text.unpack path) System.IO.WriteMode; System.IO.hSetNewlineMode outh System.IO.noNewlineTranslation; System.IO.hSetEncoding outh System.IO.utf8; Data.Text.IO.hPutStr outh str; System.IO.hFlush outh; System.IO.hClose outh; return () )) #-}
 {-# COMPILED initializeStdoutToUTF8  System.IO.hSetEncoding System.IO.stdout System.IO.utf8 #-}
 {-# COMPILED setStdoutNewlineMode System.IO.hSetNewlineMode System.IO.stdout System.IO.universalNewlineMode #-}
 {-# IMPORT System.Environment #-}
-{-# COMPILED privGetArgs System.Environment.getArgs #-}
+{-# COMPILED privGetArgs (do l <- System.Environment.getArgs; return (map Data.Text.pack l)) #-}
 {-# IMPORT System.Directory #-}
-{-# COMPILED privForceFileRead (\ contents -> seq (length contents) (return ())) #-}
-{-# COMPILED privDoesFileExist System.Directory.doesFileExist #-}
-{-# COMPILED privCreateDirectoryIfMissing System.Directory.createDirectoryIfMissing #-}
+{-# COMPILED privForceFileRead (\ contents -> seq (length (Data.Text.unpack contents)) (return ())) #-}
+{-# COMPILED privDoesFileExist (\ s -> System.Directory.doesFileExist (Data.Text.unpack s)) #-}
+{-# COMPILED privCreateDirectoryIfMissing (\ b s -> System.Directory.createDirectoryIfMissing b (Data.Text.unpack s)) #-}
 {-# IMPORT System.FilePath #-}
-{-# COMPILED privTakeDirectory System.FilePath.takeDirectory #-}
-{-# COMPILED privTakeFileName System.FilePath.takeFileName #-}
-{-# COMPILED privCombineFileNames System.FilePath.combine #-}
-{-# COMPILED getLine getLine #-}
-{-# COMPILED privGetHomeDirectory System.Directory.getHomeDirectory #-}
+{-# COMPILED privTakeDirectory (\ s -> Data.Text.pack (System.FilePath.takeDirectory (Data.Text.unpack s))) #-}
+{-# COMPILED privTakeFileName (\ s -> Data.Text.pack (System.FilePath.takeFileName (Data.Text.unpack s))) #-}
+{-# COMPILED privCombineFileNames (\ s1 s2 -> Data.Text.pack (System.FilePath.combine (Data.Text.unpack s1) (Data.Text.unpack s2))) #-}
+{-# COMPILED getLine (Data.Text.IO.hGetLine System.IO.stdin) #-}
+{-# COMPILED privGetHomeDirectory (do x <- System.Directory.getHomeDirectory; return (Data.Text.pack x)) #-}
 
 getArgs : IO (𝕃 string)
 getArgs = privGetArgs >>= (λ args → return (simple-list-to-𝕃 args))
@@ -123,8 +124,8 @@ getHomeDirectory = privGetHomeDirectory
 postulate
   fileIsOlder : string → string → IO 𝔹
   canonicalizePath : string → IO string 
-{-# COMPILED fileIsOlder (\ s1 s2 -> (System.Directory.getModificationTime s1) >>= \ t1 -> (System.Directory.getModificationTime s2) >>= \ t2 -> return (t1 < t2)) #-}
-{-# COMPILED canonicalizePath System.Directory.canonicalizePath #-}
+{-# COMPILED fileIsOlder (\ s1 s2 -> (System.Directory.getModificationTime (Data.Text.unpack s1)) >>= \ t1 -> (System.Directory.getModificationTime (Data.Text.unpack s2)) >>= \ t2 -> return (t1 < t2)) #-}
+{-# COMPILED canonicalizePath (\ s -> do x <- System.Directory.canonicalizePath (Data.Text.unpack s); return (Data.Text.pack x)) #-}
 
 ----------------------------------------------------------------------
 -- defined operations
