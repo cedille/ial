@@ -46,7 +46,7 @@ tail : ∀ {ℓ} {A : Set ℓ} → 𝕃 A → 𝕃 A
 tail [] = []
 tail (x :: xs) = xs
 
-head : ∀{ℓ}{A : Set ℓ} → (l : 𝕃 A) → is-empty l ≡ ff → A
+head : ∀{ℓ}{A : Set ℓ} → (l : 𝕃 A) → .(is-empty l ≡ ff) → A
 head [] ()
 head (x :: xs) _ = x
 

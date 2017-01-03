@@ -78,7 +78,7 @@ is-empty-[] (x :: l) ()
 rev-help-empty : ∀ {ℓ}{A : Set ℓ} (l1 l2 : 𝕃 A) → (p1 : is-empty l2 ≡ ff) → 
                       is-empty (reverse-helper l1 l2) ≡ ff
 rev-help-empty l1 [] ()
-rev-help-empty l1 (x :: l2) p rewrite reverse-++h (x :: l1) l2 | is-empty-distr (reverse-helper [] l2) (x :: l1)
+rev-help-empty l1 (x :: l2) refl rewrite reverse-++h (x :: l1) l2 | is-empty-distr (reverse-helper [] l2) (x :: l1)
                                     | (&&-comm (is-empty (reverse-helper [] l2)) ff) = refl
 
 is-empty-revh : ∀{ℓ}{A : Set ℓ}(h l : 𝕃 A) → is-empty l ≡ ff → is-empty (reverse-helper h l) ≡ ff
@@ -86,8 +86,8 @@ is-empty-revh h l p = rev-help-empty h l p
 
 head-last-reverse-lem : ∀{ℓ}{A : Set ℓ}(h l : 𝕃 A)(p : is-empty l ≡ ff) → last l p ≡ head (reverse-helper h l) (is-empty-revh h l p)
 head-last-reverse-lem h [] ()
-head-last-reverse-lem h (x :: []) p = refl
-head-last-reverse-lem h (x :: y :: l) p = head-last-reverse-lem (x :: h) (y :: l) refl
+head-last-reverse-lem h (x :: []) _ = refl
+head-last-reverse-lem h (x :: y :: l) refl = head-last-reverse-lem (x :: h) (y :: l) refl
 
 head-last-reverse : ∀{ℓ}{A : Set ℓ}(l : 𝕃 A)(p : is-empty l ≡ ff) → last l p ≡ head (reverse l) (rev-help-empty [] l p)
 head-last-reverse [] ()
