@@ -45,4 +45,9 @@ _÷_mod_ : ℕ → (y : ℕ) → y =ℕ 0 ≡ ff → ℕ
 x ÷ y mod p with x ÷ y ! p
 ... | q , r , p' = r
 
-
+{- convenience function to divide when we lack a proof that the divisor is nonzero.
+   We will return 0 , 0 if the divisor is 0, and otherwise return the quotient and remainder -}
+_÷_ : (x : ℕ) → (y : ℕ) → ℕ × ℕ
+x ÷ y with keep (y =ℕ 0)
+x ÷ y | tt , _ = 0 , 0
+x ÷ y | ff , p = x ÷ y !! p 
