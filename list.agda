@@ -106,9 +106,7 @@ reverse l = reverse-helper [] l
 
 list-member : ∀{ℓ}{A : Set ℓ}(eq : A → A → 𝔹)(a : A)(l : 𝕃 A) → 𝔹
 list-member eq a [] = ff
-list-member eq a (x :: xs) with eq a x
-... | tt = tt
-... | ff = list-member eq a xs
+list-member eq a (x :: xs) = eq a x || list-member eq a xs
 
 list-minus : ∀{ℓ}{A : Set ℓ}(eq : A → A → 𝔹)(l1 l2 : 𝕃 A) → 𝕃 A
 list-minus eq [] l2 = []
