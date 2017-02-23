@@ -78,3 +78,8 @@ string-to-ℕ : string → maybe ℕ
 string-to-ℕ s with 𝕃maybe-map string-to-digit (reverse (string-to-𝕃char s)) 
 ... | nothing = nothing
 ... | just ds = just (digits-to-ℕ ds)
+
+string-to-ℕ0 : string → ℕ
+string-to-ℕ0 s with string-to-ℕ s
+... | nothing = 0
+... | just x = x
