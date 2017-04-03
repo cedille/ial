@@ -122,6 +122,24 @@ trie-cal-nonempty [] = ff
 trie-cal-nonempty ((a , t) :: c) = trie-nonempty t || trie-cal-nonempty c
 
 ----------------------------------------------------------------------
+-- list-tries, which map strings to lists of values
+----------------------------------------------------------------------
+
+𝕃trie : Set → Set
+𝕃trie A = trie (𝕃 A)
+
+𝕃trie-lookup : ∀{A : Set} → 𝕃trie A → string → 𝕃 A
+𝕃trie-lookup t s with trie-lookup t s
+... | nothing = []
+... | just l = l
+
+𝕃trie-add : ∀{A : Set} → trie (𝕃 A) → string → A → trie (𝕃 A)
+𝕃trie-add t s a = trie-insert t s (a :: 𝕃trie-lookup t s)
+
+𝕃trie-add* : ∀{A : Set} → trie (𝕃 A) → string → 𝕃 A → trie (𝕃 A)
+𝕃trie-add* t s aa = trie-insert t s (aa ++ 𝕃trie-lookup t s)
+
+----------------------------------------------------------------------
 -- stringset
 ----------------------------------------------------------------------
 
