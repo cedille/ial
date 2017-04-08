@@ -279,6 +279,12 @@ iszeromult (suc x) (suc y) p q = refl
 ... | inj₁ p' | inj₂ p'' rewrite =ℕ-to-≡ {y} p'' | p' = refl
 ... | inj₂ p' | inj₂ p'' rewrite =ℕ-to-≡ {x} p'  | =ℕ-to-≡ {y} p'' | =ℕ-refl z | ||-tt (z < z) = refl
 
+≤-total : ∀{x y : ℕ} → x ≤ y ≡ ff → y ≤ x ≡ tt
+≤-total {zero} {zero} p = refl
+≤-total {zero} {suc y} ()
+≤-total {suc x} {zero} p = refl
+≤-total {suc x} {suc y} p = ≤-total{x}{y} p
+
 suc≤ : ∀ {n n' : ℕ} → suc n ≤ suc n' ≡ tt → n ≤ n' ≡ tt
 suc≤{n}{n'} p = p
 
