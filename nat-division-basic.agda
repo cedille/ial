@@ -12,7 +12,7 @@ open import nat
 open import product
 open import sum
 
-{-# NO_TERMINATION_CHECK #-}
+{-# TERMINATING #-}
 div : (x d : ℕ) → d =ℕ 0 ≡ ff → ℕ × ℕ
 div 0 _ _ = 0 , 0
 div x d p with (x < d)

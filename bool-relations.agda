@@ -8,10 +8,10 @@ open import product-thms
 
 module bool-relations {ℓ : level}{A : Set ℓ} (_≤A_ : A → A → 𝔹) where
 
-reflexive : Set (ℓ)
+reflexive : Set ℓ
 reflexive = ∀ {a : A} → a ≤A a ≡ tt
 
-transitive : Set (ℓ)
+transitive : Set ℓ
 transitive = ∀ {a b c : A} → a ≤A b ≡ tt → b ≤A c ≡ tt → a ≤A c ≡ tt
 
 total : Set ℓ
