@@ -28,6 +28,7 @@ infixr 6 _&&_
 infixr 5 _||_ 
 infix  4 if_then_else_   if*_then_else_
 infixr 4 _imp_ 
+infix 4 _iff_
 
 ----------------------------------------------------------------------
 -- operations
@@ -38,6 +39,11 @@ infixr 4 _imp_
 ~ tt = ff
 ~ ff = tt
 
+_iff_ : 𝔹 → 𝔹 → 𝔹
+tt iff tt = tt
+tt iff ff = ff
+ff iff tt = ff
+ff iff ff = tt
 
 -- and
 _&&_ : 𝔹 → 𝔹 → 𝔹

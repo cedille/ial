@@ -31,6 +31,9 @@ trans refl refl = refl
 cong : ∀ {ℓ ℓ'}{A : Set ℓ}{B : Set ℓ'}(p : A → B) {x y : A} → x ≡ y → p x ≡ p y
 cong p refl = refl
 
+cong-pred : ∀ {ℓ ℓ'}{A : Set ℓ}(P : A → Set ℓ') {x y : A} → x ≡ y → P x → P y
+cong-pred P refl p = p
+
 congf : ∀{l l' : Level}{A : Set l}{B : Set l'}{f f' : A → B}{b c : A} → f ≡ f' → b ≡ c → (f b) ≡ (f' c)
 congf refl refl = refl
 
@@ -51,3 +54,4 @@ cong3 : ∀{i j k l}{A : Set i}{B : Set j}{C : Set k}{D : Set l}{a a' : A}{b b' 
   → c ≡ c'
   → f a b c ≡ f a' b' c'
 cong3 f refl refl refl = refl
+
