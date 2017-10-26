@@ -546,6 +546,11 @@ max-<2{0}{suc m} = refl
 max-<2{suc n}{0} rewrite =ℕ-refl n | ||-tt (n < n) = refl
 max-<2{suc n}{suc m} rewrite max-suc n m = max-<2{n}
 
+min-0 : ∀{n : ℕ} → min 0 n ≡ 0
+min-0 {n} with keep (0 < n)
+min-0 {n} | b , p rewrite p with n 
+min-0 {_} | b , p | 0 rewrite sym p = refl
+min-0 {_} | b , p | suc n rewrite sym p = refl
 
 --------------------------------------------------
 -- some disequalities
