@@ -552,6 +552,9 @@ min-0 {n} | b , p rewrite p with n
 min-0 {_} | b , p | 0 rewrite sym p = refl
 min-0 {_} | b , p | suc n rewrite sym p = refl
 
+min-0' : ∀{n : ℕ} → min n 0 ≡ 0
+min-0'{n} rewrite min-comm n 0 = min-0{n}
+
 --------------------------------------------------
 -- some disequalities
 --------------------------------------------------
