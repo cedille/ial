@@ -57,6 +57,10 @@ nth𝕍 (suc n) p (_ :: xs) = nth𝕍 n p xs
 nth𝕍 (suc n) () []
 nth𝕍 0 () []
 
+member𝕍 : ∀{ℓ}{A : Set ℓ}{n : ℕ}(eq : A → A → 𝔹)(a : A)(l : 𝕍 A n) → 𝔹
+member𝕍 eq a [] = ff
+member𝕍 eq a (x :: l) = if (eq a x) then tt else (member𝕍 eq a l)
+
 repeat𝕍 : ∀ {ℓ} {A : Set ℓ} → (a : A)(n : ℕ) → 𝕍 A n
 repeat𝕍 a 0 = []
 repeat𝕍 a (suc n) = a :: (repeat𝕍 a n)
