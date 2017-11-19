@@ -158,35 +158,35 @@ ParseTreeToString parsed-ws-plus-10 = "[ws-plus-10]"
 
 mutual
 
-  {-# NO_TERMINATION_CHECK #-}
+  {-# TERMINATING #-}
   norm-words : (x : words) → words
   norm-words x = x
 
-  {-# NO_TERMINATION_CHECK #-}
+  {-# TERMINATING #-}
   norm-start : (x : start) → start
   norm-start x = x
 
-  {-# NO_TERMINATION_CHECK #-}
+  {-# TERMINATING #-}
   norm-posinfo : (x : posinfo) → posinfo
   norm-posinfo x = x
 
-  {-# NO_TERMINATION_CHECK #-}
+  {-# TERMINATING #-}
   norm-digit : (x : digit) → digit
   norm-digit x = x
 
-  {-# NO_TERMINATION_CHECK #-}
+  {-# TERMINATING #-}
   norm-codes : (x : codes) → codes
   norm-codes x = x
 
-  {-# NO_TERMINATION_CHECK #-}
+  {-# TERMINATING #-}
   norm-code : (x : code) → code
   norm-code x = x
 
-  {-# NO_TERMINATION_CHECK #-}
+  {-# TERMINATING #-}
   norm-cmd : (x : cmd) → cmd
   norm-cmd x = x
 
-  {-# NO_TERMINATION_CHECK #-}
+  {-# TERMINATING #-}
   norm-bvlit : (x : bvlit) → bvlit
   norm-bvlit x = x
 
