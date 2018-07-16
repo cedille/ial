@@ -12,7 +12,7 @@ open import bool
 postulate
   runtime-identity : ∀{A : Set} → A → A
 
-{-# COMPILED runtime-identity (\ _ x -> x )   #-}
+{-# COMPILE GHC runtime-identity = (\ _ x -> x )   #-}
 
 runtime-only : ∀{A : Set} → 𝔹 → A → A
 runtime-only ff = λ x → x

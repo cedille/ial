@@ -14,11 +14,11 @@ postulate
   string-to-int : string → int
   is-zero-int : int → 𝔹
 
-{-# COMPILED_TYPE int Int #-}
-{-# COMPILED int0 0 #-}
-{-# COMPILED int1 1 #-}
-{-# COMPILED _+int_ (+) #-}
-{-# COMPILED _*int_ (*) #-}
-{-# COMPILED _-int_ (-) #-}
-{-# COMPILED string-to-int (\ x -> read x :: Int) #-}
-{-# COMPILED is-zero-int ((==) 0) #-}
+{-# COMPILE GHC int = type Int #-}
+{-# COMPILE GHC int0 = 0 #-}
+{-# COMPILE GHC int1 = 1 #-}
+{-# COMPILE GHC _+int_ = (+) #-}
+{-# COMPILE GHC _*int_ = (*) #-}
+{-# COMPILE GHC _-int_ = (-) #-}
+{-# COMPILE GHC string-to-int x = read x :: Int #-}
+{-# COMPILE GHC is-zero-int = (==) 0 #-}

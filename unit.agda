@@ -6,7 +6,7 @@ open import eq
 data ⊤ : Set where
   triv : ⊤
 
-{-# COMPILED_DATA ⊤ () ()  #-}
+{-# COMPILE GHC ⊤ = data () (())  #-}
 
 single-range : ∀{U : Set}{g : U → ⊤} → ∀{u : U} → g u ≡ triv
 single-range {U}{g}{u} with g u

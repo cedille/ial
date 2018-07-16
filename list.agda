@@ -19,8 +19,6 @@ data 𝕃 {ℓ} (A : Set ℓ) : Set ℓ where
   _::_ : (x : A) (xs : 𝕃 A) → 𝕃 A
 
 {-# BUILTIN LIST 𝕃 #-}
-{-# BUILTIN NIL  []   #-}
-{-# BUILTIN CONS _::_  #-}
 
 list = 𝕃
 

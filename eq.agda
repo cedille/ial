@@ -10,7 +10,6 @@ data _≡_ {ℓ} {A : Set ℓ} (x : A) : A → Set ℓ where
   refl : x ≡ x
 
 {-# BUILTIN EQUALITY _≡_ #-}
-{-# BUILTIN REFL refl #-}
 
 ----------------------------------------------------------------------
 -- syntax

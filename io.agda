@@ -13,7 +13,7 @@ open import unit
 postulate
   IO : Set → Set
 
-{-# COMPILED_TYPE IO IO #-}
+{-# COMPILE GHC IO = type IO #-}
 {-# BUILTIN IO IO #-}
 
 ----------------------------------------------------------------------
@@ -31,8 +31,8 @@ postulate
   return : ∀ {A : Set} → A → IO A
   _>>=_  : ∀ {A B : Set} → IO A → (A → IO B) → IO B
 
-{-# COMPILED return (\ _ -> return )   #-}
-{-# COMPILED _>>=_  (\ _ _ -> (>>=)) #-}
+{-# COMPILE GHC return = \ _ -> return #-}
+{-# COMPILE GHC _>>=_ = \ _ _ -> (>>=) #-}
 
 postulate
   putStr : string -> IO ⊤
@@ -52,22 +52,9 @@ postulate
 
   getLine : IO string
 
-{-# IMPORT System.IO #-}
-
-private
-  data simple-list (A : Set) : Set where
-    nil : simple-list A
-    cons : A → simple-list A → simple-list A
-  
-  simple-list-to-𝕃 : ∀ {A : Set} → simple-list A → 𝕃 A
-  simple-list-to-𝕃 nil = []
-  simple-list-to-𝕃 (cons x xs) = x :: (simple-list-to-𝕃 xs)
-
-{-# COMPILED_DATA simple-list ([]) [] (:) #-}
-
 private
   postulate
-    privGetArgs : IO (simple-list string)
+    privGetArgs : IO (𝕃 string)
     privDoesFileExist : string → IO 𝔹
     privCreateDirectoryIfMissing : 𝔹 → string → IO ⊤
     privTakeDirectory : string → string
@@ -77,28 +64,29 @@ private
 
     privGetHomeDirectory : IO string
 
-{-# IMPORT Control.DeepSeq #-}
-{-# IMPORT Data.Text.IO #-}
-{-# COMPILED putStr         Data.Text.IO.putStr                #-}
-{-# COMPILED readFiniteFile (\y -> let x = Data.Text.unpack y in do inh <- System.IO.openFile x System.IO.ReadMode; System.IO.hSetEncoding inh System.IO.utf8; fileAsString <- System.IO.hGetContents inh; Control.DeepSeq.rnf fileAsString `seq` System.IO.hClose inh; return (Data.Text.pack fileAsString)) #-}
-{-# COMPILED writeFile (\path -> (\str -> do outh <- System.IO.openFile (Data.Text.unpack path) System.IO.WriteMode; System.IO.hSetNewlineMode outh System.IO.noNewlineTranslation; System.IO.hSetEncoding outh System.IO.utf8; Data.Text.IO.hPutStr outh str; System.IO.hFlush outh; System.IO.hClose outh; return () )) #-}
-{-# COMPILED initializeStdoutToUTF8  System.IO.hSetEncoding System.IO.stdout System.IO.utf8 #-}
-{-# COMPILED setStdoutNewlineMode System.IO.hSetNewlineMode System.IO.stdout System.IO.universalNewlineMode #-}
-{-# IMPORT System.Environment #-}
-{-# COMPILED privGetArgs (do l <- System.Environment.getArgs; return (map Data.Text.pack l)) #-}
-{-# IMPORT System.Directory #-}
-{-# COMPILED privForceFileRead (\ contents -> seq (length (Data.Text.unpack contents)) (return ())) #-}
-{-# COMPILED privDoesFileExist (\ s -> System.Directory.doesFileExist (Data.Text.unpack s)) #-}
-{-# COMPILED privCreateDirectoryIfMissing (\ b s -> System.Directory.createDirectoryIfMissing b (Data.Text.unpack s)) #-}
-{-# IMPORT System.FilePath #-}
-{-# COMPILED privTakeDirectory (\ s -> Data.Text.pack (System.FilePath.takeDirectory (Data.Text.unpack s))) #-}
-{-# COMPILED privTakeFileName (\ s -> Data.Text.pack (System.FilePath.takeFileName (Data.Text.unpack s))) #-}
-{-# COMPILED privCombineFileNames (\ s1 s2 -> Data.Text.pack (System.FilePath.combine (Data.Text.unpack s1) (Data.Text.unpack s2))) #-}
-{-# COMPILED getLine (Data.Text.IO.hGetLine System.IO.stdin) #-}
-{-# COMPILED privGetHomeDirectory (do x <- System.Directory.getHomeDirectory; return (Data.Text.pack x)) #-}
+{-# FOREIGN GHC import qualified System.IO #-}
+{-# FOREIGN GHC import qualified Control.DeepSeq #-}
+{-# FOREIGN GHC import qualified Data.Text.IO #-}
+{-# COMPILE GHC putStr = Data.Text.IO.putStr #-}
+{-# COMPILE GHC readFiniteFile = (\y -> let x = Data.Text.unpack y in do inh <- System.IO.openFile x System.IO.ReadMode; System.IO.hSetEncoding inh System.IO.utf8; fileAsString <- System.IO.hGetContents inh; Control.DeepSeq.rnf fileAsString `seq` System.IO.hClose inh; return (Data.Text.pack fileAsString)) #-}
+{-# COMPILE GHC writeFile = (\path -> (\str -> do outh <- System.IO.openFile (Data.Text.unpack path) System.IO.WriteMode; System.IO.hSetNewlineMode outh System.IO.noNewlineTranslation; System.IO.hSetEncoding outh System.IO.utf8; Data.Text.IO.hPutStr outh str; System.IO.hFlush outh; System.IO.hClose outh; return () )) #-}
+{-# COMPILE GHC initializeStdoutToUTF8 = System.IO.hSetEncoding System.IO.stdout System.IO.utf8 #-}
+{-# COMPILE GHC setStdoutNewlineMode = System.IO.hSetNewlineMode System.IO.stdout System.IO.universalNewlineMode #-}
+{-# FOREIGN GHC import qualified System.Environment #-}
+{-# COMPILE GHC privGetArgs = (do l <- System.Environment.getArgs; return (map Data.Text.pack l)) #-}
+{-# FOREIGN GHC import qualified System.Directory #-}
+{-# COMPILE GHC privForceFileRead = (\ contents -> seq (length (Data.Text.unpack contents)) (return ())) #-}
+{-# COMPILE GHC privDoesFileExist = (\ s -> System.Directory.doesFileExist (Data.Text.unpack s)) #-}
+{-# COMPILE GHC privCreateDirectoryIfMissing = (\ b s -> System.Directory.createDirectoryIfMissing b (Data.Text.unpack s)) #-}
+{-# FOREIGN GHC import qualified System.FilePath #-}
+{-# COMPILE GHC privTakeDirectory = (\ s -> Data.Text.pack (System.FilePath.takeDirectory (Data.Text.unpack s))) #-}
+{-# COMPILE GHC privTakeFileName = (\ s -> Data.Text.pack (System.FilePath.takeFileName (Data.Text.unpack s))) #-}
+{-# COMPILE GHC privCombineFileNames = (\ s1 s2 -> Data.Text.pack (System.FilePath.combine (Data.Text.unpack s1) (Data.Text.unpack s2))) #-}
+{-# COMPILE GHC getLine = (Data.Text.IO.hGetLine System.IO.stdin) #-}
+{-# COMPILE GHC privGetHomeDirectory = (do x <- System.Directory.getHomeDirectory; return (Data.Text.pack x)) #-}
 
 getArgs : IO (𝕃 string)
-getArgs = privGetArgs >>= (λ args → return (simple-list-to-𝕃 args))
+getArgs = privGetArgs
 
 doesFileExist : string → IO 𝔹
 doesFileExist = privDoesFileExist
@@ -124,8 +112,8 @@ getHomeDirectory = privGetHomeDirectory
 postulate
   fileIsOlder : string → string → IO 𝔹
   canonicalizePath : string → IO string 
-{-# COMPILED fileIsOlder (\ s1 s2 -> (System.Directory.getModificationTime (Data.Text.unpack s1)) >>= \ t1 -> (System.Directory.getModificationTime (Data.Text.unpack s2)) >>= \ t2 -> return (t1 < t2)) #-}
-{-# COMPILED canonicalizePath (\ s -> do x <- System.Directory.canonicalizePath (Data.Text.unpack s); return (Data.Text.pack x)) #-}
+{-# COMPILE GHC fileIsOlder = (\ s1 s2 -> (System.Directory.getModificationTime (Data.Text.unpack s1)) >>= \ t1 -> (System.Directory.getModificationTime (Data.Text.unpack s2)) >>= \ t2 -> return (t1 < t2)) #-}
+{-# COMPILE GHC canonicalizePath = (\ s -> do x <- System.Directory.canonicalizePath (Data.Text.unpack s); return (Data.Text.pack x)) #-}
 
 ----------------------------------------------------------------------
 -- defined operations

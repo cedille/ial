@@ -11,7 +11,7 @@ come from Agda's standard library.
 
 2. Using the library 
 
-This library has been tested with Agda 2.5.1.2.  If you are
+This library has been tested with Agda 2.5.4.  If you are
 using an older version of Agda, try version 1.2:
 
 https://svn.divms.uiowa.edu/repos/clc/projects/agda/ial-releases/1.2

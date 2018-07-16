@@ -46,7 +46,7 @@ postulate
 postulate
   _<char_ : char → char → 𝔹
   
-{-# COMPILED _<char_ (<)   #-}
+{-# COMPILE GHC _<char_ = (<) #-}
 
 ----------------------------------------------------------------------
 -- defined operations
