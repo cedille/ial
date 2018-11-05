@@ -48,13 +48,17 @@ especially Tom Werner.
 
 5. Releases
 
-Released versions of the library can be found at
+Recent releases of the IAL can be found here:
+
+https://github.com/cedille/ial/releases
+
+Older released versions of the library can be found at
 
 https://svn.divms.uiowa.edu/repos/clc/projects/agda/ial-releases
 
 The development version is at
 
-https://svn.divms.uiowa.edu/repos/clc/projects/agda/ial
+https://github.com/cedille/ial
 
 6. License
 
