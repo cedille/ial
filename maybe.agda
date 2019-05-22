@@ -12,7 +12,9 @@ data maybe {ℓ}(A : Set ℓ) : Set ℓ where
   nothing : maybe A
   just : A → maybe A
 
-{-# COMPILE GHC maybe = data Maybe (Nothing | Just) #-}
+{-# FOREIGN GHC type AgdaMaybe l = Maybe #-}
+-- ^ Deal with maybe's level-polymorphism (the ℓ implicit parameter)
+{-# COMPILE GHC maybe = data AgdaMaybe (Nothing | Just) #-}
 
 ----------------------------------------------------------------------
 -- operations
