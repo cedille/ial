@@ -9,8 +9,10 @@ open import bool
 ----------------------------------------------------------------------
 
 data maybe {ℓ}(A : Set ℓ) : Set ℓ where
-  just : A → maybe A
   nothing : maybe A
+  just : A → maybe A
+
+{-# COMPILE GHC maybe = data Maybe (Nothing | Just) #-}
 
 ----------------------------------------------------------------------
 -- operations
