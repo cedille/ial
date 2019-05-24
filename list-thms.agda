@@ -4,6 +4,7 @@ module list-thms where
 
 open import bool
 open import bool-thms
+open import bool-thms2
 open import functions
 open import list
 open import nat
@@ -181,3 +182,8 @@ is-empty-++ (x :: l1) l2 = refl
 is-empty-ff-length : ∀{ℓ}{A : Set ℓ}(l : 𝕃 A) → is-empty l ≡ ff → length l =ℕ 0 ≡ ff
 is-empty-ff-length [] ()
 is-empty-ff-length (x :: l) p = refl
+
+list-all-append : ∀{ℓ}{A : Set ℓ}(p : A → 𝔹)(l l' : 𝕃 A) →
+                  list-all p (l ++ l') ≡ list-all p l && list-all p l'
+list-all-append p [] l' = refl
+list-all-append p (x :: l) l' rewrite list-all-append p l l' | &&-assoc (p x) (list-all p l) (list-all p l') = refl
