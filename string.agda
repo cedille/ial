@@ -6,15 +6,31 @@ open import char
 open import list
 open import nat
 open import unit
+open import maybe
+open import product
 
 ----------------------------------------------------------------------
 -- datatypes
 ----------------------------------------------------------------------
 
 postulate
+  Pair : (A B : Set) → Set
+  pair : {A B : Set} → A → B → Pair A B
+  pair-fst : {A B : Set} → Pair A B → A
+  pair-snd : {A B : Set} → Pair A B → B
+
+{-# COMPILE GHC Pair = type (,)           #-}
+{-# COMPILE GHC pair = \ _ _ a b -> (a, b) #-}  
+{-# COMPILE GHC pair-fst = \ _ _ p -> fst p #-}  
+{-# COMPILE GHC pair-snd = \ _ _ p -> snd p #-}  
+
+
+postulate
   string : Set
+  stringUncons   : string → maybe (Pair char string)
 
 {-# BUILTIN STRING string #-}
+{-# COMPILE GHC stringUncons = Data.Text.uncons #-}
 
 private
  primitive
@@ -40,6 +56,11 @@ infix 8 _=string_
 
 _^_ : string → string → string
 _^_ = primStringAppend
+
+string-uncons : string → maybe (char × string)
+string-uncons x with stringUncons x
+string-uncons x | nothing = nothing
+string-uncons x | just x₁ = just (pair-fst x₁ , pair-snd x₁)
 
 string-to-𝕃char : string → 𝕃 char
 string-to-𝕃char = primStringToList
