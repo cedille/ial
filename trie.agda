@@ -49,8 +49,21 @@ trie-lookup-h (Node odata ts) (c :: cs) | nothing = nothing
 trie-lookup-h (Node odata ts) (c :: cs) | just t = trie-lookup-h t cs
 trie-lookup-h (Node odata ts) [] = odata
 
+trie-lookup-safe : ∀{A : Set} → trie A → string → maybe A
+trie-lookup-safe t s = trie-lookup-h t (string-to-𝕃char s)
+
+trie-lookup-fast : ∀{A : Set} → trie A → string → maybe A
+{-# TERMINATING #-}
+trie-lookup-fast (Node odata ts) s with string-uncons s
+trie-lookup-fast (Node odata ts) s | nothing = odata
+trie-lookup-fast (Node odata ts) s | just (c , cs) with cal-lookup ts c
+trie-lookup-fast (Node odata ts) s | just (c , cs) | nothing = nothing
+trie-lookup-fast (Node odata ts) s | just (c , cs) | just t = trie-lookup-fast t cs
+
 trie-lookup : ∀{A : Set} → trie A → string → maybe A
-trie-lookup t s = trie-lookup-h t (string-to-𝕃char s)
+-- trie-lookup = trie-lookup-safe
+trie-lookup = trie-lookup-fast
+-- trie-lookup t s = nothing
 
 trie-contains : ∀{A : Set} → trie A → string → 𝔹
 trie-contains t s with trie-lookup t s

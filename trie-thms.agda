@@ -18,8 +18,8 @@ trie-lookup-empty-h : ∀ {A} x → trie-lookup-h{A} empty-trie x ≡ nothing
 trie-lookup-empty-h [] = refl
 trie-lookup-empty-h (_ :: _) = refl
 
-trie-lookup-empty : ∀ {A} x → trie-lookup{A} empty-trie x ≡ nothing
-trie-lookup-empty x = trie-lookup-empty-h (string-to-𝕃char x)
+-- trie-lookup-empty : ∀ {A} x → trie-lookup{A} empty-trie x ≡ nothing
+-- trie-lookup-empty x = trie-lookup-empty-h (string-to-𝕃char x)
 
 trie-cal-insert-nonempty : ∀{A : Set}(ts : cal (trie A))(c : char)(t : trie A) → trie-nonempty t ≡ tt → 
                             trie-cal-nonempty (cal-insert ts c t) ≡ tt
