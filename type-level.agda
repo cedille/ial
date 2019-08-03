@@ -24,7 +24,7 @@ multiApplyh {n = zero} a = lift a
 multiApplyh {n = suc n} a f = multiApplyh{n = n} (f a)
 
 multiApply : {n : ℕ} → multiApplyT n
-multiApply{n} = λ{A : Set}(a : A) → multiApplyh{A}{n} a
+multiApply = λ a → multiApplyh a
 
 multiApply-test1 : Lift 𝔹
 multiApply-test1 = multiApply{3} 3 (_+_ 3) is-even ~_
