@@ -3,6 +3,9 @@ module int where
 
 open import bool
 open import string
+open import list
+open import char
+open import functions
 
 postulate 
   int : Set
@@ -11,7 +14,7 @@ postulate
   _+int_ : int → int → int
   _*int_ : int → int → int
   _-int_ : int → int → int
-  string-to-int : string → int
+  𝕃char-to-int : 𝕃 char → int
   is-zero-int : int → 𝔹
 
 {-# COMPILE GHC int = type Int #-}
@@ -20,5 +23,8 @@ postulate
 {-# COMPILE GHC _+int_ = (+) #-}
 {-# COMPILE GHC _*int_ = (*) #-}
 {-# COMPILE GHC _-int_ = (-) #-}
-{-# COMPILE GHC string-to-int x = read x :: Int #-}
+{-# COMPILE GHC 𝕃char-to-int = \ x -> read x :: Int #-}
 {-# COMPILE GHC is-zero-int = (==) 0 #-}
+
+string-to-int : string → int
+string-to-int = 𝕃char-to-int ∘ string-to-𝕃char
