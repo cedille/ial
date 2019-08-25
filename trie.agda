@@ -60,10 +60,22 @@ trie-lookup-fast (Node odata ts) s | just (c , cs) with cal-lookup ts c
 trie-lookup-fast (Node odata ts) s | just (c , cs) | nothing = nothing
 trie-lookup-fast (Node odata ts) s | just (c , cs) | just t = trie-lookup-fast t cs
 
+trie-lookup-fast2 : ∀{A : Set} → trie A → string → maybe A
+trie-lookup-fast2{A} t s
+  = extract (stringFoldl f (just t) s)
+  where
+    extract : maybe (trie A) → maybe A
+    extract nothing = nothing
+    extract (just (Node odata _)) = odata
+
+    f : maybe (trie A) → char → maybe (trie A)
+    f nothing c = nothing
+    f (just (Node _ ts)) = cal-lookup ts
+
 trie-lookup : ∀{A : Set} → trie A → string → maybe A
 -- trie-lookup = trie-lookup-safe
-trie-lookup = trie-lookup-fast
--- trie-lookup t s = nothing
+-- trie-lookup = trie-lookup-fast
+trie-lookup = trie-lookup-fast2
 
 trie-contains : ∀{A : Set} → trie A → string → 𝔹
 trie-contains t s with trie-lookup t s
