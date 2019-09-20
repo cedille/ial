@@ -8,6 +8,7 @@ open import product
 open import string
 open import unit
 
+-- possibly define an "empty cal" as empty list 
 cal : Set → Set
 cal A = 𝕃 (char × A)
 
@@ -60,6 +61,7 @@ trie-lookup-fast (Node odata ts) s | just (c , cs) with cal-lookup ts c
 trie-lookup-fast (Node odata ts) s | just (c , cs) | nothing = nothing
 trie-lookup-fast (Node odata ts) s | just (c , cs) | just t = trie-lookup-fast t cs
 
+-- consider implementing our own fold that allows an early "abort"/"shortcut"
 trie-lookup-fast2 : ∀{A : Set} → trie A → string → maybe A
 trie-lookup-fast2{A} t s
   = extract (stringFoldl f (just t) s)
@@ -68,6 +70,8 @@ trie-lookup-fast2{A} t s
     extract nothing = nothing
     extract (just (Node odata _)) = odata
 
+    -- define an "empty trie" and change this to:
+    --  (trie A) → char → (trie A)
     f : maybe (trie A) → char → maybe (trie A)
     f nothing c = nothing
     f (just (Node _ ts)) = cal-lookup ts
