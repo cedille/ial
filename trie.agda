@@ -8,6 +8,7 @@ open import product
 open import string
 open import unit
 open import eq
+open import nat
 
 cal : Set → Set
 cal A = 𝕃 (char × A)
@@ -204,6 +205,9 @@ trie-mappings t = trie-mappings-h t []
 -- return a list of all the strings which have associated data in the trie
 trie-strings : ∀{A : Set} → trie A → 𝕃 string 
 trie-strings t = map fst (trie-mappings t)
+
+trie-size : ∀{A : Set} → trie A → ℕ
+trie-size t = length (trie-strings t)
 
 trie-nonempty : ∀{A : Set} → trie A → 𝔹
 trie-cal-nonempty : ∀{A : Set} → cal (trie A) → 𝔹
