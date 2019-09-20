@@ -38,8 +38,8 @@ trie-insert-h-nonempty (Node nothing ts) (c :: cs) a | just t =
 trie-insert-h-nonempty (Node (just x) ts) (c :: cs) a | nothing = refl
 trie-insert-h-nonempty (Node nothing ts) (c :: cs) a | nothing rewrite (trie-insert-h-nonempty empty-trie cs a) = refl
 
-trie-insert-nonempty : ∀{A : Set}(t : trie A)(s : string)(a : A) → trie-nonempty (trie-insert t s a) ≡ tt
-trie-insert-nonempty t s a = trie-insert-h-nonempty t (string-to-𝕃char s) a
+-- trie-insert-nonempty : ∀{A : Set}(t : trie A)(s : string)(a : A) → trie-nonempty (trie-insert t s a) ≡ tt
+-- trie-insert-nonempty t s a = trie-insert-h-nonempty t (string-to-𝕃char s) a
 
 
 trie-mappings-h-nonempty : ∀ {A : Set}(t : trie A)(prev-str : 𝕃 char) → 

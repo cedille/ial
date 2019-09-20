@@ -7,8 +7,8 @@ open import maybe
 open import product
 open import string
 open import unit
+open import eq
 
--- possibly define an "empty cal" as empty list 
 cal : Set → Set
 cal A = 𝕃 (char × A)
 
@@ -61,7 +61,6 @@ trie-lookup-fast (Node odata ts) s | just (c , cs) with cal-lookup ts c
 trie-lookup-fast (Node odata ts) s | just (c , cs) | nothing = nothing
 trie-lookup-fast (Node odata ts) s | just (c , cs) | just t = trie-lookup-fast t cs
 
--- consider implementing our own fold that allows an early "abort"/"shortcut"
 trie-lookup-fast2 : ∀{A : Set} → trie A → string → maybe A
 trie-lookup-fast2{A} t s
   = extract (stringFoldl f (just t) s)
@@ -70,16 +69,29 @@ trie-lookup-fast2{A} t s
     extract nothing = nothing
     extract (just (Node odata _)) = odata
 
-    -- define an "empty trie" and change this to:
-    --  (trie A) → char → (trie A)
     f : maybe (trie A) → char → maybe (trie A)
     f nothing c = nothing
     f (just (Node _ ts)) = cal-lookup ts
 
+trie-lookup-fast3 : ∀{A : Set} → trie A → string → maybe A
+trie-lookup-fast3{A} t s
+  = extract (stringFoldl f t s)
+  where
+    extract : trie A → maybe A
+    extract (Node x _) = x
+
+    -- define an "empty trie" and change this to:
+    --  (trie A) → char → (trie A)
+    f : trie A → char → trie A
+    f (Node _ ts) c with cal-lookup ts c
+    f (Node _ ts) c | nothing = Node nothing empty-cal
+    f (Node _ ts) c | just t = t
+
 trie-lookup : ∀{A : Set} → trie A → string → maybe A
 -- trie-lookup = trie-lookup-safe
 -- trie-lookup = trie-lookup-fast
-trie-lookup = trie-lookup-fast2
+-- trie-lookup = trie-lookup-fast2
+trie-lookup = trie-lookup-fast3
 
 trie-contains : ∀{A : Set} → trie A → string → 𝔹
 trie-contains t s with trie-lookup t s
@@ -94,8 +106,47 @@ trie-insert-h (Node odata ts) (c :: cs) x | just t =
 trie-insert-h (Node odata ts) (c :: cs) x | nothing = 
   (Node odata (cal-add ts c (trie-insert-h empty-trie cs x)))
 
+-- trie-insert-tmp : ∀{A : Set} → trie A → 𝕃 char → A → 𝕃 (trie A → trie A)
+-- trie-insert-tmp (Node odata ts) [] x = [ (λ _ → (Node (just x) ts)) ]
+-- trie-insert-tmp (Node odata ts) (c :: cs) x with cal-lookup ts c
+-- trie-insert-tmp (Node odata ts) (c :: cs) x | just t = 
+--   (λ child → (Node odata (cal-insert ts c child))) :: (trie-insert-tmp t cs x)
+-- trie-insert-tmp (Node odata ts) (c :: cs) x | nothing = 
+--   (λ child → (Node odata (cal-add ts c child))) :: (trie-insert-tmp empty-trie cs x)
+
+trie-insert-safe : ∀{A : Set} → trie A → string → A → trie A
+trie-insert-safe t s x = trie-insert-h t (string-to-𝕃char s) x
+
+trie-insert-fast : ∀{A : Set} → trie A → string → A → trie A
+trie-insert-fast{A} t s new-data = post-process (stringFoldl g (t , []) s)
+  where
+   initial-f : trie A → trie A
+   initial-f (Node _ ts) = Node (just new-data) ts
+
+   post-process-f : (trie A → trie A) → (trie A) → trie A
+   post-process-f f t = f t
+
+   post-process : (trie A) × 𝕃 (trie A → trie A) → trie A
+   post-process (t , l) = foldr post-process-f (initial-f t) l
+
+   -- post-process (Node _ ts , []) = Node (just new-data) ts
+   -- post-process (t , f :: l) = post-process ({! !} , l)
+
+   nothing-case : maybe A → cal (trie A) → char → trie A → trie A
+   nothing-case odata ts c child = Node odata (cal-add ts c child)
+
+   just-case : maybe A → cal (trie A) → char → trie A → trie A
+   just-case odata ts c child = Node odata (cal-insert ts c child)
+   -- (Node odata (cal-insert ts c (trie-insert-h t cs x)))
+
+   g : (trie A) × 𝕃 (trie A → trie A) → char → (trie A) × 𝕃 (trie A → trie A)
+   g (Node odata ts , l) c with cal-lookup ts c 
+   g (Node odata ts , l) c | nothing = empty-trie , (nothing-case odata ts c :: l)
+   g (Node odata ts , l) c | just t = t , (just-case odata ts c) :: l
+
 trie-insert : ∀{A : Set} → trie A → string → A → trie A
-trie-insert t s x = trie-insert-h t (string-to-𝕃char s) x
+-- trie-insert = trie-insert-safe
+trie-insert = trie-insert-fast
 
 trie-remove-h : ∀{A : Set} → trie A → 𝕃 char → trie A
 trie-remove-h (Node odata ts) (c :: cs) with cal-lookup ts c
@@ -128,6 +179,17 @@ trie-cal-to-string-h sep d ((c , t) :: cs) prev-str =
    where sep is a string and d returns a string for any element A of the trie. -}
 trie-to-string : ∀{A : Set} → string → (A → string) → trie A → string
 trie-to-string sep d t = trie-to-string-h sep d t []
+
+
+bool-to-string : 𝔹 → string
+bool-to-string tt = "true"
+bool-to-string ff = "false"
+
+insert-test1 : (trie-to-string ":" bool-to-string (trie-insert-safe empty-trie "hi" tt)) ≡ "hi:true\n"
+insert-test1 = refl
+
+-- insert-test2 : (trie-to-string ":" bool-to-string (trie-insert-fast empty-trie "hi" tt)) ≡ "hi:true\n"
+-- insert-test2 = {!!}
 
 trie-mappings-h : ∀{A : Set} → trie A → 𝕃 char → 𝕃 (string × A)
 trie-cal-mappings-h : ∀{A : Set} → cal (trie A) → 𝕃 char → 𝕃 (string × A)
