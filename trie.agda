@@ -118,13 +118,14 @@ trie-insert-h (Node odata ts) (c :: cs) x | nothing =
 trie-insert-safe : ∀{A : Set} → trie A → string → A → trie A
 trie-insert-safe t s x = trie-insert-h t (string-to-𝕃char s) x
 
-foldl : ∀{ℓ ℓ'}{A : Set ℓ}{B : Set ℓ'} → (A → B → B) → B → 𝕃 A → B
-foldl f b [] = b
-foldl f b (x :: l) = foldl f (f x b) l
 
 trie-insert-fast : ∀{A : Set} → trie A → string → A → trie A
 trie-insert-fast{A} t s new-data = post-process (stringFoldl g (t , []) s)
   where
+   foldl : ∀{ℓ ℓ'}{A : Set ℓ}{B : Set ℓ'} → (A → B → B) → B → 𝕃 A → B
+   foldl f b [] = b
+   foldl f b (x :: l) = foldl f (f x b) l
+
    initial-f : trie A → trie A
    initial-f (Node _ ts) = Node (just new-data) ts
 
