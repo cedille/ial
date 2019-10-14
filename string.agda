@@ -28,11 +28,13 @@ postulate
 postulate
   string : Set
   stringUncons   : string → maybe (Pair char string)
-  stringFoldl : ∀{A : Set} → (A → char → A) → A → string → A 
+  stringFoldl : ∀{A : Set} → (A → char → A) → A → string → A
+  stringFoldr : ∀{A : Set} → (char → A → A) → A → string → A
 
 {-# BUILTIN STRING string #-}
 {-# COMPILE GHC stringUncons = Data.Text.uncons #-}
 {-# COMPILE GHC stringFoldl = \ x -> Data.Text.foldl #-}
+{-# COMPILE GHC stringFoldr = \ x -> Data.Text.foldr #-}
 
 private
  primitive

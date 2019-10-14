@@ -54,25 +54,25 @@ trie-lookup-h (Node odata ts) [] = odata
 trie-lookup-safe : ∀{A : Set} → trie A → string → maybe A
 trie-lookup-safe t s = trie-lookup-h t (string-to-𝕃char s)
 
-trie-lookup-fast : ∀{A : Set} → trie A → string → maybe A
-{-# TERMINATING #-}
-trie-lookup-fast (Node odata ts) s with string-uncons s
-trie-lookup-fast (Node odata ts) s | nothing = odata
-trie-lookup-fast (Node odata ts) s | just (c , cs) with cal-lookup ts c
-trie-lookup-fast (Node odata ts) s | just (c , cs) | nothing = nothing
-trie-lookup-fast (Node odata ts) s | just (c , cs) | just t = trie-lookup-fast t cs
+-- trie-lookup-fast : ∀{A : Set} → trie A → string → maybe A
+-- {-# TERMINATING #-}
+-- trie-lookup-fast (Node odata ts) s with string-uncons s
+-- trie-lookup-fast (Node odata ts) s | nothing = odata
+-- trie-lookup-fast (Node odata ts) s | just (c , cs) with cal-lookup ts c
+-- trie-lookup-fast (Node odata ts) s | just (c , cs) | nothing = nothing
+-- trie-lookup-fast (Node odata ts) s | just (c , cs) | just t = trie-lookup-fast t cs
 
-trie-lookup-fast2 : ∀{A : Set} → trie A → string → maybe A
-trie-lookup-fast2{A} t s
-  = extract (stringFoldl f (just t) s)
-  where
-    extract : maybe (trie A) → maybe A
-    extract nothing = nothing
-    extract (just (Node odata _)) = odata
+-- trie-lookup-fast2 : ∀{A : Set} → trie A → string → maybe A
+-- trie-lookup-fast2{A} t s
+--   = extract (stringFoldl f (just t) s)
+--   where
+--     extract : maybe (trie A) → maybe A
+--     extract nothing = nothing
+--     extract (just (Node odata _)) = odata
 
-    f : maybe (trie A) → char → maybe (trie A)
-    f nothing c = nothing
-    f (just (Node _ ts)) = cal-lookup ts
+--     f : maybe (trie A) → char → maybe (trie A)
+--     f nothing c = nothing
+--     f (just (Node _ ts)) = cal-lookup ts
 
 trie-lookup-fast3 : ∀{A : Set} → trie A → string → maybe A
 trie-lookup-fast3{A} t s
@@ -107,52 +107,55 @@ trie-insert-h (Node odata ts) (c :: cs) x | just t =
 trie-insert-h (Node odata ts) (c :: cs) x | nothing = 
   (Node odata (cal-add ts c (trie-insert-h empty-trie cs x)))
 
--- trie-insert-tmp : ∀{A : Set} → trie A → 𝕃 char → A → 𝕃 (trie A → trie A)
--- trie-insert-tmp (Node odata ts) [] x = [ (λ _ → (Node (just x) ts)) ]
--- trie-insert-tmp (Node odata ts) (c :: cs) x with cal-lookup ts c
--- trie-insert-tmp (Node odata ts) (c :: cs) x | just t = 
---   (λ child → (Node odata (cal-insert ts c child))) :: (trie-insert-tmp t cs x)
--- trie-insert-tmp (Node odata ts) (c :: cs) x | nothing = 
---   (λ child → (Node odata (cal-add ts c child))) :: (trie-insert-tmp empty-trie cs x)
-
 trie-insert-safe : ∀{A : Set} → trie A → string → A → trie A
 trie-insert-safe t s x = trie-insert-h t (string-to-𝕃char s) x
 
 
-trie-insert-fast : ∀{A : Set} → trie A → string → A → trie A
-trie-insert-fast{A} t s new-data = post-process (stringFoldl g (t , []) s)
+trie-insert-fast2 : ∀{A : Set} → trie A → string → A → trie A
+trie-insert-fast2{A} t s new-data = (stringFoldr g initial-f s) t
   where
-   foldl : ∀{ℓ ℓ'}{A : Set ℓ}{B : Set ℓ'} → (A → B → B) → B → 𝕃 A → B
-   foldl f b [] = b
-   foldl f b (x :: l) = foldl f (f x b) l
-
    initial-f : trie A → trie A
    initial-f (Node _ ts) = Node (just new-data) ts
 
-   post-process-f : (trie A → trie A) → (trie A) → trie A
-   post-process-f f t = f t
+   g : char → (trie A → trie A) → (trie A → trie A)
+   g c f (Node odata ts) with cal-lookup ts c
+   g c f (Node odata ts) | nothing = Node odata (cal-add ts c (f empty-trie))
+   g c f (Node odata ts) | just t = Node odata (cal-insert ts c (f t))
 
-   post-process : (trie A) × 𝕃 (trie A → trie A) → trie A
-   post-process (t , l) = foldl post-process-f (initial-f t) l
+-- trie-insert-fast : ∀{A : Set} → trie A → string → A → trie A
+-- trie-insert-fast{A} t s new-data = post-process (stringFoldl g (t , []) s)
+--   where
+--    foldl : ∀{ℓ ℓ'}{A : Set ℓ}{B : Set ℓ'} → (A → B → B) → B → 𝕃 A → B
+--    foldl f b [] = b
+--    foldl f b (x :: l) = foldl f (f x b) l
 
-   -- post-process (Node _ ts , []) = Node (just new-data) ts
-   -- post-process (t , f :: l) = post-process ({! !} , l)
+--    initial-f : trie A → trie A
+--    initial-f (Node _ ts) = Node (just new-data) ts
 
-   nothing-case : maybe A → cal (trie A) → char → trie A → trie A
-   nothing-case odata ts c child = Node odata (cal-add ts c child)
+--    post-process-f : (trie A → trie A) → (trie A) → trie A
+--    post-process-f f t = f t
 
-   just-case : maybe A → cal (trie A) → char → trie A → trie A
-   just-case odata ts c child = Node odata (cal-insert ts c child)
-   -- (Node odata (cal-insert ts c (trie-insert-h t cs x)))
+--    post-process : (trie A) × 𝕃 (trie A → trie A) → trie A
+--    post-process (t , l) = foldl post-process-f (initial-f t) l
 
-   g : (trie A) × 𝕃 (trie A → trie A) → char → (trie A) × 𝕃 (trie A → trie A)
-   g (Node odata ts , l) c with cal-lookup ts c 
-   g (Node odata ts , l) c | nothing = empty-trie , (nothing-case odata ts c :: l)
-   g (Node odata ts , l) c | just t = t , (just-case odata ts c) :: l
+--    -- post-process (Node _ ts , []) = Node (just new-data) ts
+--    -- post-process (t , f :: l) = post-process ({! !} , l)
+
+--    nothing-case : maybe A → cal (trie A) → char → trie A → trie A
+--    nothing-case odata ts c child = Node odata (cal-add ts c child)
+
+--    just-case : maybe A → cal (trie A) → char → trie A → trie A
+--    just-case odata ts c child = Node odata (cal-insert ts c child)
+--    -- (Node odata (cal-insert ts c (trie-insert-h t cs x)))
+
+--    g : (trie A) × 𝕃 (trie A → trie A) → char → (trie A) × 𝕃 (trie A → trie A)
+--    g (Node odata ts , l) c with cal-lookup ts c 
+--    g (Node odata ts , l) c | nothing = empty-trie , (nothing-case odata ts c :: l)
+--    g (Node odata ts , l) c | just t = t , (just-case odata ts c) :: l
 
 trie-insert : ∀{A : Set} → trie A → string → A → trie A
 -- trie-insert = trie-insert-safe
-trie-insert = trie-insert-fast
+trie-insert = trie-insert-fast2
 
 trie-remove-h : ∀{A : Set} → trie A → 𝕃 char → trie A
 trie-remove-h (Node odata ts) (c :: cs) with cal-lookup ts c
@@ -160,8 +163,23 @@ trie-remove-h (Node odata ts) (c :: cs) | nothing = Node odata ts
 trie-remove-h (Node odata ts) (c :: cs) | just t = Node odata (cal-insert ts c (trie-remove-h t cs))
 trie-remove-h (Node odata ts) [] = Node nothing ts
 
+trie-remove-fast : ∀{A : Set} → trie A → string → trie A
+trie-remove-fast{A} t s = (stringFoldr g initial-f s) t
+  where
+   initial-f : trie A → trie A
+   initial-f (Node _ ts) = Node nothing ts
+
+   g : char → (trie A → trie A) → (trie A → trie A)
+   g c f (Node odata ts) with cal-lookup ts c
+   g c f (Node odata ts) | nothing = Node odata ts
+   g c f (Node odata ts) | just t = Node odata (cal-insert ts c (f t))
+
+trie-remove-safe : ∀{A : Set} → trie A → string → trie A
+trie-remove-safe t s = trie-remove-h t (string-to-𝕃char s) 
+
 trie-remove : ∀{A : Set} → trie A → string → trie A
-trie-remove t s = trie-remove-h t (string-to-𝕃char s) 
+-- trie-remove = trie-remove-safe
+trie-remove = trie-remove-fast
 
 trie-map : ∀{A B : Set} → (A → B) → trie A → trie B
 trie-cal-map : ∀{A B : Set} → (A → B) → cal (trie A) → cal (trie B)
