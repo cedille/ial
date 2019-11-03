@@ -1,6 +1,6 @@
 module trie-fast where
 
-open import trie using (trie ; Node ; cal-lookup ; cal-insert ; empty-cal ; cal-add ; trie-insert-h ; trie-lookup-h ; trie-remove-h ; empty-trie ; trie-to-string)
+open import trie hiding (trie-lookup ; trie-insert ; trie-remove) public
 open import string
 open import maybe
 open import char
