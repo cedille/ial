@@ -20,5 +20,5 @@ postulate
 {-# COMPILE GHC _+int_ = (+) #-}
 {-# COMPILE GHC _*int_ = (*) #-}
 {-# COMPILE GHC _-int_ = (-) #-}
-{-# COMPILE GHC string-to-int x = read x :: Int #-}
+{-# COMPILE GHC string-to-int = \ x -> read x :: Int #-}
 {-# COMPILE GHC is-zero-int = (==) 0 #-}
