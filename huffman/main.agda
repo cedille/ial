@@ -62,11 +62,11 @@ build-huffman-pqueue ((s , f) :: l) = pq-insert (ht-leaf s f) (build-huffman-pqu
 -- where we call this function, we have enough evidence to prove the Braun tree is nonempty 
 process-huffman-pqueue : ∀{n} → n =ℕ 0 ≡ ff → pqueue n → huffman-tree
 process-huffman-pqueue{0} () b
-process-huffman-pqueue{suc n} _ t with pq-remove-min t 
-process-huffman-pqueue{suc 0} _ t | h , _ = h
-process-huffman-pqueue{suc (suc n)} _ _ | h , t with pq-remove-min t 
-process-huffman-pqueue{suc (suc n)} _ _ | h , _ | h' , t =
-  process-huffman-pqueue{suc n} refl (pq-insert (ht-node ((ht-frequency h) + (ht-frequency h')) h h') t)
+process-huffman-pqueue{suc n} _ t with (λ r x → process-huffman-pqueue {n} r x) | pq-remove-min t 
+process-huffman-pqueue{suc 0} _ t | _ | h , _ = h
+process-huffman-pqueue{suc (suc n)} _ _ | _ | h , t with pq-remove-min t 
+process-huffman-pqueue{suc (suc n)} _ _ | rec | h , _ | h' , t =
+  rec refl (pq-insert (ht-node ((ht-frequency h) + (ht-frequency h')) h h') t)
 
 build-mappingh : huffman-tree → trie string → 𝕃 char → trie string
 build-mappingh (ht-leaf s _) m l = trie-insert m s (𝕃char-to-string (reverse l))
