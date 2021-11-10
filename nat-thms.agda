@@ -540,11 +540,14 @@ max-<1{0}{suc m} = refl
 max-<1{suc n}{0} rewrite =ℕ-refl n | ||-tt (n < n) = refl
 max-<1{suc n}{suc m} rewrite max-suc n m = max-<1{n}
 
-max-<2 : ∀ {n m : ℕ} → n ≤ max n m ≡ tt
-max-<2{0}{0} = refl
-max-<2{0}{suc m} = refl
-max-<2{suc n}{0} rewrite =ℕ-refl n | ||-tt (n < n) = refl
-max-<2{suc n}{suc m} rewrite max-suc n m = max-<2{n}
+max-comm : ∀ {n m : ℕ} -> max n m ≡ max m n
+max-comm{n}{m} with ℕ-trichotomy n m
+... | inj₁ n<m rewrite n<m | <-asym{n}{m} n<m = refl
+... | inj₂ (inj₁ n=ℕm) rewrite =ℕ-to-≡ {n} n=ℕm = refl
+... | inj₂ (inj₂ m<n) rewrite m<n | <-asym{m}{n} m<n = refl
+
+max-<2 : ∀ {n m : ℕ} → m ≤ max n m ≡ tt
+max-<2{n}{m} rewrite max-comm{n}{m} = max-<1{m}{n}
 
 min-0 : ∀{n : ℕ} → min 0 n ≡ 0
 min-0 {n} with keep (0 < n)
