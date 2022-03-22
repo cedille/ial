@@ -11,9 +11,9 @@ open import nat-thms
 merge : (l1 l2 : 𝕃 A) → 𝕃 A
 merge [] ys = ys
 merge xs [] = xs
-merge (x :: xs) (y :: ys) with x <A y
-merge (x :: xs) (y :: ys) | tt = x :: (merge xs (y :: ys))
-merge (x :: xs) (y :: ys) | ff = y :: (merge (x :: xs) ys)
+merge (x :: xs) (y :: ys) with merge xs (y :: ys) | merge (x :: xs) ys | x <A y
+merge (x :: xs) (y :: ys) | rec₁ | _ | tt = x :: rec₁
+merge (x :: xs) (y :: ys) | _ | rec₂ | ff = y :: rec₂
 
 merge-sort-h : ∀{n : ℕ} → braun-tree' n → 𝕃 A
 merge-sort-h (bt'-leaf a) = [ a ]
