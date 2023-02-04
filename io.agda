@@ -37,17 +37,17 @@ postulate
 postulate
   putStr : string -> IO ⊤
 
-  -- Reads a file, which is assumed to be finite. 
+  -- Reads a file, which is assumed to be finite.
   readFiniteFile : string → IO string
 
   writeFile : string → string → IO ⊤
 
   -- set output to UTF-8 for Windows
-  
+
   initializeStdoutToUTF8 : IO ⊤
 
   -- set newline mode for Windows
-  
+
   setStdoutNewlineMode : IO ⊤
 
   getLine : IO string
@@ -111,7 +111,7 @@ getHomeDirectory = privGetHomeDirectory
 
 postulate
   fileIsOlder : string → string → IO 𝔹
-  canonicalizePath : string → IO string 
+  canonicalizePath : string → IO string
 {-# COMPILE GHC fileIsOlder = (\ s1 s2 -> (System.Directory.getModificationTime (Data.Text.unpack s1)) >>= \ t1 -> (System.Directory.getModificationTime (Data.Text.unpack s2)) >>= \ t2 -> return (t1 < t2)) #-}
 {-# COMPILE GHC canonicalizePath = (\ s -> do x <- System.Directory.canonicalizePath (Data.Text.unpack s); return (Data.Text.pack x)) #-}
 

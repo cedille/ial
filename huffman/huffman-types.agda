@@ -20,29 +20,29 @@ word = string
 
 mutual
 
-  data bvlit : Set where 
+  data bvlit : Set where
     BvlitCons : digit → bvlit → bvlit
     BvlitStart : digit → bvlit
 
-  data cmd : Set where 
+  data cmd : Set where
     Decode : codes → bvlit → cmd
     Encode : words → cmd
 
-  data code : Set where 
+  data code : Set where
     Code : word → bvlit → code
 
-  data codes : Set where 
+  data codes : Set where
     CodesNext : code → codes → codes
     CodesStart : code → codes
 
-  data digit : Set where 
+  data digit : Set where
     One : digit
     Zero : digit
 
-  data start : Set where 
+  data start : Set where
     File : cmd → start
 
-  data words : Set where 
+  data words : Set where
     WordsNext : word → words → words
     WordsStart : word → words
 

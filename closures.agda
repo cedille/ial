@@ -3,7 +3,7 @@ open import level
 open import eq
 open import product
 open import product-thms
-open import relations 
+open import relations
 
 module closures where
 
@@ -16,9 +16,9 @@ module closures where
     data rc : A → A → Set (ℓ ⊔ ℓ') where
       rc-step : ∀{a b : A} → a >A b → rc a b
       rc-refl : ∀{a : A} → rc a a
-  
+
     tc-transitive : transitive tc
-    tc-transitive = tc-trans 
+    tc-transitive = tc-trans
 
   module combinations {ℓ ℓ' : level}{A : Set ℓ} (_>A_ : A → A → Set ℓ') where
      open basics public

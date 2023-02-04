@@ -63,7 +63,7 @@ tt-imp ff = refl
 
 &&-over-||-l : ∀ (a b c : 𝔹) → a && (b || c) ≡ (a && b) || (a && c)
 &&-over-||-l tt _ _ = refl
-&&-over-||-l ff _ _ = refl 
+&&-over-||-l ff _ _ = refl
 
 &&-over-||-r : ∀ (a b c : 𝔹) → (a || b) && c ≡ (a && c) || (b && c)
 &&-over-||-r tt tt tt = refl
@@ -77,7 +77,7 @@ tt-imp ff = refl
 
 ||-over-&&-l : ∀ (a b c : 𝔹) → a || (b && c) ≡ (a || b) && (a || c)
 ||-over-&&-l tt _ _ = refl
-||-over-&&-l ff _ _ = refl 
+||-over-&&-l ff _ _ = refl
 
 ||-over-&&-r : ∀ (a b c : 𝔹) → (a && b) || c ≡ (a || c) && (b || c)
 ||-over-&&-r tt _ _ = refl
@@ -89,7 +89,7 @@ tt-imp ff = refl
 &&-cong₁ refl = refl
 
 &&-cong₂ : ∀ {b1 b2 b2' : 𝔹} → b2 ≡ b2' → b1 && b2 ≡ b1 && b2'
-&&-cong₂ refl = refl 
+&&-cong₂ refl = refl
 
 &&-intro : ∀ {b1 b2 : 𝔹} → b1 ≡ tt → b2 ≡ tt → b1 && b2 ≡ tt
 &&-intro{tt}{tt} _ _ = refl
@@ -101,7 +101,7 @@ tt-imp ff = refl
 ||-intro1 {tt} p = refl
 ||-intro1 {ff} ()
 
-&&-elim : ∀ {b1 b2 : 𝔹} → b1 && b2 ≡ tt → b1 ≡ tt ∧ b2 ≡ tt 
+&&-elim : ∀ {b1 b2 : 𝔹} → b1 && b2 ≡ tt → b1 ≡ tt ∧ b2 ≡ tt
 &&-elim{tt}{tt} _ = refl , refl
 &&-elim{ff}{_} ()
 &&-elim{tt}{ff} ()
@@ -146,7 +146,7 @@ imp-to-|| : ∀ (b1 b2 : 𝔹) → (b1 imp b2) ≡ (~ b1 || b2)
 imp-to-|| ff _ = refl
 imp-to-|| tt _ = refl
 
-imp-mp : ∀ {b b' : 𝔹} → b imp b' ≡ tt → b ≡ tt → b' ≡ tt 
+imp-mp : ∀ {b b' : 𝔹} → b imp b' ≡ tt → b ≡ tt → b' ≡ tt
 imp-mp {tt} {tt} p refl = refl
 imp-mp {ff} {ff} p q = q
 imp-mp {tt} {ff} p q = p
@@ -154,7 +154,7 @@ imp-mp {ff} {tt} p q = refl
 
 imp-antisymm : ∀ {b1 b2 : 𝔹} → b1 imp b2 ≡ tt → b2 imp b1 ≡ tt → b1 ≡ b2
 imp-antisymm{tt}{tt} p q = refl
-imp-antisymm{tt}{ff} () q 
+imp-antisymm{tt}{ff} () q
 imp-antisymm{ff}{tt} p ()
 imp-antisymm{ff}{ff} p q = refl
 

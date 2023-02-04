@@ -16,9 +16,9 @@ open import sum
 div : (x d : ℕ) → d =ℕ 0 ≡ ff → ℕ × ℕ
 div 0 _ _ = 0 , 0
 div x d p with (x < d)
-div x d p | tt = 0 , x 
+div x d p | tt = 0 , x
 div x d p | ff with div (x ∸ d) d p
-div x d p | ff | q , r = suc q , r 
+div x d p | ff | q , r = suc q , r
 
 test-div : ℕ × ℕ
 test-div = div 17 3 refl

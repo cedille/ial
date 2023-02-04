@@ -100,7 +100,7 @@ compare : ℕ → ℕ → compare-t
 compare 0 0 = compare-eq
 compare 0 (suc y) = compare-lt
 compare (suc x) 0 = compare-gt
-compare (suc x) (suc y) = compare x y 
+compare (suc x) (suc y) = compare x y
 
 iszero : ℕ → 𝔹
 iszero 0 = tt

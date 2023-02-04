@@ -32,4 +32,4 @@ record Iso {ℓ₁ ℓ₂ : Level} (A : Set ℓ₁) (B : Set ℓ₂) : Set (ℓ�
    l-inv : A → B
    r-inv : B → A
    l-cancel : r-inv ∘ l-inv ≡ id
-   r-cancel : l-inv ∘ r-inv ≡ id 
+   r-cancel : l-inv ∘ r-inv ≡ id

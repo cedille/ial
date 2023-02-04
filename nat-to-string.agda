@@ -53,7 +53,7 @@ digits-to-string (d :: ds) = (digit-to-string d) ^ (digits-to-string ds)
 ℕ-to-string 0 = "0"
 ℕ-to-string (suc x) = digits-to-string (ℕ-to-digits (suc x))
 
-string-to-digit : char → maybe ℕ 
+string-to-digit : char → maybe ℕ
 string-to-digit '0' = just 0
 string-to-digit '1' = just 1
 string-to-digit '2' = just 2
@@ -75,7 +75,7 @@ digits-to-ℕ : 𝕃 ℕ → ℕ
 digits-to-ℕ digits = digits-to-ℕh 1 0 digits
 
 string-to-ℕ : string → maybe ℕ
-string-to-ℕ s with 𝕃maybe-map string-to-digit (reverse (string-to-𝕃char s)) 
+string-to-ℕ s with 𝕃maybe-map string-to-digit (reverse (string-to-𝕃char s))
 ... | nothing = nothing
 ... | just ds = just (digits-to-ℕ ds)
 

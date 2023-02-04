@@ -54,9 +54,9 @@ trie-lookup-h (Node odata ts) [] = odata
 trie-insert-h : ∀{A : Set} → trie A → 𝕃 char → A → trie A
 trie-insert-h (Node odata ts) [] x = (Node (just x) ts)
 trie-insert-h (Node odata ts) (c :: cs) x with cal-lookup ts c
-trie-insert-h (Node odata ts) (c :: cs) x | just t = 
+trie-insert-h (Node odata ts) (c :: cs) x | just t =
   (Node odata (cal-insert ts c (trie-insert-h t cs x)))
-trie-insert-h (Node odata ts) (c :: cs) x | nothing = 
+trie-insert-h (Node odata ts) (c :: cs) x | nothing =
   (Node odata (cal-add ts c (trie-insert-h empty-trie cs x)))
 
 trie-remove-h : ∀{A : Set} → trie A → 𝕃 char → trie A

@@ -10,7 +10,7 @@ open import product
 ℕ⁺ : Set
 ℕ⁺ = Σ ℕ (λ n → iszero n ≡ ff)
 
-suc⁺ : ℕ⁺ → ℕ⁺ 
+suc⁺ : ℕ⁺ → ℕ⁺
 suc⁺ (x , p) = (suc x , refl)
 
 _+⁺_ : ℕ⁺ → ℕ⁺ → ℕ⁺

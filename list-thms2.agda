@@ -23,15 +23,15 @@ list-or-++ (x :: l1) l2 rewrite (list-or-++ l1 l2) | (||-assoc x (list-or l1) (l
 ++-singleton a l1 [] rewrite ++[] (l1 ++ a :: []) = refl
 ++-singleton a l1 l2  rewrite (++-assoc l1 [ a ] l2) = refl
 
-list-member-++ : ∀{ℓ}{A : Set ℓ}(eq : A → A → 𝔹)(a : A)(l1 l2 : 𝕃 A) → 
+list-member-++ : ∀{ℓ}{A : Set ℓ}(eq : A → A → 𝔹)(a : A)(l1 l2 : 𝕃 A) →
                  list-member eq a (l1 ++ l2) ≡ (list-member eq a l1) || (list-member eq a l2)
 list-member-++ eq a [] l2 = refl
 list-member-++ eq a (x :: l1) l2 with eq a x
 list-member-++ eq a (x :: l1) l2 | tt = refl
 list-member-++ eq a (x :: l1) l2 | ff rewrite (list-member-++ eq a l1 l2) = refl
 
-list-member-++2 : ∀{ℓ}{A : Set ℓ}(eq : A → A → 𝔹)(a : A)(l1 l2 : 𝕃 A) → 
-                   list-member eq a l1 ≡ tt → 
+list-member-++2 : ∀{ℓ}{A : Set ℓ}(eq : A → A → 𝔹)(a : A)(l1 l2 : 𝕃 A) →
+                   list-member eq a l1 ≡ tt →
                    list-member eq a (l1 ++ l2) ≡ tt
 list-member-++2 eq a [] l2 ()
 list-member-++2 eq a (x :: l1) l2 p with eq a x
@@ -39,8 +39,8 @@ list-member-++2 eq a (x :: l1) l2 p | tt = refl
 list-member-++2 eq a (x :: l1) l2 p | ff rewrite (list-member-++2 eq a l1 l2 p) = refl
 
 
-list-member-++3 : ∀{ℓ}{A : Set ℓ}(eq : A → A → 𝔹)(a : A)(l1 l2 : 𝕃 A) →  
-                   list-member eq a l2 ≡ tt → 
+list-member-++3 : ∀{ℓ}{A : Set ℓ}(eq : A → A → 𝔹)(a : A)(l1 l2 : 𝕃 A) →
+                   list-member eq a l2 ≡ tt →
                    list-member eq a (l1 ++ l2) ≡ tt
 list-member-++3 eq a [] l2 p = p
 list-member-++3 eq a (x :: l1) l2 p with eq a x
@@ -48,7 +48,7 @@ list-member-++3 eq a (x :: l1) l2 p | tt = refl
 list-member-++3 eq a (x :: l1) l2 p | ff rewrite (list-member-++3 eq a l1 l2 p) = refl
 
 filter-ff-repeat : ∀{ℓ}{A : Set ℓ}{p : A → 𝔹}{a : A}(n : ℕ) →
-                     p a ≡ ff → 
+                     p a ≡ ff →
                      filter p (repeat n a) ≡ []
 filter-ff-repeat zero p1 = refl
 filter-ff-repeat{ℓ}{A}{p0}{a} (suc n) p1 with keep (p0 a)
@@ -75,7 +75,7 @@ is-empty-[] : ∀{ℓ}{A : Set ℓ} (l : 𝕃 A)(p : is-empty l ≡ tt) → l �
 is-empty-[] [] p = refl
 is-empty-[] (x :: l) ()
 
-rev-help-empty : ∀ {ℓ}{A : Set ℓ} (l1 l2 : 𝕃 A) → (p1 : is-empty l2 ≡ ff) → 
+rev-help-empty : ∀ {ℓ}{A : Set ℓ} (l1 l2 : 𝕃 A) → (p1 : is-empty l2 ≡ ff) →
                       is-empty (reverse-helper l1 l2) ≡ ff
 rev-help-empty l1 [] ()
 rev-help-empty l1 (x :: l2) refl rewrite reverse-++h (x :: l1) l2 | is-empty-distr (reverse-helper [] l2) (x :: l1)

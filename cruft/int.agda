@@ -21,7 +21,7 @@ data int : sign → Set where
   +0 : int zero
   unit : ∀ {p : pol} → int (nonzero p)
   next_ : ∀ {p : pol} → int (nonzero p) → int (nonzero p)
-  
+
 data nonneg : sign → Set where
   pos-nonneg : nonneg (nonzero pos)
   zero-nonneg : nonneg zero
@@ -60,7 +60,7 @@ add-unit p +0 = , unit{p}
 add-unit p (unit{p'}) = if eq-pol p p' then , next (unit{p}) else , +0
 add-unit p (next_{p'} x) = if eq-pol p p' then , next (next x) else , x
 
-_+ℤ_ : ℤ → ℤ → ℤ 
+_+ℤ_ : ℤ → ℤ → ℤ
 (, +0) +ℤ (, x) = , x
 (, x) +ℤ (, +0) = , x
 (, x) +ℤ (, unit{p}) = add-unit p x

@@ -69,7 +69,7 @@ foldl𝕍 : ∀{ℓ ℓ'}{A : Set ℓ}{B : Set ℓ'} → B → (B → A → B) �
 foldl𝕍 b _f_ [] = []
 foldl𝕍 b _f_ (x :: xs) = let r = (b f x) in r :: (foldl𝕍 r _f_  xs)
 
-zipWith𝕍 : ∀ {ℓ ℓ' ℓ''} {A : Set ℓ}{B : Set ℓ'}{C : Set ℓ''} → 
+zipWith𝕍 : ∀ {ℓ ℓ' ℓ''} {A : Set ℓ}{B : Set ℓ'}{C : Set ℓ''} →
            (A → B → C) → {n : ℕ} → 𝕍 A n → 𝕍 B n → 𝕍 C n
 zipWith𝕍 f [] [] = []
 zipWith𝕍 _f_ (x :: xs) (y :: ys) = (x f y) :: (zipWith𝕍 _f_ xs ys)
@@ -79,7 +79,7 @@ allh𝕍 : ∀ {ℓ} {A : Set ℓ}{n : ℕ}(p : ℕ → A → 𝔹) → 𝕍 A n
 allh𝕍 p [] n = tt
 allh𝕍 p (x :: xs) n = p n x && allh𝕍 p xs (suc n)
 
--- given a predicate p which takes in an index and the element of 
+-- given a predicate p which takes in an index and the element of
 -- the given 𝕍 at that index, return tt iff the predicate
 -- returns true for all indices (and their elements).
 all𝕍 : ∀ {ℓ} {A : Set ℓ}{n : ℕ}(p : ℕ → A → 𝔹) → 𝕍 A n → 𝔹

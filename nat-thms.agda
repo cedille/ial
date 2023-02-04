@@ -67,7 +67,7 @@ open import sum
 
 *distribr : ∀ (x y z : ℕ) → (x + y) * z ≡ x * z + y * z
 *distribr zero y z = refl
-*distribr (suc x) y z rewrite *distribr x y z = +assoc z (x * z) (y * z) 
+*distribr (suc x) y z rewrite *distribr x y z = +assoc z (x * z) (y * z)
 
 *distribl : ∀ (x y z : ℕ) → x * (y + z) ≡ x * y + x * z
 *distribl 0 y z = refl
@@ -109,7 +109,7 @@ pred+ (suc x) y p = refl
 <-drop {0} {0} p = inj₁ refl
 <-drop {suc x} {0} p rewrite <-0 x = 𝔹-contra p
 <-drop {0} {suc y} p = inj₂ refl
-<-drop {suc x} {suc y} p with <-drop {x} {y} p 
+<-drop {suc x} {suc y} p with <-drop {x} {y} p
 ... | inj₁ u rewrite u = inj₁ refl
 ... | inj₂ u = inj₂ u
 
@@ -153,7 +153,7 @@ pred+ (suc x) y p = refl
 <-push : ∀ {x y : ℕ} → (suc x) < y ≡ tt → Σ ℕ (λ y' → y ≡ (suc y'))
 <-push {x} {0} ()
 <-push {0} {suc y} p = (y , refl)
-<-push {suc x} {suc y} p with <-push {x} {y} p 
+<-push {suc x} {suc y} p with <-push {x} {y} p
 ... | ( y' , p' ) rewrite p' = (suc y' , refl)
 
 suc-inj : ∀ {n m : ℕ} → suc n ≡ suc m → n ≡ m
@@ -179,9 +179,9 @@ iszerosum2 : ∀ (x y : ℕ) → iszero x ≡ ff → iszero(x + y) ≡ ff
 iszerosum2 0 y ()
 iszerosum2 (suc x) y _ = refl
 
-iszeromult : ∀ (x y : ℕ) → iszero x ≡ ff → iszero y ≡ ff → 
+iszeromult : ∀ (x y : ℕ) → iszero x ≡ ff → iszero y ≡ ff →
                iszero (x * y) ≡ ff
-iszeromult zero zero () q 
+iszeromult zero zero () q
 iszeromult zero (suc y) () q
 iszeromult (suc x) zero p ()
 iszeromult (suc x) (suc y) p q = refl
@@ -205,8 +205,8 @@ iszeromult (suc x) (suc y) p q = refl
 ÷<{suc (suc d)}{0} u p = refl
 ÷<{suc (suc d)}{suc q}{r}{0} u ()
 ÷<{suc (suc d)}{suc q}{r}{suc x} u p with suc-inj{suc (d + q * suc (suc d) + r)}{suc x} p
-... | p' rewrite sym (+suc (d + q * suc (suc d)) r) | +comm d (q * suc (suc d)) 
-               | sym (+assoc (q * (suc (suc d))) d (suc r)) = ÷<{suc (suc d)}{q}{d + suc r}{x} refl p'  
+... | p' rewrite sym (+suc (d + q * suc (suc d)) r) | +comm d (q * suc (suc d))
+               | sym (+assoc (q * (suc (suc d))) d (suc r)) = ÷<{suc (suc d)}{q}{d + suc r}{x} refl p'
 
 --------------------------------------------------
 -- ordering properties of < and ≤ℕ
@@ -253,9 +253,9 @@ iszeromult (suc x) (suc y) p q = refl
 
 <-trans : ∀ {x y z : ℕ} → x < y ≡ tt → y < z ≡ tt → x < z ≡ tt
 <-trans {x} {0} p1 p2 rewrite <-0 x = 𝔹-contra p1
-<-trans {0} {suc y} {0} p1 () 
+<-trans {0} {suc y} {0} p1 ()
 <-trans {0} {suc y} {suc z} p1 p2 = refl
-<-trans {suc x} {suc y} {0} p1 () 
+<-trans {suc x} {suc y} {0} p1 ()
 <-trans {suc x} {suc y} {suc z} p1 p2 = <-trans {x} {y} {z} p1 p2
 
 <≤-trans : ∀ {x y z : ℕ} → x < y ≡ tt → y ≤ z ≡ tt → x < z ≡ tt
@@ -289,10 +289,10 @@ suc≤ : ∀ {n n' : ℕ} → suc n ≤ suc n' ≡ tt → n ≤ n' ≡ tt
 suc≤{n}{n'} p = p
 
 suc≤< : ∀ {n n' : ℕ} → suc n ≤ n' ≡ tt → n < n' ≡ tt
-suc≤<{n} p = <≤-trans{n} (<-suc n) p 
+suc≤<{n} p = <≤-trans{n} (<-suc n) p
 
 suc<< : ∀ {n' n : ℕ} → suc n < n' ≡ tt → n < n' ≡ tt
-suc<<{n = n} p = <-trans{n} (<-suc n) p 
+suc<<{n = n} p = <-trans{n} (<-suc n) p
 
 <-suc-trans : ∀{x y : ℕ} → x < y ≡ tt → x < suc y ≡ tt
 <-suc-trans{0}{0} _ = refl
@@ -383,7 +383,7 @@ suc<<{n = n} p = <-trans{n} (<-suc n) p
 <tt{x}{y} p rewrite <-not-=ℕ{x}{y} p | <-not->{x}{y} p = refl
 
 ≤-antisym : ∀{x y : ℕ} → x ≤ y ≡ tt → y ≤ x ≡ tt → x ≡ y
-≤-antisym{x}{y} p q with ||-split {x < y} p 
+≤-antisym{x}{y} p q with ||-split {x < y} p
 ≤-antisym{x}{y} p q | inj₁ u rewrite <tt{x} u with q
 ≤-antisym{x}{y} p q | inj₁ u | ()
 ≤-antisym{x}{y} p q | inj₂ u = =ℕ-to-≡ u
@@ -416,7 +416,7 @@ suc<<{n = n} p = <-trans{n} (<-suc n) p
 
 ∸< : ∀ {x y : ℕ} → x =ℕ 0 ≡ ff → x ∸ (suc y) < x ≡ tt
 ∸< {0} {y} ()
-∸< {suc x} {y} _ with ||-split{x ∸ y < x}{x ∸ y =ℕ x} (∸≤ x y) 
+∸< {suc x} {y} _ with ||-split{x ∸ y < x}{x ∸ y =ℕ x} (∸≤ x y)
 ... | inj₁ u = <-trans {x ∸ y} u (<-suc x)
 ... | inj₂ u rewrite (=ℕ-to-≡ {x ∸ y} u) = <-suc x
 
@@ -448,7 +448,7 @@ suc<<{n = n} p = <-trans{n} (<-suc n) p
                               lem p' rewrite ∸+2{x}{y} p = p'
 
 <∸ : ∀ {x y : ℕ} → (y < x ≡ tt) → ((x ∸ y =ℕ 0) ≡ ff)
-<∸ {0}{y} p with <-0 y 
+<∸ {0}{y} p with <-0 y
 ... | q rewrite p = 𝔹-contra (sym q)
 <∸ {suc x}{0} p = refl
 <∸ {suc x}{suc y} p = <∸{x}{y} p
@@ -489,7 +489,7 @@ distribr*∸ (suc x) (suc y) z rewrite distribr*∸ x y z | ∸cancel z (x * z) 
 -- properties of min, max
 --------------------------------------------------
 min-forced1 : ∀ {n n' m : ℕ} → n < n' ≡ tt → n ≡ min n' m → n ≡ m
-min-forced1{n}{n'}{m} p1 p2 with n' < m 
+min-forced1{n}{n'}{m} p1 p2 with n' < m
 ... | tt rewrite p2 = 𝔹-contra (trans (sym (<-irrefl n')) p1)
 ... | ff = p2
 
@@ -500,12 +500,12 @@ max-suc : ∀ (n m : ℕ) → max (suc n) (suc m) ≡ suc (max n m)
 max-suc n m rewrite (ite-arg suc (n < m) m n) = refl
 
 min-mono1 : ∀ (n n' m : ℕ) → n ≤ n' ≡ tt → min n m ≤ min n' m ≡ tt
-min-mono1 n n' m p with ||-split{n < n'} p 
+min-mono1 n n' m p with ||-split{n < n'} p
 ... | inj₂ p' rewrite =ℕ-to-≡ {n} p' | =ℕ-refl (min n' m) | ||-tt ((min n' m) < (min n' m)) = refl
 ... | inj₁ p' with ℕ-trichotomy n' m
 ... | inj₁ p'' rewrite <-trans {n} p' p'' | p'' | p' = refl
 ... | inj₂ (inj₁ p'') rewrite =ℕ-to-≡ {n'} p'' | p' | =ℕ-refl (min n m) | ||-tt ((min n m) < (min n m)) | <-irrefl m | p' = refl
-... | inj₂ (inj₂ p'') rewrite <-asym {m} p'' with ℕ-trichotomy n m 
+... | inj₂ (inj₂ p'') rewrite <-asym {m} p'' with ℕ-trichotomy n m
 ... | inj₁ p''' rewrite p''' | p''' = refl
 ... | inj₂ (inj₁ p''') rewrite =ℕ-to-≡ {n} p''' | <-irrefl m | =ℕ-refl m | ||-tt (m < m) = refl
 ... | inj₂ (inj₂ p''') rewrite <-asym {m} p''' | =ℕ-refl m | ||-tt (m < m) = refl
@@ -551,7 +551,7 @@ max-<2{n}{m} rewrite max-comm{n}{m} = max-<1{m}{n}
 
 min-0 : ∀{n : ℕ} → min 0 n ≡ 0
 min-0 {n} with keep (0 < n)
-min-0 {n} | b , p rewrite p with n 
+min-0 {n} | b , p rewrite p with n
 min-0 {_} | b , p | 0 rewrite sym p = refl
 min-0 {_} | b , p | suc n rewrite sym p = refl
 
@@ -565,7 +565,7 @@ min-0'{n} rewrite min-comm n 0 = min-0{n}
 +≢ : ∀ (x y : ℕ) → x ≢ x + suc y
 +≢ 0 y ()
 +≢ (suc x) y p with =ℕ-from-≡ {suc x} p
-... | q with =ℕ-to-≡ {x} q 
+... | q with =ℕ-to-≡ {x} q
 ... | r = +≢ x y r
 
 --------------------------------------------------

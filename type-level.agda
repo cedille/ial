@@ -4,10 +4,10 @@ open import bool
 open import level
 open import nat
 
-{- multiApply{n} applies a sequence f1, f2, ..., f_n of functions 
+{- multiApply{n} applies a sequence f1, f2, ..., f_n of functions
    to a starting point a:
 
-   multiApply{n} a f1 f2 ... f_n = f_n (... (f2 (f1 a))) 
+   multiApply{n} a f1 f2 ... f_n = f_n (... (f2 (f1 a)))
 -}
 
 multiApplyTh : ℕ → Set → Set lone

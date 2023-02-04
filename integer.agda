@@ -41,19 +41,19 @@ is-oddℤ (mkℤ n _) = is-odd n
 {- subtract the second natural number from the first, returning an integer.
    This is mostly a helper for _+ℤ_ -}
 diffℤ : ℕ → ℕ → ℤ
-diffℤ n m with ℕ-trichotomy n m 
+diffℤ n m with ℕ-trichotomy n m
 diffℤ n m | inj₁ p with <∸suc{m}{n} p               -- n < m
 diffℤ n m | inj₁ p | x , _ = mkℤ (suc x) ff
-diffℤ n m | inj₂ (inj₁ p) = mkℤ 0 triv              -- n = m 
+diffℤ n m | inj₂ (inj₁ p) = mkℤ 0 triv              -- n = m
 diffℤ n m | inj₂ (inj₂ p) with <∸suc{n}{m} p
-diffℤ n m | inj₂ (inj₂ p) | x , _ = mkℤ (suc x) tt  -- m < n 
+diffℤ n m | inj₂ (inj₂ p) | x , _ = mkℤ (suc x) tt  -- m < n
 
 _+ℤ_ : ℤ → ℤ → ℤ
 (mkℤ 0 _) +ℤ x = x
 x +ℤ (mkℤ 0 _) = x
-(mkℤ (suc n) p1) +ℤ (mkℤ (suc m) p2) with p1 xor p2 
+(mkℤ (suc n) p1) +ℤ (mkℤ (suc m) p2) with p1 xor p2
 (mkℤ (suc n) p1) +ℤ (mkℤ (suc m) p2) | ff = mkℤ (suc n + suc m) p1
-(mkℤ (suc n) p1) +ℤ (mkℤ (suc m) p2) | tt = if p1 imp p2 then diffℤ m n else diffℤ n m 
+(mkℤ (suc n) p1) +ℤ (mkℤ (suc m) p2) | tt = if p1 imp p2 then diffℤ m n else diffℤ n m
 
 test-+ℤ1 : (mkℤ 2 ff) +ℤ (mkℤ 4 tt) ≡ (mkℤ 2 tt)
 test-+ℤ1 = refl
@@ -71,15 +71,15 @@ _≤ℤ_ : ℤ → ℤ → 𝔹
 
 ≤ℤ-antisymm : ∀(x y : ℤ) → x ≤ℤ y ≡ tt → y ≤ℤ x ≡ tt → x ≡ y
 ≤ℤ-antisymm (mkℤ zero triv) (mkℤ zero triv) p q = refl
-≤ℤ-antisymm (mkℤ zero triv) (mkℤ (suc y) pos2) p q rewrite p with q 
+≤ℤ-antisymm (mkℤ zero triv) (mkℤ (suc y) pos2) p q rewrite p with q
 ≤ℤ-antisymm (mkℤ zero triv) (mkℤ (suc y) pos2) p q | ()
 ≤ℤ-antisymm (mkℤ (suc x) pos1) (mkℤ zero triv) p q rewrite q with p
 ≤ℤ-antisymm (mkℤ (suc x) pos1) (mkℤ zero triv) p q | ()
 ≤ℤ-antisymm (mkℤ (suc x) pos1) (mkℤ (suc y) pos2) p q with keep (pos1 xor pos2)
-≤ℤ-antisymm (mkℤ (suc x) pos1) (mkℤ (suc y) pos2) p q | tt , rp rewrite rp | xor-comm pos1 pos2 | rp with imp-antisymm{pos1} p q 
+≤ℤ-antisymm (mkℤ (suc x) pos1) (mkℤ (suc y) pos2) p q | tt , rp rewrite rp | xor-comm pos1 pos2 | rp with imp-antisymm{pos1} p q
 ≤ℤ-antisymm (mkℤ (suc x) pos1) (mkℤ (suc y) pos2) p q | tt , rp | pp rewrite pp | xor-anti-idem pos2 with rp
 ≤ℤ-antisymm (mkℤ (suc x) pos1) (mkℤ (suc y) pos2) p q | tt , rp | pp | ()
 ≤ℤ-antisymm (mkℤ (suc x) pos1) (mkℤ (suc y) pos2) p q | ff , rp
- rewrite rp | xor-comm pos1 pos2 | rp | xor-≡{pos2}rp with pos1 
+ rewrite rp | xor-comm pos1 pos2 | rp | xor-≡{pos2}rp with pos1
 ≤ℤ-antisymm (mkℤ (suc x) pos1) (mkℤ (suc y) pos2) p q | ff , rp | tt rewrite ≤-antisym{x} p q = refl
 ≤ℤ-antisymm (mkℤ (suc x) pos1) (mkℤ (suc y) pos2) p q | ff , rp | ff rewrite ≤-antisym{y} p q = refl

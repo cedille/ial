@@ -17,16 +17,16 @@ open import minmax _≤A_ ≤A-trans ≤A-total
 
 data bst : A → A → Set where
   bst-leaf : ∀ {l u : A} → l ≤A u ≡ tt → bst l u
-  bst-node : ∀ {l l' u' u : A}(d : A) → 
-               bst l' d → bst d u' → 
-               l ≤A l' ≡ tt → u' ≤A u ≡ tt → 
+  bst-node : ∀ {l l' u' u : A}(d : A) →
+               bst l' d → bst d u' →
+               l ≤A l' ≡ tt → u' ≤A u ≡ tt →
                bst l u
 
 -- find a node which is isomorphic (_=A_) to d and return it; or else return nothing
 bst-search : ∀{l u : A}(d : A) → bst l u → maybe (Σ A (λ d' → d iso𝔹 d' ≡ tt))
 bst-search d (bst-leaf _) = nothing
 bst-search d (bst-node d' L R _ _) with keep (d ≤A d')
-bst-search d (bst-node d' L R _ _) | tt , p1 with keep (d' ≤A d) 
+bst-search d (bst-node d' L R _ _) | tt , p1 with keep (d' ≤A d)
 bst-search d (bst-node d' L R _ _) | tt , p1 | tt , p2 = just (d' , iso𝔹-intro p1 p2)
 bst-search d (bst-node d' L R _ _) | tt , p1 | ff , p2 = bst-search d L
 bst-search d (bst-node d' L R _ _) | ff , p1 = bst-search d R
@@ -41,11 +41,11 @@ bst-inc-ub (bst-node d L R p1 p2) q = bst-node d L R p1 (≤A-trans p2 q)
 
 bst-insert : ∀{l u : A}(d : A) → bst l u → bst (min d l) (max d u)
 bst-insert d (bst-leaf p) = bst-node d (bst-leaf ≤A-refl) (bst-leaf ≤A-refl) min-≤1 max-≤1
-bst-insert d (bst-node d' L R p1 p2) with keep (d ≤A d') 
+bst-insert d (bst-node d' L R p1 p2) with keep (d ≤A d')
 bst-insert d (bst-node d' L R p1 p2) | tt , p with bst-insert d L
-bst-insert d (bst-node d' L R p1 p2) | tt , p | L' rewrite p = 
+bst-insert d (bst-node d' L R p1 p2) | tt , p | L' rewrite p =
   bst-node d' L' (bst-inc-ub R (≤A-trans p2 max-≤2)) (min2-mono p1) ≤A-refl
 bst-insert d (bst-node d' L R p1 p2) | ff , p with bst-insert d R
-bst-insert d (bst-node d' L R p1 p2) | ff , p | R' rewrite p = 
+bst-insert d (bst-node d' L R p1 p2) | ff , p | R' rewrite p =
   bst-node d' (bst-dec-lb L p1) R' min-≤2 (max2-mono p2)
 

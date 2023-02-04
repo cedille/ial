@@ -40,7 +40,7 @@ Sfree-↝-size> p (↝K a b) = ≤<-trans {size a} (≤+1 (size a) (size b))
                              (<+2 {size a + size b} {2})
 Sfree-↝-size> () (↝S a b c)
 Sfree-↝-size> p (↝Cong1{a}{a'} b u) with &&-elim{Sfree a} p
-Sfree-↝-size> p (↝Cong1{a}{a'} b u) | p1 , _ = <+mono2 {size a'} (Sfree-↝-size> p1 u) 
+Sfree-↝-size> p (↝Cong1{a}{a'} b u) | p1 , _ = <+mono2 {size a'} (Sfree-↝-size> p1 u)
 Sfree-↝-size> p (↝Cong2 a u) with &&-elim{Sfree a} p
 Sfree-↝-size> p (↝Cong2 a u) | _ , p2 = <+mono1{size a} (Sfree-↝-size> p2 u)
 
@@ -49,7 +49,7 @@ Sfree-↝-size> p (↝Cong2 a u) | _ , p2 = <+mono1{size a} (Sfree-↝-size> p2 
 ↝-preserves-Sfree () (↝S a b c)
 ↝-preserves-Sfree p (↝Cong1 b u) with &&-elim p
 ↝-preserves-Sfree p (↝Cong1 b u) | p1 , p2 = &&-intro (↝-preserves-Sfree p1 u) p2
-↝-preserves-Sfree p (↝Cong2 a u) with &&-elim{Sfree a} p 
+↝-preserves-Sfree p (↝Cong2 a u) with &&-elim{Sfree a} p
 ↝-preserves-Sfree p (↝Cong2 a u) | p1 , p2 = &&-intro p1 (↝-preserves-Sfree p2 u)
 
 Sfree-comb : Set
@@ -72,18 +72,18 @@ measure-decreases a = measure-↓ (↓-> (size-Sfree-comb a))
 Sfree-terminatesh : ∀{a : comb}{p : Sfree a ≡ tt} → ↓ ↝-Sfree-comb (a , p) →  ↓ _↝_ a
 Sfree-terminatesh{a}{p} (pf↓ f) = pf↓ h
   where h : {y : comb} → a ↝ y → ↓ _↝_ y
-        h{y} u = Sfree-terminatesh (f {y , ↝-preserves-Sfree p u} u)  
+        h{y} u = Sfree-terminatesh (f {y , ↝-preserves-Sfree p u} u)
 
 Sfree-terminates : ∀(a : comb) → Sfree a ≡ tt → ↓ _↝_ a
 Sfree-terminates a p = Sfree-terminatesh (measure-decreases (a , p))
 
 data varcomb : Set where
-  S : varcomb 
-  K : varcomb 
-  app : varcomb → varcomb → varcomb 
-  var : (s : string) → varcomb 
+  S : varcomb
+  K : varcomb
+  app : varcomb → varcomb → varcomb
+  var : (s : string) → varcomb
 
-λ* : (s : string) → varcomb → varcomb 
+λ* : (s : string) → varcomb → varcomb
 λ* s S = app K S
 λ* s K = app K K
 λ* s (app c1 c2) = app (app S (λ* s c1)) (λ* s c2)
@@ -104,7 +104,7 @@ data _↝vc_ : varcomb → varcomb → Set where
 open closures.basics _↝vc_
 
 _↝vc+_ : varcomb → varcomb → Set
-_↝vc+_ = tc 
+_↝vc+_ = tc
 
 id↝ : ∀ (a : varcomb) → app (app (app S K) K) a ↝vc+ a
 id↝ a = (tc-trans (tc-step (↝S K K a)) (tc-step (↝K a (app K a))))
@@ -134,7 +134,7 @@ contains-var s (var s') = s =string s'
 λ*-↝ : ∀ (v1 v2 : varcomb)(s : string) → (app (λ* s v1) v2) ↝vc+ (subst v2 s v1)
 λ*-↝ S v2 s = tc-step (↝K S v2)
 λ*-↝ K v2 s = tc-step (↝K K v2)
-λ*-↝ (app c1 c2) v2 s = 
+λ*-↝ (app c1 c2) v2 s =
   (tc-trans (tc-step (↝S (λ* s c1) (λ* s c2) v2))
   (tc-trans (trans-Cong1 (app (λ* s c2) v2) (λ*-↝ c1 v2 s))
     (trans-Cong2 (subst v2 s c1) (λ*-↝ c2 v2 s))))

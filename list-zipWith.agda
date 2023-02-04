@@ -6,7 +6,7 @@ _⇒_ : 𝕃 Set → Set → Set
 [] ⇒ rettp = rettp
 (x :: inputtps) ⇒ rettp = x → inputtps ⇒ rettp
 
-_⇒𝕃_ : 𝕃 Set → Set → Set 
+_⇒𝕃_ : 𝕃 Set → Set → Set
 inputtps ⇒𝕃 rettp = (map 𝕃 inputtps) ⇒ (𝕃 rettp)
 
 eatInputs : {inputtps : 𝕃 Set}{rettp : Set} → inputtps ⇒𝕃 rettp

@@ -39,13 +39,13 @@ postulate
 =char-sym : (c1 c2 : char) → (c1 =char c2) ≡ (c2 =char c1)
 =char-sym c1 c2 with keep (c1 =char c2)
 =char-sym c1 c2 | tt , p rewrite =char-to-≡ c1 c2 p = refl
-=char-sym c1 c2 | ff , p with keep (c2 =char c1) 
+=char-sym c1 c2 | ff , p with keep (c2 =char c1)
 =char-sym c1 c2 | ff , p | tt , p' rewrite =char-to-≡ c2 c1 p' = refl
 =char-sym c1 c2 | ff , p | ff , p' rewrite p | p' = refl
 
 postulate
   _<char_ : char → char → 𝔹
-  
+
 {-# COMPILE GHC _<char_ = (<) #-}
 
 ----------------------------------------------------------------------

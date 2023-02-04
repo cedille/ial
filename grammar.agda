@@ -34,11 +34,11 @@ splice (suc n) (s :: ss) s' ss' = s :: splice n ss s' ss'
 
 data derivation{numprods : ℕ} {g : grammar{numprods}} : 𝕃 (form ⊎ char) → 𝕃 char → Set where
   end : {ss : 𝕃 char} → derivation (𝕃inj₂ ss) ss
-  step : ∀ {ss1 ss1' : 𝕃 (form ⊎ char)}{ss2 : 𝕃 char}{s : form}{ss : 𝕃 (form ⊎ char)} → 
-           (m n : ℕ) → (p : n < numprods ≡ tt) → 
-           nth𝕍 n p (prods g) ≡ (s ⇒ ss) → 
+  step : ∀ {ss1 ss1' : 𝕃 (form ⊎ char)}{ss2 : 𝕃 char}{s : form}{ss : 𝕃 (form ⊎ char)} →
+           (m n : ℕ) → (p : n < numprods ≡ tt) →
+           nth𝕍 n p (prods g) ≡ (s ⇒ ss) →
            m < length ss1 ≡ tt →
-           splice m ss1 s ss ≡ ss1' → 
+           splice m ss1 s ss ≡ ss1' →
            derivation {g = g} ss1' ss2 →
            derivation ss1 ss2
 
@@ -49,7 +49,7 @@ splice-concat{l1}{x :: xs}{n = n} pr rewrite +suc n (length xs) | splice-concat{
 _=form⊎char_ : (x y : form ⊎ char) → 𝔹
 _=form⊎char_ = =⊎ _eq_ _=char_
 
-form⊎char-drop : (x y : form ⊎ char) → x ≡ y → x =form⊎char y ≡ tt 
+form⊎char-drop : (x y : form ⊎ char) → x ≡ y → x =form⊎char y ≡ tt
 form⊎char-drop = ≡⊎-to-= _eq_ _=char_ drop-form ≡char-to-=
 
 form⊎char-rise : (x y : form ⊎ char) → x =form⊎char y ≡ tt → x ≡ y
@@ -62,10 +62,10 @@ splice-concat2{inj₁ x :: xs}{l2}{target}{n = 0}{slice} pr1 pr2 with x eq slice
 ...| tt rewrite (sym pr1) | ++[] target | ++-assoc target xs l2 = refl
 ...| ff rewrite (sym pr1) = refl
 splice-concat2{inj₂ x :: xs}{l2}{target}{n = 0}{slice} pr1 pr2 rewrite (sym pr1) = refl
-splice-concat2{x :: xs}{l2}{target}{[]}{suc n} pr1 pr2 with pr1 
+splice-concat2{x :: xs}{l2}{target}{[]}{suc n} pr1 pr2 with pr1
 ...| ()
-splice-concat2{x :: xs}{l2}{target}{f :: fs}{suc n}{slice} pr1 pr2 with =𝕃-from-≡ _=form⊎char_ form⊎char-drop pr1 
-...| s1 rewrite splice-concat2{xs}{l2}{target}{fs}{n}{slice} (≡𝕃-from-={l1 = splice n xs slice target}{fs} _=form⊎char_ form⊎char-rise (&&-snd{x =form⊎char f} s1)) pr2 | form⊎char-rise x f (&&-fst{x =form⊎char f} s1) = refl 
+splice-concat2{x :: xs}{l2}{target}{f :: fs}{suc n}{slice} pr1 pr2 with =𝕃-from-≡ _=form⊎char_ form⊎char-drop pr1
+...| s1 rewrite splice-concat2{xs}{l2}{target}{fs}{n}{slice} (≡𝕃-from-={l1 = splice n xs slice target}{fs} _=form⊎char_ form⊎char-rise (&&-snd{x =form⊎char f} s1)) pr2 | form⊎char-rise x f (&&-fst{x =form⊎char f} s1) = refl
 
 length+ : ∀{ℓ}{A : Set ℓ}(l1 l2 : 𝕃 A) → length (l1 ++ l2) ≡ length l1 + length l2
 length+ [] l2 = refl
@@ -93,7 +93,7 @@ infixr 10 _deriv++_
 _deriv++_ : {l2 l4 : 𝕃 char}{l1 l3 : 𝕃 (form ⊎ char)}{n : ℕ}{gr : grammar{n}} → derivation{g = gr} l1 l2 → derivation{g = gr} l3 l4 → derivation{g = gr} (l1 ++ l3) (l2 ++ l4)
 _deriv++_{l2}{l4} end end rewrite sym (𝕃inj₂++{B = form} l2 l4) = end
 _deriv++_{l2}{l4}{l1}{l3} f (step{ss1' = ss1'}{s = s}{ss} a b pr1 pr2 pr3 pr4 next) with <-h1{a}{length l3}{length l1} pr3
-...| pr5 rewrite +comm (length l3) (length l1) | (sym (length+ l1 l3)) =  step{ss1 = l1 ++ l3}{l1 ++ ss1'}{l2 ++ l4} (a + (length l1)) b pr1 pr2 pr5 (splice-concat{l3}{l1} pr4) (_deriv++_ f next) 
+...| pr5 rewrite +comm (length l3) (length l1) | (sym (length+ l1 l3)) =  step{ss1 = l1 ++ l3}{l1 ++ ss1'}{l2 ++ l4} (a + (length l1)) b pr1 pr2 pr5 (splice-concat{l3}{l1} pr4) (_deriv++_ f next)
 _deriv++_{l2}{l4}{l1} (step{ss1' = ss1'}{s = s}{ss} a b pr1 pr2 pr3 pr4 next) end with <-h2{a}{length l1}{length (𝕃inj₂{B = form} l4)} pr3
 ...| pr5 rewrite sym (length+ l1 (𝕃inj₂ l4)) = step{ss1 = l1 ++ 𝕃inj₂ l4}{ss1' ++ 𝕃inj₂ l4}{l2 ++ l4} a b pr1 pr2 pr5 (splice-concat2{l1}{𝕃inj₂ l4} pr4 pr3) (_deriv++_ next end)
 

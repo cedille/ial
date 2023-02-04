@@ -17,7 +17,7 @@ merge (x :: xs) (y :: ys) | ff = y :: (merge (x :: xs) ys)
 
 merge-sort-h : ∀{n : ℕ} → braun-tree' n → 𝕃 A
 merge-sort-h (bt'-leaf a) = [ a ]
-merge-sort-h (bt'-node l r p) = merge (merge-sort-h l) (merge-sort-h r) 
+merge-sort-h (bt'-node l r p) = merge (merge-sort-h l) (merge-sort-h r)
 
 merge-sort : 𝕃 A → 𝕃 A
 merge-sort [] = []

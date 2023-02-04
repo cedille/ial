@@ -35,8 +35,8 @@ open import sum
 ||-cong₂ : ∀ {b1 b2 b2'} → b2 ≡ b2' → b1 || b2 ≡ b1 || b2'
 ||-cong₂ p rewrite p = refl
 
-ite-same : ∀{ℓ}{A : Set ℓ} → 
-           ∀(b : 𝔹) (x : A) → 
+ite-same : ∀{ℓ}{A : Set ℓ} →
+           ∀(b : 𝔹) (x : A) →
            (if b then x else x) ≡ x
 ite-same tt x = refl
 ite-same ff x = refl

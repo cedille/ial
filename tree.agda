@@ -3,8 +3,8 @@ module tree where
 open import bool
 open import eq
 open import level
-open import list 
-open import list-to-string 
+open import list
+open import list-to-string
 open import nat
 open import nat-thms
 open import string
@@ -33,7 +33,7 @@ leaf a = node a []
 
 perfect-binary-tree : ∀ {ℓ}{A : Set ℓ} → ℕ → A → 𝕋 A
 perfect-binary-tree 0 a = (node a [])
-perfect-binary-tree (suc n) a = let t = perfect-binary-tree n a in 
+perfect-binary-tree (suc n) a = let t = perfect-binary-tree n a in
                                   (node a (t :: t :: []))
 
 size𝕋 : ∀ {ℓ}{A : Set ℓ} → 𝕋 A → ℕ

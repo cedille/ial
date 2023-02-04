@@ -23,19 +23,19 @@ trie-map : ∀{A B : Set} → (A → B) → trie A → trie B
 trie-cal-map : ∀{A B : Set} → (A → B) → cal (trie A) → cal (trie B)
 trie-map f (Node x x₁) = Node (maybe-map f x) (trie-cal-map f x₁)
 trie-cal-map f [] = []
-trie-cal-map f ((c , t) :: cs) = 
-  (c , trie-map f t) :: trie-cal-map f cs 
+trie-cal-map f ((c , t) :: cs) =
+  (c , trie-map f t) :: trie-cal-map f cs
 
 trie-to-string-h : ∀{A : Set} → string → (A → string) → trie A → 𝕃 char → string
 trie-cal-to-string-h : ∀{A : Set} → string → (A → string) → cal (trie A) → 𝕃 char → string
-trie-to-string-h sep d (Node (just x) c) prev-str = 
+trie-to-string-h sep d (Node (just x) c) prev-str =
   (𝕃char-to-string (reverse prev-str)) ^ sep ^ (d x) ^ "\n" ^ (trie-cal-to-string-h sep d c prev-str)
 trie-to-string-h sep d (Node nothing c) prev-str = trie-cal-to-string-h sep d c prev-str
 trie-cal-to-string-h sep d [] prev-str = ""
-trie-cal-to-string-h sep d ((c , t) :: cs) prev-str = 
+trie-cal-to-string-h sep d ((c , t) :: cs) prev-str =
   (trie-to-string-h sep d t (c :: prev-str)) ^ (trie-cal-to-string-h sep d cs prev-str)
 
-{- trie-to-string sep d t returns a string representation of the trie t, 
+{- trie-to-string sep d t returns a string representation of the trie t,
    where each mapping from string s to data x is printed as
      s sep d x
    where sep is a string and d returns a string for any element A of the trie. -}
@@ -53,7 +53,7 @@ trie-mappings : ∀{A : Set} → trie A → 𝕃 (string × A)
 trie-mappings t = trie-mappings-h t []
 
 -- return a list of all the strings which have associated data in the trie
-trie-strings : ∀{A : Set} → trie A → 𝕃 string 
+trie-strings : ∀{A : Set} → trie A → 𝕃 string
 trie-strings t = map fst (trie-mappings t)
 
 trie-size : ∀{A : Set} → trie A → ℕ
@@ -89,7 +89,7 @@ trie-cal-nonempty ((a , t) :: c) = trie-nonempty t || trie-cal-nonempty c
 ----------------------------------------------------------------------
 
 stringset : Set
-stringset = trie ⊤ 
+stringset = trie ⊤
 
 stringset-contains : stringset → string → 𝔹
 stringset-contains ss s = trie-contains ss s

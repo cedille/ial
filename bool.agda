@@ -25,9 +25,9 @@ bool = 𝔹
 infix  7 ~_
 infix 6 _xor_ _nand_
 infixr 6 _&&_
-infixr 5 _||_ 
+infixr 5 _||_
 infix  4 if_then_else_   if*_then_else_
-infixr 4 _imp_ 
+infixr 4 _imp_
 infix 4 _iff_
 
 ----------------------------------------------------------------------
@@ -63,14 +63,14 @@ if*_then_else_ : ∀ {ℓ} {A B : Set ℓ} → (b : 𝔹) → A → B → if b t
 if* tt then a else b = a
 if* ff then a else b = b
 
-_xor_ : 𝔹 → 𝔹 → 𝔹 
+_xor_ : 𝔹 → 𝔹 → 𝔹
 tt xor ff = tt
 ff xor tt = tt
 tt xor tt = ff
 ff xor ff = ff
 
 -- implication
-_imp_ : 𝔹 → 𝔹 → 𝔹 
+_imp_ : 𝔹 → 𝔹 → 𝔹
 tt imp b2 = b2
 ff imp b2 = tt
 

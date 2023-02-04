@@ -24,7 +24,7 @@ A i× B = Σi A (λ x → B)
 
 infix 1 Σ-syntax
 infixr 2 _×_ _i×_ _∧_
-infixr 4 _,_ 
+infixr 4 _,_
 infix  4 ,_
 
 -- This provides the syntax: Σ[ x ∈ A ] B it is taken from the Agda
@@ -55,7 +55,7 @@ twist-× : ∀{ℓ₁ ℓ₂}
      {A : Set ℓ₁}{B : Set ℓ₂}
     → A × B
     → B × A
-twist-× (a , b) = (b , a)       
+twist-× (a , b) = (b , a)
 
 rl-assoc-× : ∀{ℓ₁ ℓ₂ ℓ₃}
              {A : Set ℓ₁}{B : Set ℓ₂}

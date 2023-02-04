@@ -7,7 +7,7 @@ open import unit
 
 main : IO ⊤
 main = getArgs >>= cont
-          where cont : 𝕃 string → IO ⊤ 
+          where cont : 𝕃 string → IO ⊤
                 cont [] = return triv
                 cont (x :: xs) = (readFiniteFile x) >>= putStr
 

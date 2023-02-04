@@ -11,7 +11,7 @@ open parsem.pnoderiv huffman.rrs huffman.huffman-rtn
 open import run ptr
 open noderiv {- from run.agda -}
 
-{- imports for Huffman trees and also 
+{- imports for Huffman trees and also
    Braun trees specialized to store Huffman trees
    with lower frequency ones nearer the root -}
 open import huffman-tree
@@ -59,31 +59,31 @@ build-huffman-pqueue : (l : 𝕃 (string × ℕ)) → pqueue (length l)
 build-huffman-pqueue [] = pq-empty
 build-huffman-pqueue ((s , f) :: l) = pq-insert (ht-leaf s f) (build-huffman-pqueue l)
 
--- where we call this function, we have enough evidence to prove the Braun tree is nonempty 
+-- where we call this function, we have enough evidence to prove the Braun tree is nonempty
 process-huffman-pqueue : ∀{n} → n =ℕ 0 ≡ ff → pqueue n → huffman-tree
 process-huffman-pqueue{0} () b
-process-huffman-pqueue{suc n} _ t with (λ r x → process-huffman-pqueue {n} r x) | pq-remove-min t 
+process-huffman-pqueue{suc n} _ t with (λ r x → process-huffman-pqueue {n} r x) | pq-remove-min t
 process-huffman-pqueue{suc 0} _ t | _ | h , _ = h
-process-huffman-pqueue{suc (suc n)} _ _ | _ | h , t with pq-remove-min t 
+process-huffman-pqueue{suc (suc n)} _ _ | _ | h , t with pq-remove-min t
 process-huffman-pqueue{suc (suc n)} _ _ | rec | h , _ | h' , t =
   rec refl (pq-insert (ht-node ((ht-frequency h) + (ht-frequency h')) h h') t)
 
 build-mappingh : huffman-tree → trie string → 𝕃 char → trie string
 build-mappingh (ht-leaf s _) m l = trie-insert m s (𝕃char-to-string (reverse l))
-build-mappingh (ht-node _ h1 h2) m l = 
+build-mappingh (ht-node _ h1 h2) m l =
   build-mappingh h2 (build-mappingh h1 m ('0' :: l)) ('1' :: l)
 
 build-mapping : huffman-tree → trie string
 build-mapping h = build-mappingh h empty-trie []
 
-encode-word : trie string → word → string 
+encode-word : trie string → word → string
 encode-word t w with trie-lookup t w
 encode-word t w | nothing = "error"
 encode-word t w | just s = s
 
-encode-words : trie string → words → string 
+encode-words : trie string → words → string
 encode-words t (WordsNext w ww) = encode-word t w ^ encode-words t ww
-encode-words t (WordsStart w) = encode-word t w 
+encode-words t (WordsStart w) = encode-word t w
 
 data code-tree : Set where
   ct-empty : code-tree
@@ -105,10 +105,10 @@ ct-node-digit Zero t1 t2 = ct-node t1 t2
 ct-node-digit One t1 t2 = ct-node t2 t1
 
 ct-insert : code-tree → code → code-tree
-ct-insert t (Code s (BvlitStart d)) = 
+ct-insert t (Code s (BvlitStart d)) =
   -- child d of the new tree is the new leaf, and the other child is the other subtree of t
   ct-node-digit d (ct-leaf s) (sub-ct (flip-digit d) t)
-ct-insert t (Code s (BvlitCons d v)) = 
+ct-insert t (Code s (BvlitCons d v)) =
   -- child d of the new tree is obtained recursively and the other child is the other subtree of t
   ct-node-digit d (ct-insert (sub-ct d t) (Code s v)) (sub-ct (flip-digit d) t)
 
@@ -116,25 +116,25 @@ make-code-tree : code-tree → codes → code-tree
 make-code-tree t (CodesNext c cs) = make-code-tree (ct-insert t c) cs
 make-code-tree t (CodesStart c) = ct-insert t c
 
-decode-stringh : code-tree → code-tree → bvlit → string 
-decode-stringh orig n (BvlitCons d v) with sub-ct d n 
+decode-stringh : code-tree → code-tree → bvlit → string
+decode-stringh orig n (BvlitCons d v) with sub-ct d n
 decode-stringh orig n (BvlitCons d v) | ct-leaf s = s ^ " " ^ (decode-stringh orig orig v)
 decode-stringh orig n (BvlitCons d v) | ct-empty = "error\n"
 decode-stringh orig n (BvlitCons d v) | n' = decode-stringh orig n' v
-decode-stringh orig n (BvlitStart d) with sub-ct d n 
+decode-stringh orig n (BvlitStart d) with sub-ct d n
 decode-stringh orig n (BvlitStart d) | ct-leaf s = s ^ "\n"
 decode-stringh orig n (BvlitStart d) | _ = "error\n"
 
-decode-string : code-tree → bvlit → string 
+decode-string : code-tree → bvlit → string
 decode-string t v = decode-stringh t t v
 
 process-cmd : cmd → output-type
-process-cmd (Encode ww) = step (compute-frequencies ww empty-trie) (compute-frequencies-nonempty ww empty-trie) 
+process-cmd (Encode ww) = step (compute-frequencies ww empty-trie) (compute-frequencies-nonempty ww empty-trie)
   where step : (t : trie ℕ) → trie-nonempty t ≡ tt → output-type
         step t nonempty-t =
          let s1 = trie-to-string " -> " ℕ-to-string t in
          let m = trie-mappings t in
-         let wt = build-huffman-pqueue m in  
+         let wt = build-huffman-pqueue m in
          let h = process-huffman-pqueue (is-empty-ff-length (trie-mappings t) (trie-mappings-nonempty t nonempty-t)) wt in
          let s2 = ht-to-string h in
          let mp = build-mapping h in
@@ -147,7 +147,7 @@ process-cmd (Decode cs v) =
     decode-output s
 
 process-start : start → output-type
-process-start (File c) = process-cmd c 
+process-start (File c) = process-cmd c
 
 process : Run → output-type
 process (ParseTree (parsed-start p) :: []) = process-start p
@@ -159,14 +159,14 @@ putStrRunIf ff r = return triv
 
 doOutput : output-type → string → IO ⊤
 doOutput (error-output s) basename = putStr ("Error: " ^ s ^ "\n")
-doOutput (encode-output s1 s2 s3 s4) basename = 
-  writeFile (basename ^ "-frequencies.txt") s1 >> 
+doOutput (encode-output s1 s2 s3 s4) basename =
+  writeFile (basename ^ "-frequencies.txt") s1 >>
   writeFile (basename ^ ".gv") s2 >>
   writeFile (basename ^ "-mapping.txt") s3 >>
   writeFile (basename ^ ".huff") s4
 doOutput (decode-output s) basename = writeFile (basename ^ "-decoded.txt") s
 
-processArgs : (showRun : 𝔹) → (showParsed : 𝔹) → 𝕃 string → IO ⊤ 
+processArgs : (showRun : 𝔹) → (showParsed : 𝔹) → 𝕃 string → IO ⊤
 processArgs showRun showParsed (input-filename :: []) = (readFiniteFile input-filename) >>= processText
   where processText : string → IO ⊤
         processText x with runRtn (string-to-𝕃char x)
@@ -175,9 +175,9 @@ processArgs showRun showParsed (input-filename :: []) = (readFiniteFile input-fi
         processText x | s | inj₂ r with putStrRunIf showRun r | rewriteRun r
         processText x | s | inj₂ r | sr | r' with putStrRunIf showParsed r'
         processText x | s | inj₂ r | sr | r' | sr' = sr >> sr' >> doOutput (process r') (base-filename input-filename)
-                                     
-processArgs showRun showParsed ("--showRun" :: xs) = processArgs tt showParsed xs 
-processArgs showRun showParsed ("--showParsed" :: xs) = processArgs showRun tt xs 
+
+processArgs showRun showParsed ("--showRun" :: xs) = processArgs tt showParsed xs
+processArgs showRun showParsed ("--showParsed" :: xs) = processArgs showRun tt xs
 processArgs showRun showParsed (x :: xs) = putStr ("Unknown option " ^ x ^ "\n")
 processArgs showRun showParsed [] = putStr "Please run with the name of a file to process.\n"
 

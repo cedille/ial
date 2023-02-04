@@ -23,4 +23,4 @@ inj₁-inj refl = refl
 ¬∧2 f (a , b) = f b
 
 ¬∀ : ∀{A : Set}{B : A → Set} → Σ A (λ x → ¬ B x) → ¬ ∀(x : A) → B x
-¬∀ (a , b) f = b (f a) 
+¬∀ (a , b) f = b (f a)

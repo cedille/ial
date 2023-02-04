@@ -6,9 +6,9 @@ open import string
 open import list
 open import char
 open import functions
-open import nat 
+open import nat
 
-postulate 
+postulate
   int : Set
   int0 : int
   int1 : int
@@ -33,7 +33,7 @@ string-to-int : string → int
 string-to-int = 𝕃char-to-int ∘ string-to-𝕃char
 
 int-to-string : int → string
-int-to-string = 𝕃char-to-string ∘ int-to-𝕃char 
+int-to-string = 𝕃char-to-string ∘ int-to-𝕃char
 
 int-from-nat : ℕ → int
 int-from-nat zero = int0

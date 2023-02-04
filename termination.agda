@@ -14,12 +14,12 @@ open import sum
 ----------------------------------------------------------------------
 
 {- ↓ _>_ a means that the _>_ relation is well-founded below a.  That
-   is, there are no infinite chains a > a1 > ... starting with a. 
+   is, there are no infinite chains a > a1 > ... starting with a.
    One can also say that _>_ terminates from a. -}
 data ↓ {ℓ ℓ'} {A : Set ℓ} (_>_ : A → A → Set ℓ') : A → Set (ℓ ⊔ ℓ') where
   pf↓ : ∀ {x : A} → (∀ {y : A} → x > y → ↓ _>_ y) → ↓ _>_ x
 
-↓𝔹 : ∀ {ℓ}{A : Set ℓ} (_>_ : A → A → 𝔹) → A → Set ℓ 
+↓𝔹 : ∀ {ℓ}{A : Set ℓ} (_>_ : A → A → 𝔹) → A → Set ℓ
 ↓𝔹{ℓ}{A} _>_ x = ↓{ℓ}{lzero} (λ (x y : A) → (x > y) ≡ tt) x
 
 ----------------------------------------------------------------------
@@ -32,9 +32,9 @@ data ↓ {ℓ ℓ'} {A : Set ℓ} (_>_ : A → A → Set ℓ') : A → Set (ℓ 
 ↓-> : ∀ (x : ℕ) → ↓𝔹 _>_ x
 ↓-> x = pf↓ (h x)
   where h : ∀ x → ∀ {y} → x > y ≡ tt → ↓𝔹 _>_ y
-        h 0 {0} () 
-        h 0 {suc y} () 
-        h (suc x) {y} p with <-drop {y} p 
+        h 0 {0} ()
+        h 0 {suc y} ()
+        h (suc x) {y} p with <-drop {y} p
         h (suc x) {y} p | inj₁ u rewrite u = ↓-> x
         h (suc x) {y} p | inj₂ u = h x u
 
@@ -42,9 +42,9 @@ data ↓ {ℓ ℓ'} {A : Set ℓ} (_>_ : A → A → Set ℓ') : A → Set (ℓ 
 ↓-> : ∀ (n : ℕ) → ↓𝔹 _>_ n
 ↓-> n = pf↓ (lem n)
   where lem : ∀ y → ∀ {x} → y > x ≡ tt → ↓𝔹 _>_ x
-        lem 0 {0} () 
-        lem 0 {suc y} () 
-        lem (suc x) {y} p with <-drop {y} p 
+        lem 0 {0} ()
+        lem 0 {suc y} ()
+        lem (suc x) {y} p with <-drop {y} p
         lem (suc x) {y} p | inj₁ u rewrite u = ↓-> x
         lem (suc x) {y} p | inj₂ u = lem x u
 -}
@@ -53,7 +53,7 @@ data ↓ {ℓ ℓ'} {A : Set ℓ} (_>_ : A → A → Set ℓ') : A → Set (ℓ 
 -- lexicographic combination
 ------------------------------
 module lexcomb {ℓ ℓ' ℓ1 ℓ2 : level}{A : Set ℓ}{B : Set ℓ'}(_>A_ : A → A → Set ℓ1)(_>B_ : B → B → Set ℓ2) where
-  
+
   _>lex_ : A × B → A × B → Set (ℓ ⊔ ℓ1 ⊔ ℓ2)
   (a , b) >lex (a' , b') = a >A a' ∨ (a ≡ a' ∧ b >B b')
 
@@ -69,8 +69,8 @@ module lexcomb {ℓ ℓ' ℓ1 ℓ2 : level}{A : Set ℓ}{B : Set ℓ'}(_>A_ : A 
 -- measure functions
 ------------------------------
 
-{- Suppose we want to prove that _>A_ is terminating starting from a, and we have a function m, 
-   called a measure function, that maps A to another type B, where we know an 
+{- Suppose we want to prove that _>A_ is terminating starting from a, and we have a function m,
+   called a measure function, that maps A to another type B, where we know an
    ordering _>B_ is terminating starting from (m a).
 
    Then as long as m is preserved by _>A_ -- meaning that a >A a' implies m a >B m a' -- then we
@@ -102,7 +102,7 @@ module newman {ℓ ℓ' : level}{A : Set ℓ}(_>A_ : A → A → Set ℓ')
 {-  In progress...
 
   the_lemma : ∀{a b c : A} → ↓ _>A_ a → a tc b → a tc c → ∃ A (λ d → b tc d ∧ c tc d)
-  the_lemma w (tc-step u) (tc-step v) with lc u v 
+  the_lemma w (tc-step u) (tc-step v) with lc u v
   the_lemma w (tc-step u) (tc-step v) | d , u' , v' = d , tc-step u' , tc-step v'
   the_lemma w (tc-step u) (tc-trans v1 v2) = {!!}
   the_lemma w (tc-trans u1 u2) (tc-step v) = {!!}

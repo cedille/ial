@@ -15,7 +15,7 @@ data _≡_ {ℓ} {A : Set ℓ} (x : A) : A → Set ℓ where
 -- syntax
 ----------------------------------------------------------------------
 
-infix 3 _≡_ 
+infix 3 _≡_
 
 ----------------------------------------------------------------------
 -- operations
@@ -41,14 +41,14 @@ congf2 refl refl refl = refl
 
 cong2 : ∀{i j k}{A : Set i}{B : Set j}{C : Set k}{a a' : A}{b b' : B}
   → (f : A → B → C)
-  → a ≡ a' 
+  → a ≡ a'
   → b ≡ b'
   → f a b ≡ f a' b'
 cong2 f refl refl = refl
 
 cong3 : ∀{i j k l}{A : Set i}{B : Set j}{C : Set k}{D : Set l}{a a' : A}{b b' : B}{c c' : C}
   → (f : A → B → C → D)
-  → a ≡ a' 
+  → a ≡ a'
   → b ≡ b'
   → c ≡ c'
   → f a b c ≡ f a' b' c'

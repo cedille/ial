@@ -51,7 +51,7 @@ extract-inj₂≡ refl = refl
 =⊎ _ _ _ _ = ff
 
 
-=⊎-to-≡ : ∀{ℓ}{ℓ'}{A : Set ℓ}{B : Set ℓ'} → (_eqa_ : A → A → 𝔹) → (_eqb_ : B → B → 𝔹) → ((a a' : A) → (a eqa a' ≡ tt) → a ≡ a') → ((b b' : B) → (b eqb b' ≡ tt) → b ≡ b') →  (x y : A ⊎ B) → =⊎ _eqa_ _eqb_ x y  ≡ tt → x ≡ y 
+=⊎-to-≡ : ∀{ℓ}{ℓ'}{A : Set ℓ}{B : Set ℓ'} → (_eqa_ : A → A → 𝔹) → (_eqb_ : B → B → 𝔹) → ((a a' : A) → (a eqa a' ≡ tt) → a ≡ a') → ((b b' : B) → (b eqb b' ≡ tt) → b ≡ b') →  (x y : A ⊎ B) → =⊎ _eqa_ _eqb_ x y  ≡ tt → x ≡ y
 =⊎-to-≡ eqa eqb risea riseb (inj₁ a) (inj₁ a') p rewrite risea a a' p = refl
 =⊎-to-≡ eqa eqb risea riseb (inj₂ b) (inj₂ b') p rewrite riseb b b' p = refl
 =⊎-to-≡ eqa eqb risea riseb (inj₁ a) (inj₂ b) ()

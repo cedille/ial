@@ -3,7 +3,7 @@
   when generating large terms intended for evaluation at run-time only.
   You can use the runtime-only function for this.  If its first
   argument is tt, then we will use a postulate runtime-identity
-  to block Agda's compile-time evaluation.  Otherwise, we will 
+  to block Agda's compile-time evaluation.  Otherwise, we will
   not block compile-time evaluation. -}
 module runtime-only where
 

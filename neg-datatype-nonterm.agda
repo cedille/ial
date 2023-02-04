@@ -2,7 +2,7 @@
 
 {- This file gives a standard example showing that if arguments to
    constructors can use the datatype in a negative position (to the
-   left of one or an odd number of arrows), then termination and 
+   left of one or an odd number of arrows), then termination and
    logical consistency is lost. -}
 
 module neg-datatype-nonterm where

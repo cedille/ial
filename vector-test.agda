@@ -9,8 +9,8 @@ test-vector : 𝕍 𝔹 4
 test-vector = ff :: tt :: ff :: ff :: []
 
 test-vector2 : 𝕃 (𝕍 𝔹 2)
-test-vector2 = (ff :: tt :: []) :: 
-               (tt :: ff :: []) :: 
+test-vector2 = (ff :: tt :: []) ::
+               (tt :: ff :: []) ::
                (tt :: ff :: []) :: []
 
 test-vector3 : 𝕍 (𝕍 𝔹 3) 2

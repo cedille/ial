@@ -10,7 +10,7 @@ insert𝕍 : ∀{ℓ}{A : Set ℓ}{n : ℕ} → (_<_ : A → A → 𝔹) → (_�
 insert𝕍 _<_ _≅_ x [] = , [ x ]𝕍
 insert𝕍 _<_ _≅_ x (y :: ys) with x < y
 ... | tt = , x :: y :: ys
-... | ff with x ≅ y 
+... | ff with x ≅ y
 ... | tt = , y :: ys
 ... | ff with (insert𝕍 _<_ _≅_ x ys)
 ... | , r = , y :: r

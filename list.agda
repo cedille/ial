@@ -26,8 +26,8 @@ list = 𝕃
 -- syntax
 ----------------------------------------------------------------------
 
-infixr 6 _::_ _++_ 
-infixr 5 _shorter_ _longer_ 
+infixr 6 _::_ _++_
+infixr 5 _shorter_ _longer_
 
 ----------------------------------------------------------------------
 -- operations
@@ -108,7 +108,7 @@ list-member eq a (x :: xs) = eq a x || list-member eq a xs
 
 list-minus : ∀{ℓ}{A : Set ℓ}(eq : A → A → 𝔹)(l1 l2 : 𝕃 A) → 𝕃 A
 list-minus eq [] l2 = []
-list-minus eq (x :: xs) l2 = 
+list-minus eq (x :: xs) l2 =
   let r = list-minus eq xs l2 in
     if list-member eq x l2 then r else x :: r
 
@@ -127,7 +127,7 @@ list-all pred (x :: xs) = pred x && list-all pred xs
 
 all-pred : {X : Set} → (X → Set) → 𝕃 X → Set
 all-pred f [] = ⊤
-all-pred f (x₁ :: xs) = (f x₁) ∧ (all-pred f xs) 
+all-pred f (x₁ :: xs) = (f x₁) ∧ (all-pred f xs)
 
 -- return tt iff at least one element in the list satisfies the given predicate pred.
 list-any : ∀{ℓ}{A : Set ℓ}(pred : A → 𝔹)(l : 𝕃 A) → 𝔹
@@ -156,14 +156,14 @@ isSublist l1 l2 eq = list-all (λ a → list-member eq a l2) l1
 
 filter : ∀{ℓ}{A : Set ℓ} → (A → 𝔹) → 𝕃 A → 𝕃 A
 filter p [] = []
-filter p (x :: xs) = let r = filter p xs in 
+filter p (x :: xs) = let r = filter p xs in
                      if p x then x :: r else r
 
 -- remove all elements equal to the given one
 remove : ∀{ℓ}{A : Set ℓ}(eq : A → A → 𝔹)(a : A)(l : 𝕃 A) → 𝕃 A
 remove eq a l = filter (λ x → ~ (eq a x)) l
 
-{- nthTail n l returns the part of the list after the first n elements, 
+{- nthTail n l returns the part of the list after the first n elements,
    or [] if the list has fewer than n elements -}
 nthTail : ∀{ℓ}{A : Set ℓ} → ℕ → 𝕃 A → 𝕃 A
 nthTail 0 l = l

@@ -20,9 +20,9 @@ postulate
   pair-snd : {A B : Set} → Pair A B → B
 
 {-# COMPILE GHC Pair = type (,)           #-}
-{-# COMPILE GHC pair = \ _ _ a b -> (a, b) #-}  
-{-# COMPILE GHC pair-fst = \ _ _ p -> fst p #-}  
-{-# COMPILE GHC pair-snd = \ _ _ p -> snd p #-}  
+{-# COMPILE GHC pair = \ _ _ a b -> (a, b) #-}
+{-# COMPILE GHC pair-fst = \ _ _ p -> fst p #-}
+{-# COMPILE GHC pair-snd = \ _ _ p -> snd p #-}
 
 
 postulate
@@ -49,7 +49,7 @@ private
 -- syntax
 ----------------------------------------------------------------------
 
-infixr 6 _^_ 
+infixr 6 _^_
 infix 8 _=string_
 
 
@@ -80,7 +80,7 @@ char-to-string : char → string
 char-to-string c = 𝕃char-to-string [ c ]
 
 string-append-t : ℕ → Set
-string-append-t 0 = string → string 
+string-append-t 0 = string → string
 string-append-t (suc n) = string → (string-append-t n)
 
 string-append-h : (n : ℕ) → string → string-append-t n

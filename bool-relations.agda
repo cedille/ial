@@ -17,7 +17,7 @@ transitive = ∀ {a b c : A} → a ≤A b ≡ tt → b ≤A c ≡ tt → a ≤A 
 total : Set ℓ
 total = ∀ {a b : A} → a ≤A b ≡ ff → b ≤A a ≡ tt
 
-total-reflexive : total → reflexive 
+total-reflexive : total → reflexive
 total-reflexive tot {a} with keep (a ≤A a)
 total-reflexive tot {a} | tt , p = p
 total-reflexive tot {a} | ff , p = tot p
