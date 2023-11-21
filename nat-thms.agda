@@ -398,6 +398,14 @@ suc<<{n = n} p = <-trans{n} (<-suc n) p
 <+mono2 : ∀ {x y z : ℕ} → x < y ≡ tt → x + z < y + z ≡ tt
 <+mono2{x}{y}{z} p rewrite +comm x z | +comm y z | <+mono1{z}{x}{y} p = refl
 
+≤+mono1 : ∀{x x' y : ℕ} → x ≤ x' ≡ tt → x + y ≤ x' + y ≡ tt
+≤+mono1 {x} {x'} {zero} p rewrite +0 x | +0 x' = p
+≤+mono1 {x} {x'} {suc y} p rewrite +suc x y | +suc x' y = ≤+mono1{x}{x'}{y} p
+
+≤+mono2 : ∀{x y y' : ℕ} → y ≤ y' ≡ tt → x + y ≤ x + y' ≡ tt
+≤+mono2 {zero} {y} {y'} p = p
+≤+mono2 {suc x} {y} {y'} p = ≤+mono2{x}{y}{y'} p
+
 --------------------------------------------------
 -- properties of subtraction
 --------------------------------------------------
