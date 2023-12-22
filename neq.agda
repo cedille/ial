@@ -1,6 +1,7 @@
 module neq where
 
 open import eq
+open import empty
 open import negation
 
 ----------------------------------------------------------------------
@@ -15,3 +16,6 @@ infix 4 _≢_
 
 _≢_ : ∀ {ℓ}{A : Set ℓ} → A → A → Set ℓ
 x ≢ y = ¬ (x ≡ y)
+
+≢antirefl : ∀{ℓ}{A : Set ℓ}{a : A} → a ≢ a → ∀{P : Set ℓ} → P
+≢antirefl{ℓ} p = ⊥-elim (p refl)

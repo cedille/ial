@@ -101,6 +101,10 @@ pred+ (suc x) y p = refl
 <-0 0 = refl
 <-0 (suc y) = refl
 
+<-0-False : ∀ {x : ℕ} → x < 0 ≡ tt → ∀{ℓ}{X : Set ℓ} → X
+<-0-False{x} p rewrite (<-0 x) with p 
+<-0-False _ | ()
+
 0-≤ : ∀ (x : ℕ) → 0 ≤ x ≡ tt
 0-≤ 0 = refl
 0-≤ (suc x) = refl
@@ -163,8 +167,9 @@ suc-inj {n} {m} p rewrite (=ℕ-to-≡{n} (=ℕ-from-≡ p)) = refl
 <-implies-suc{x}{0} p rewrite <-0 x = 𝔹-contra p
 <-implies-suc{y = suc y} p = y , refl
 
-<=ℕff : ∀ (x : ℕ) → 0 < x ≡ tt → x =ℕ 0 ≡ ff
-<=ℕff 0 ()
+<=ℕff : ∀ (x : ℕ){y : ℕ} → y < x ≡ tt → x =ℕ 0 ≡ ff
+<=ℕff 0 {zero} () 
+<=ℕff 0 {suc y} ()
 <=ℕff (suc x) p = refl
 
 nonzero< : ∀ {n : ℕ} → iszero n ≡ ff → 0 < n ≡ tt
@@ -345,7 +350,7 @@ suc<<{n = n} p = <-trans{n} (<-suc n) p
 0<+ (suc x) y p = refl
 
 <=ℕff2 : ∀ (x : ℕ) → 1 < x ≡ tt → x =ℕ 0 ≡ ff
-<=ℕff2 x p = <=ℕff x (<-trans{0}{1}{x} refl p)
+<=ℕff2 x p = <=ℕff x {1} p
 
 *≤ : ∀(x y : ℕ) → x ≤ x * (suc y) ≡ tt
 *≤ zero y = refl
