@@ -124,3 +124,8 @@ is-even 0 = tt
 is-even (suc x) = is-odd x
 is-odd 0 = ff
 is-odd (suc x) = is-even x
+
+----------------------------------------------------------------------
+iter : ℕ → ∀{ℓ}{X : Set ℓ} → (X → X) → X → X
+iter 0 f x = x
+iter (suc n) f x = f (iter n f x)
