@@ -73,3 +73,7 @@ ite-arg f ff x y = refl
 &&-ff : ∀(b : 𝔹) → b && ff ≡ ff
 &&-ff tt = refl
 &&-ff ff = refl
+
+not-not : ∀(b : 𝔹) → (~ ~ b) ≡ b
+not-not tt = refl
+not-not ff = refl
