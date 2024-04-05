@@ -210,3 +210,7 @@ drop-nothing : ∀{ℓ}{A : Set ℓ} → 𝕃 (maybe A) → 𝕃 A
 drop-nothing [] = []
 drop-nothing (nothing :: aa) = drop-nothing aa
 drop-nothing (just a :: aa) = a :: drop-nothing aa
+
+null : ∀{ℓ}{A : Set ℓ} → 𝕃 A → 𝔹
+null [] = tt
+null (x :: xs) = ff
