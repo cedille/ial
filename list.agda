@@ -57,6 +57,11 @@ last [] ()
 last (x :: []) _ = x
 last (x :: (y :: xs)) _ = last (y :: xs) refl
 
+init : ∀{ℓ}{A : Set ℓ} → (l : 𝕃 A) → is-empty l ≡ ff → 𝕃 A
+init [] ()
+init (x :: []) _ = []
+init (x :: (y :: xs)) _ = x :: init (y :: xs) refl
+
 _++_ : ∀ {ℓ} {A : Set ℓ} → 𝕃 A → 𝕃 A → 𝕃 A
 []        ++ ys = ys
 (x :: xs) ++ ys = x :: (xs ++ ys)
@@ -170,6 +175,12 @@ nthTail 0 l = l
 nthTail n [] = []
 nthTail (suc n) (x :: l) = nthTail n l
 
+splitAt : ∀{ℓ}{A : Set ℓ} → ℕ → 𝕃 A → (𝕃 A × 𝕃 A)
+splitAt 0 xs = ([] , xs)
+splitAt (suc n) [] = ([] , [])
+splitAt (suc n) (x :: xs) with splitAt n xs
+splitAt (suc n) (x :: xs) | (l , r) = (x :: l , r)
+
 nth : ∀{ℓ}{A : Set ℓ} → ℕ → 𝕃 A → maybe A
 nth _ [] = nothing
 nth 0 (x :: xs) = just x
@@ -214,3 +225,4 @@ drop-nothing (just a :: aa) = a :: drop-nothing aa
 null : ∀{ℓ}{A : Set ℓ} → 𝕃 A → 𝔹
 null [] = tt
 null (x :: xs) = ff
+

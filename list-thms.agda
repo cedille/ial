@@ -187,3 +187,22 @@ list-all-append : ∀{ℓ}{A : Set ℓ}(p : A → 𝔹)(l l' : 𝕃 A) →
                   list-all p (l ++ l') ≡ list-all p l && list-all p l'
 list-all-append p [] l' = refl
 list-all-append p (x :: l) l' rewrite list-all-append p l l' | &&-assoc (p x) (list-all p l) (list-all p l') = refl
+
+length-init : ∀ {A : Set}(x : A)(xs : 𝕃 A) →
+              length (init (x :: xs) refl) ≡ length xs
+length-init x [] = refl
+length-init x (x₁ :: []) = refl
+length-init x (x₁ :: x₂ :: xs) rewrite length-init x₂ xs = refl
+
+lengthSplitAt : ∀{A : Set}(n : ℕ)(l pre suff : 𝕃 A) →
+                splitAt n l ≡ (pre , suff) →
+                length l ≡ length pre + length suff
+lengthSplitAt zero [] pre suff u with ,inj u
+lengthSplitAt zero [] pre suff u | (u1 , u2) rewrite sym u1 | sym u2 = refl
+lengthSplitAt zero (x :: l) pre suff u with ,inj u
+lengthSplitAt zero (x :: l) pre suff u | (u1 , u2) rewrite sym u2 | sym u1 = refl
+lengthSplitAt (suc n) [] pre suff u with ,inj u
+lengthSplitAt (suc n) [] pre suff u | (u1 , u2) rewrite sym u1 | sym u2 = refl
+lengthSplitAt (suc n) (x :: l) pre suff u with keep (splitAt n l) 
+lengthSplitAt (suc n) (x :: l) pre suff u | ((pre' , suff') , p) rewrite p | lengthSplitAt n l pre' suff' p with ,inj u 
+lengthSplitAt (suc n) (x :: l) pre suff u | ((pre' , suff') , p) | (u1 , u2) rewrite sym u1 | sym u2 = refl
