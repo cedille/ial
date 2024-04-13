@@ -29,6 +29,10 @@ open import sum
 ||-tt tt = refl
 ||-tt ff = refl
 
+||-ff : ∀ (b : 𝔹) → b || ff ≡ b
+||-ff tt = refl
+||-ff ff = refl
+
 ||-cong₁ : ∀ {b1 b1' b2} → b1 ≡ b1' → b1 || b2 ≡ b1' || b2
 ||-cong₁ refl = refl
 

@@ -25,10 +25,6 @@ tt-imp ff = refl
 &&-tt tt = refl
 &&-tt ff = refl
 
-||-ff : ∀ (b : 𝔹) → b || ff ≡ b
-||-ff tt = refl
-||-ff ff = refl
-
 &&-contra : ∀ (b : 𝔹) → b && ~ b ≡ ff
 &&-contra ff = refl
 &&-contra tt = refl
