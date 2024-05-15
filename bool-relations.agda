@@ -14,6 +14,9 @@ reflexive = ∀ {a : A} → a ≤A a ≡ tt
 transitive : Set ℓ
 transitive = ∀ {a b c : A} → a ≤A b ≡ tt → b ≤A c ≡ tt → a ≤A c ≡ tt
 
+preorder : Set ℓ
+preorder = reflexive ∧ transitive
+
 total : Set ℓ
 total = ∀ {a b : A} → a ≤A b ≡ ff → b ≤A a ≡ tt
 
@@ -28,4 +31,8 @@ d iso𝔹 d' = d ≤A d' && d' ≤A d
 iso𝔹-intro : ∀{x y : A} → x ≤A y ≡ tt → y ≤A x ≡ tt → x iso𝔹 y ≡ tt
 iso𝔹-intro p1 p2 rewrite p1 | p2 = refl
 
+symmetric : Set ℓ
+symmetric = ∀{a b : A} → a ≤A b ≡ tt → b ≤A a ≡ tt
 
+equivalence : Set ℓ
+equivalence = preorder ∧ symmetric

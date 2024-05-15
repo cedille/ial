@@ -23,3 +23,8 @@ d iso d' = d ≥A d' ∧ d' ≥A d
 iso-intro : ∀{x y : A} → x ≥A y → y ≥A x → x iso y 
 iso-intro p1 p2 = p1 , p2
 
+symmetric : Set (ℓ ⊔ ℓ')
+symmetric = ∀{a b : A} → a ≥A b → b ≥A a
+
+equivalence : Set (ℓ ⊔ ℓ')
+equivalence = preorder ∧ symmetric
