@@ -111,6 +111,13 @@ list-member : ∀{ℓ}{A : Set ℓ}(eq : A → A → 𝔹)(a : A)(l : 𝕃 A) �
 list-member eq a [] = ff
 list-member eq a (x :: xs) = eq a x || list-member eq a xs
 
+-- like Data.List.find in Haskell
+find : ∀{ℓ}{A : Set ℓ}(pred : A → 𝔹)(l : 𝕃 A) → maybe A
+find pred [] = nothing
+find pred (x :: xs) with pred x
+find pred (x :: xs) | tt = just x
+find pred (x :: xs) | ff = find pred xs
+
 list-minus : ∀{ℓ}{A : Set ℓ}(eq : A → A → 𝔹)(l1 l2 : 𝕃 A) → 𝕃 A
 list-minus eq [] l2 = []
 list-minus eq (x :: xs) l2 = 
