@@ -6,3 +6,4 @@ open import thms public
 open import termination public
 open import error public
 open import io public
+open import rel public

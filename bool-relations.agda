@@ -36,3 +36,9 @@ symmetric = ∀{a b : A} → a ≤A b ≡ tt → b ≤A a ≡ tt
 
 equivalence : Set ℓ
 equivalence = preorder ∧ symmetric
+
+~symmetric : symmetric → ∀{a b : A} → a ≤A b ≡ ff → b ≤A a ≡ ff
+~symmetric symm {a}{b} p with keep (b ≤A a)
+~symmetric symm {_} {_} p | tt , p' rewrite symm p' with p 
+~symmetric symm {_} {_} p | tt , p' | ()
+~symmetric symm {_} {_} p | ff , p' = p'

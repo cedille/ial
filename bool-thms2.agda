@@ -5,6 +5,9 @@ open import eq
 open import product
 open import sum
 
+~-≡-tt : ∀{b : 𝔹} → ~ b ≡ tt → b ≡ ff
+~-≡-tt {ff} p = refl
+
 ff-imp : ∀ (b : 𝔹) → ff imp b ≡ tt
 ff-imp ff = refl
 ff-imp tt = refl
@@ -126,10 +129,10 @@ ite-cong₂ b y refl = refl
 ite-cong₃ : ∀{ℓ}{A : Set ℓ} (b : 𝔹)(x : A){y y' : A} → y ≡ y' → (if b then x else y) ≡ (if b then x else y')
 ite-cong₃ b x refl = refl
 
-&&-split : ∀ {b b' : 𝔹} → b || b' ≡ ff → b ≡ ff ⊎ b' ≡ ff
-&&-split {tt} ()
-&&-split {ff}{tt} ()
-&&-split {ff}{ff} p = inj₁ refl
+||-≡-ff : ∀ {b b' : 𝔹} → b || b' ≡ ff → b ≡ ff ∧ b' ≡ ff
+||-≡-ff {tt} ()
+||-≡-ff {ff}{tt} ()
+||-≡-ff {ff}{ff} refl = refl , refl
 
 -----------------------------------
 -- Theorems about imp

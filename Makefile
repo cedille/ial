@@ -24,6 +24,7 @@ ROOTS=  bool bool-test bool-thms bool-thms2 bool-kleene bool-to-string \
         tree tree-test \
 	trie trie-thms \
 	vector vector-test vector-sort \
+        relations bool-relations
 
 SOURCES=$(ROOTS:=.agda)
 DEPS=$(ROOTS:%=deps/%.deps)
