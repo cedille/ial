@@ -3,6 +3,7 @@ module nat-thms where
 open import bool
 open import bool-thms
 open import bool-thms2
+open import bool-relations
 open import eq
 open import nat
 open import neq
@@ -135,6 +136,17 @@ pred+ (suc x) y p = refl
 =ℕ-sym 0 (suc y) = refl
 =ℕ-sym (suc x) 0 = refl
 =ℕ-sym (suc x) (suc y) rewrite =ℕ-sym x y = refl
+
+=ℕ-sym' : ∀ (x y : ℕ) → (x =ℕ y) ≡ tt → (y =ℕ x) ≡ tt
+=ℕ-sym' zero zero p = refl
+=ℕ-sym' (suc x) (suc y) p = =ℕ-sym' x y p
+
+=ℕ-trans : ∀ (x y z : ℕ) → (x =ℕ y) ≡ tt → (y =ℕ z) ≡ tt → (x =ℕ z) ≡ tt 
+=ℕ-trans zero zero zero p q = refl
+=ℕ-trans (suc x) (suc y) (suc z) p q = =ℕ-trans x y z p q
+
+=ℕ-equivalence : equivalence _=ℕ_
+=ℕ-equivalence = ((λ {x} → =ℕ-refl x), λ{x}{y}{z} → =ℕ-trans x y z) , λ{x}{y} → =ℕ-sym' x y
 
 =ℕ-suc : ∀ (x : ℕ) → suc x =ℕ x ≡ ff
 =ℕ-suc 0 = refl

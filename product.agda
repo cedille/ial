@@ -22,7 +22,7 @@ A i× B = Σi A (λ x → B)
 -- syntax
 ----------------------------------------------------------------------
 
-infix 1 Σ-syntax
+infix 1 Σ-syntax Σi-syntax
 infixr 2 _×_ _i×_ _∧_
 infixr 4 _,_ 
 infix  4 ,_
@@ -33,6 +33,13 @@ infix  4 ,_
 Σ-syntax = Σ
 
 syntax Σ-syntax A (λ x → B) = Σ[ x ∈ A ] B
+
+-- This provides the syntax: Σ[ x ∈ A ] B it is taken from the Agda
+-- standard library. This style is nice when working in Set.
+Σi-syntax : ∀ {a b} (A : Set a) → (A → Set b) → Set (a ⊔ b)
+Σi-syntax = Σi
+
+syntax Σi-syntax A (λ x → B) = Σi[ x ∈ A ] B
 
 ----------------------------------------------------------------------
 -- operations
