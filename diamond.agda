@@ -35,9 +35,7 @@ confluent r = diamond (r ⋆)
    If we can find a relation r2 that is
      1. intermediate between r1 and r1 ⋆, and
      2. has the diamond property, then
-   r1 is confluent.
-
-   We will use this concretely in Confluence.agda -}
+   r1 is confluent. -}
 mediator-diamond : ∀{A : Set}{r1 r2 : Rel A} → r1 ⊆ r2 → r2 ⊆ r1 ⋆ → diamond r2 → confluent r1
 mediator-diamond sub1 sub2 di2 p1 p2  with ⋆diamond di2 (⋆mono sub1 p1) (⋆mono sub1 p2)
 mediator-diamond sub1 sub2 di2 p1 p2 | , q1 , q2 = , ⋆idem (⋆mono sub2 q1) , ⋆idem (⋆mono sub2 q2)
