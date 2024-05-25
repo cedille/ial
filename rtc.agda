@@ -5,8 +5,8 @@ open import relations
 module rtc where
 
 data _⋆ {A : Set} (r : Rel A) : Rel A where
-  ⋆base_ : ∀{a a' : A} → r a a' → (r ⋆) a a'
   ⋆refl : ∀{a : A} → (r ⋆) a a
+  ⋆base_ : ∀{a a' : A} → r a a' → (r ⋆) a a'
   _⋆trans_ : ∀{a a' a'' : A} → (r ⋆) a a' → (r ⋆) a' a'' → (r ⋆) a a''
 
 infix 10 _⋆

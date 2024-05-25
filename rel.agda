@@ -1,4 +1,5 @@
 open import level
+open import eq
 open import product
 open import sum
 
@@ -12,6 +13,9 @@ a ⟨ r ⟩ a' = r a a'
 
 _∪_ : ∀ {A : Set} → Rel A → Rel A → Rel A
 (r ∪ r') x y = (r x y) ∨ (r' x y)
+
+1r : ∀ {A : Set} → Rel A
+1r = _≡_
 
 _∘_ : ∀ {A : Set} → Rel A → Rel A → Rel A
 _∘_ {A} _r_ _r'_ x z = Σ[ y ∈ A ] ((x r y) ∧ (y r' z))

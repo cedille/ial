@@ -152,6 +152,11 @@ pred+ (suc x) y p = refl
 =ℕ-suc 0 = refl
 =ℕ-suc (suc x) = =ℕ-suc x
 
+=ℕ-suc-≤ : ∀(x y : ℕ) → x ≤ y ≡ tt → x =ℕ suc y ≡ ff
+=ℕ-suc-≤ zero zero p = refl
+=ℕ-suc-≤ zero (suc y) p = refl
+=ℕ-suc-≤ (suc x) (suc y) p = =ℕ-suc-≤ x y p
+
 <-suc : ∀ (n : ℕ) → n < suc n ≡ tt
 <-suc 0 = refl
 <-suc (suc n) rewrite <-suc n = refl
@@ -205,6 +210,11 @@ iszeromult (suc x) (suc y) p q = refl
 
 <≤ : ∀ {n m : ℕ} → n < m ≡ tt → n ≤ m ≡ tt
 <≤ {n}{m} p rewrite p = refl
+
+≤<suc : ∀{x y : ℕ} → x ≤ y ≡ tt → x < suc y ≡ tt
+≤<suc {zero} {zero} p = refl
+≤<suc {zero} {suc y} p = refl
+≤<suc {suc x} {suc y} p = ≤<suc{x}{y} p
 
 ≤+1 : ∀(x y : ℕ) → x ≤ x + y ≡ tt
 ≤+1 zero zero = refl
@@ -327,6 +337,11 @@ suc<<{n = n} p = <-trans{n} (<-suc n) p
 -- more properties relating <, ≤ with arithmetic operations
 -------------------------------------------------------------
 
+<+1 : ∀{x y z : ℕ} → x < z ≡ tt → x < y + z ≡ tt
+<+1 {x} {zero} {z} p = p
+<+1 {zero} {suc y} {suc z} p = refl
+<+1 {suc x} {suc y} {suc z} p rewrite +suc y z = <-suc-trans{x} (<+1 {x}{y}{z} p)
+
 <+ : ∀ {x y : ℕ} → y =ℕ 0 ≡ ff → x < y + x ≡ tt
 <+{y = 0} ()
 <+{x}{suc 0} p = <-suc x
@@ -389,6 +404,9 @@ suc<<{n = n} p = <-trans{n} (<-suc n) p
 <-not-=ℕ{suc x}{0} ()
 <-not-=ℕ{0}{suc y} p = refl
 <-not-=ℕ{suc x}{suc y} p = <-not-=ℕ{x}{y} p
+
+<-not-=ℕ' : ∀{x y : ℕ} → x < y ≡ tt → x =ℕ y ≡ ff
+<-not-=ℕ'{x}{y} p rewrite =ℕ-sym x y = <-not-=ℕ{x}{y} p
 
 <-not-> : ∀{x y : ℕ} → x < y ≡ tt → y < x ≡ ff
 <-not->{0}{0} ()
