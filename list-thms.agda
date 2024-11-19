@@ -5,6 +5,7 @@ module list-thms where
 open import bool
 open import bool-thms
 open import bool-thms2
+open import bool-relations
 open import functions
 open import list
 open import nat
@@ -194,6 +195,35 @@ length-init x [] = refl
 length-init x (x₁ :: []) = refl
 length-init x (x₁ :: x₂ :: xs) rewrite length-init x₂ xs = refl
 
+list-all-filter : ∀{A : Set}{p q : A → 𝔹}(l : 𝕃 A) →
+                   (∀ (a : A) → (p a) ≡ ff → (q a) ≡ tt) →
+                   list-all q (filter p l) ≡ tt →
+                   list-all q l ≡ tt
+list-all-filter [] sub al = refl
+list-all-filter{p = p} (x :: l) sub al with keep (p x)
+list-all-filter{q = q} (x :: l) sub al | tt , r rewrite r with &&-elim{q x} al
+list-all-filter (x :: l) sub al | tt , r | al1 , al2 rewrite al1 = list-all-filter l sub al2
+list-all-filter (x :: l) sub al | ff , r rewrite r | (sub x r) = list-all-filter l sub al
+
+list-all-sub : ∀{A : Set}{p q : A → 𝔹}(l : 𝕃 A) →
+               (∀ (a : A) → (p a) ≡ tt → (q a) ≡ tt) →
+               list-all p l ≡ tt →
+               list-all q l ≡ tt
+list-all-sub [] sub u = refl
+list-all-sub {p = p}(x :: l) sub u with keep (p x)
+list-all-sub {p = p} (x :: l) sub u | tt , r rewrite (sub x r) = list-all-sub l sub (&&-elim2{p x} u)
+list-all-sub (x :: l) sub u | ff , r rewrite r with u
+list-all-sub (x :: l) sub u | ff , r | ()               
+
+list-all-&& : ∀{A : Set}{p q : A → 𝔹}(l : 𝕃 A) →
+               list-all p l ≡ tt →
+               list-all q l ≡ tt → 
+               list-all (λ x → p x && q x) l ≡ tt
+list-all-&& [] u v = refl
+list-all-&&{p = p}{q} (x :: l) u v =
+  &&-intro (&&-intro{p x} (&&-elim1 u) (&&-elim1 v))
+           (list-all-&& l (&&-elim2 u) (&&-elim2 v))
+
 lengthSplitAt : ∀{A : Set}(n : ℕ)(l pre suff : 𝕃 A) →
                 splitAt n l ≡ (pre , suff) →
                 length l ≡ length pre + length suff
@@ -206,3 +236,97 @@ lengthSplitAt (suc n) [] pre suff u | (u1 , u2) rewrite sym u1 | sym u2 = refl
 lengthSplitAt (suc n) (x :: l) pre suff u with keep (splitAt n l) 
 lengthSplitAt (suc n) (x :: l) pre suff u | ((pre' , suff') , p) rewrite p | lengthSplitAt n l pre' suff' p with ,inj u 
 lengthSplitAt (suc n) (x :: l) pre suff u | ((pre' , suff') , p) | (u1 , u2) rewrite sym u1 | sym u2 = refl
+
+isSublist-refl : ∀{A : Set}{eq : A → A → 𝔹} → 
+                 reflexive eq → {l : 𝕃 A} →
+                 isSublist l l eq ≡ tt
+isSublist-refl r {[]} = refl
+isSublist-refl{A}{eq} r {x :: l} with isSublist-refl{A}{eq} r {l}
+isSublist-refl{A}{eq} r {x :: l} | p rewrite r {x} = list-all-sub l (λ a u → ||-intro2{eq a x} u) p
+
+list-member-sub : ∀{A : Set}{eq : A → A → 𝔹}{a : A}{l1 l2 : 𝕃 A} →
+                  computational-equality eq → 
+                  list-member eq a l1 ≡ tt →
+                  isSublist l1 l2 eq ≡ tt → 
+                  list-member eq a l2 ≡ tt
+list-member-sub {eq = eq}{a}{x :: l1}{l2} e mem sub with ||-elim{eq a x} mem | &&-elim{list-member eq x l2} sub 
+list-member-sub {eq = _} {_} {x :: l1} e mem sub | inj₁ p | u1 , u2 rewrite e p = u1
+list-member-sub {eq = _} {a} {x :: l1} {l2} e mem sub | inj₂ p | u1 , u2 = list-member-sub{a = a}{l1}{l2} e p u2
+
+list-member-sub-ff : ∀{A : Set}{eq : A → A → 𝔹}{a : A}{l1 l2 : 𝕃 A} →
+                     computational-equality eq → 
+                     isSublist l1 l2 eq ≡ tt → 
+                     list-member eq a l2 ≡ ff →
+                     list-member eq a l1 ≡ ff
+list-member-sub-ff{A}{eq}{a}{l1}{l2} ceq sub =
+  contrapos2{list-member eq a l1}{list-member eq a l2} λ m → list-member-sub{a = a}{l1}{l2} ceq m sub
+  
+
+isSublist-++1 : ∀{A : Set}{eq : A → A → 𝔹}{l1 l2 : 𝕃 A} →
+                reflexive eq → 
+                isSublist l1 (l1 ++ l2) eq ≡ tt
+isSublist-++1 {A} {eq} {[]} {l2} _ = refl
+isSublist-++1 {A} {eq} {x :: l1} {l2} r with isSublist-++1{A}{eq}{l1}{l2} r
+isSublist-++1 {A} {eq} {x :: l1} {l2} r | ih rewrite r {x} =
+  list-all-sub{p = λ a → list-member eq a (l1 ++ l2)} l1 (λ a u → ||-intro2 u) ih
+
+isSublist-++2 : ∀{A : Set}{eq : A → A → 𝔹}{l1 l2 l2' : 𝕃 A} →
+                reflexive eq →
+                isSublist l2 l2' eq ≡ tt → 
+                isSublist l2 (l1 ++ l2') eq ≡ tt
+isSublist-++2 {A} {eq} {[]} {l2} r p = p
+isSublist-++2 {A} {eq} {x :: l1} {l2} {l2'} r p with isSublist-++2{A}{eq}{l1}{l2}{l2'} r p
+isSublist-++2 {A} {eq} {x :: l1} {l2} {l2'} r p | ih rewrite r {x} = 
+ list-all-sub{p = λ a → list-member eq a (l1 ++ l2')} l2 (λ a u → ||-intro2 u) ih
+
+isSublist-++-cong : ∀{A : Set}{eq : A → A → 𝔹}{l1 l2 l3 : 𝕃 A} →
+                    reflexive eq → 
+                    isSublist l2 l3 eq ≡ tt → 
+                    isSublist (l1 ++ l2) (l1 ++ l3) eq ≡ tt
+isSublist-++-cong {A} {eq} {[]} {l2} r p = p
+isSublist-++-cong {A} {eq} {x :: l1} {l2} {l3} r p with isSublist-++-cong{A}{eq}{l1}{l2}{l3} r p 
+isSublist-++-cong {A} {eq} {x :: l1} {l2} {l3} r p | u rewrite r {x} =
+  list-all-sub{A}{λ a → list-member eq a (l1 ++ l3)} (l1 ++ l2) (λ a u → ||-intro2 u) u
+
+isSublist-++-merge : ∀{A : Set}{eq : A → A → 𝔹}{l1 l1' l2 l2' : 𝕃 A} →
+                      computational-equality eq → 
+                      reflexive eq → 
+                      isSublist l1 l1' eq ≡ tt →
+                      isSublist l2 l2' eq ≡ tt →                       
+                      isSublist (l1 ++ l2) (l1' ++ l2') eq ≡ tt
+isSublist-++-merge{eq = eq} {[]} {l1'}{l2}{l2'} _ r s1 s2 = isSublist-++2{eq = eq}{l1 = l1'}{l2 = l2}{l2'} r s2
+isSublist-++-merge{eq = eq} {x :: l1} {l1'} ceq r s1 s2 with &&-elim {list-member eq x l1'} s1
+isSublist-++-merge{eq = eq} {x :: l1} {l1'}{l2}{l2'} ceq r s1 s2 | s1a , s1b
+  rewrite isSublist-++-merge{eq = eq}{l1}{l1'}{l2}{l2'} ceq r s1b s2 |
+          list-member-sub{eq = eq}{x}{l1'}{l1' ++ l2'} ceq s1a (isSublist-++1 {eq = eq} {l1'} {l2'} r) = refl
+
+isSublist-trans : ∀{A : Set}{eq : A → A → 𝔹}{l1 l2 l3 : 𝕃 A} →
+                  computational-equality eq → 
+                  isSublist l1 l2 eq ≡ tt →
+                  isSublist l2 l3 eq ≡ tt →
+                  isSublist l1 l3 eq ≡ tt
+isSublist-trans {eq = eq} {[]} {l2} {l3} _ s12 s23 = refl
+isSublist-trans {eq = eq} {x :: l1} {l2} {l3} ceq s12 s23 with &&-elim {list-member eq x l2} s12
+isSublist-trans {eq = eq} {x :: l1} {l2} {l3} ceq s12 s23 | p1 , p2
+  rewrite list-member-sub{eq = eq}{x}{l2}{l3} ceq p1 s23 = isSublist-trans{eq = eq}{l1}{l2}{l3} ceq p2 s23
+
+isSublist-++1l : ∀{A : Set}{eq : A → A → 𝔹}{l1 l2 l3 : 𝕃 A} →
+                 isSublist (l1 ++ l2) l3 eq ≡ tt → 
+                 isSublist l1 l3 eq ≡ tt
+isSublist-++1l {A} {eq} {[]} {l2} {l3} s = refl
+isSublist-++1l {A} {eq} {x :: l1} {l2} {l3} s with &&-elim{list-member eq x l3} s
+isSublist-++1l {A} {eq} {x :: l1} {l2} {l3} s | s1 , s2 = &&-intro{list-member eq x l3} s1 (isSublist-++1l{A}{eq}{l1}{l2}{l3} s2)
+
+isSublist-++2l : ∀{A : Set}{eq : A → A → 𝔹}{l1 l2 l3 : 𝕃 A} →
+                 isSublist (l1 ++ l2) l3 eq ≡ tt → 
+                 isSublist l2 l3 eq ≡ tt
+isSublist-++2l {A} {eq} {[]} {l2} {l3} s = s
+isSublist-++2l {A} {eq} {x :: l1} {l2} {l3} s with &&-elim{list-member eq x l3} s
+isSublist-++2l {A} {eq} {x :: l1} {l2} {l3} s | s1 , s2 = isSublist-++2l{A}{eq}{l1}{l2}{l3} s2
+
+list-member-list-all-ff : ∀{A : Set}{eq : A → A → 𝔹}{z : A}{l : 𝕃 A} → 
+                           list-all (λ x → ~ (eq z x)) l ≡ tt →
+                           list-member eq z l ≡ ff
+list-member-list-all-ff {l = []} p = refl
+list-member-list-all-ff {eq = eq}{z}{x :: l} p with eq z x
+list-member-list-all-ff {eq = _} {_} {x :: l} p | ff = list-member-list-all-ff{l = l} p

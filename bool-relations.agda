@@ -1,6 +1,7 @@
 {- This file describes properties of computable relations. -}
 
 open import bool
+open import bool-thms2
 open import level
 open import eq
 open import product
@@ -42,3 +43,9 @@ equivalence = preorder ∧ symmetric
 ~symmetric symm {_} {_} p | tt , p' rewrite symm p' with p 
 ~symmetric symm {_} {_} p | tt , p' | ()
 ~symmetric symm {_} {_} p | ff , p' = p'
+
+~symmetric2 : symmetric → ∀{a b : A} → ~ (a ≤A b) ≡ tt → ~ (b ≤A a) ≡ tt
+~symmetric2 symm {a}{b} p rewrite ~symmetric symm{a}{b} (~-≡-tt p) = refl
+
+computational-equality : Set ℓ
+computational-equality = ∀{x y : A} → x ≤A y ≡ tt → x ≡ y

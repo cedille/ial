@@ -10,6 +10,7 @@ open import nat
 open import nat-thms
 open import product-thms
 open import logic
+open import bool-relations as B
 
 list-and-++ : ∀(l1 l2 : 𝕃 𝔹) → list-and (l1 ++ l2) ≡ (list-and l1) && (list-and l2)
 list-and-++ [] l2 = refl
@@ -106,3 +107,110 @@ empty++elem a (x :: l) = refl
 last-++ : ∀{ℓ}{A : Set ℓ} (a : A) (l : 𝕃 A) → last (l ++ [ a ]) (empty++elem a l) ≡ a
 last-++ a [] = refl
 last-++ a (x :: l) rewrite last-distr (l ++ [ a ]) x (empty++elem a l) | last-++ a l = refl
+
+disjoint-[] : ∀{A : Set}{l : 𝕃 A}{eq : A → A → 𝔹} →
+               disjoint eq l [] ≡ tt
+disjoint-[] {l = []} = refl
+disjoint-[] {l = x :: l}{eq} = disjoint-[]{l = l}{eq}
+
+disjoint-++ : ∀{A : Set}{l1 l2a l2b : 𝕃 A}{eq : A → A → 𝔹} →
+               disjoint eq l1 (l2a ++ l2b) ≡ tt →
+               disjoint eq l1 l2a ≡ tt ∧ disjoint eq l1 l2b ≡ tt
+disjoint-++{A} {[]} {l2} {l2b}{eq} p = refl , refl
+disjoint-++{A} {x :: l1} {l2a} {l2b}{eq} p with &&-elim{~ list-member eq x (l2a ++ l2b)} p
+disjoint-++{A} {x :: l1} {l2a} {l2b}{eq} _ | p1 , p2 rewrite list-member-++{A = A} eq x l2a l2b |
+ ~-over-|| (list-member eq x l2a) (list-member eq x l2b) with &&-elim{~ list-member eq x l2a} p1
+disjoint-++{A} {x :: l1} {l2a} {l2b}{eq} _ | p1 , p2 | r1 , r2 rewrite r1 | r2 =
+  disjoint-++{l1 = l1}{l2a}{l2b}{eq = eq} p2
+
+disjoint-++i : ∀{A : Set}{l1 l2a l2b : 𝕃 A}{eq : A → A → 𝔹} →
+                disjoint eq l1 l2a ≡ tt →
+                disjoint eq l1 l2b ≡ tt → 
+                disjoint eq l1 (l2a ++ l2b) ≡ tt 
+disjoint-++i {l1 = []} {l2a} {l2b} {eq} u1 u2 = refl
+disjoint-++i {l1 = x :: l1} {l2a} {l2b} {eq} u1 u2 with &&-elim{~ list-member eq x l2a} u1 | &&-elim{~ list-member eq x l2b} u2
+disjoint-++i {l1 = x :: l1} {l2a} {l2b} {eq} u1 u2 | v1 , v2 | w1 , w2
+  rewrite list-member-++ eq x l2a l2b | ~-≡-tt{list-member eq x l2a} v1 | ~-≡-tt{list-member eq x l2b} w1 =
+  disjoint-++i{l1 = l1}{l2a}{l2b} v2 w2
+
+disjoint-++2 : ∀{A : Set}{l1a l1b l2 : 𝕃 A}{eq : A → A → 𝔹} →
+               disjoint eq (l1a ++ l1b) l2 ≡ tt →
+               disjoint eq l1a l2 ≡ tt ∧ disjoint eq l1b l2 ≡ tt
+disjoint-++2 {l1a = []} {l1b} {l2} {eq} u = refl , u
+disjoint-++2 {l1a = x :: l1a} {l1b} {l2} {eq} u with &&-elim{~ list-member eq x l2} u
+disjoint-++2 {l1a = x :: l1a} {l1b} {l2} {eq} u | u1 , u2 rewrite u1 = disjoint-++2{l1a = l1a}{l1b}{l2}{eq} u2
+
+disjoint-++2i : ∀{A : Set}{l1a l1b l2 : 𝕃 A}{eq : A → A → 𝔹} →
+                 disjoint eq l1a l2 ≡ tt → 
+                 disjoint eq l1b l2 ≡ tt → 
+                 disjoint eq (l1a ++ l1b) l2 ≡ tt 
+disjoint-++2i{l1a = []}{l1b}{l2}{eq} u1 u2 = u2
+disjoint-++2i{l1a = x :: l1a}{l1b}{l2}{eq} u1 u2 with &&-elim{~ list-member eq x l2} u1
+disjoint-++2i{l1a = x :: l1a}{l1b}{l2}{eq} u1 u2 | v1 , v2 rewrite v1 = disjoint-++2i{l1a = l1a}{l1b}{l2}{eq} u1 u2
+
+list-member-disjoint : ∀{A : Set}{x : A}{l : 𝕃 A}{eq : A → A → 𝔹} → 
+                       ~ list-member eq x l ≡ tt →
+                       B.symmetric eq → 
+                       disjoint eq l [ x ] ≡ tt
+list-member-disjoint {l = []} sm p = refl
+list-member-disjoint {x = x}{l = y :: l}{eq} p sm with keep (eq x y)
+list-member-disjoint {x = x}{l = y :: l}{eq} p sm | tt , q rewrite q | sm q with p 
+list-member-disjoint {x = x}{l = y :: l}{eq} p sm | tt , q | () 
+list-member-disjoint {x = x}{l = y :: l}{eq} p sm | ff , q rewrite q | ~symmetric eq sm q = 
+  list-member-disjoint{x = x}{l = l} p sm 
+
+disjoint-sym : ∀{A : Set}{l1 l2 : 𝕃 A}{eq : A → A → 𝔹} →
+               B.symmetric eq → 
+               disjoint eq l1 l2 ≡ tt →
+               disjoint eq l2 l1 ≡ tt
+disjoint-sym {l1 = []}{l2}{eq} sm u rewrite disjoint-[]{l = l2}{eq} = refl
+disjoint-sym {l1 = x :: l1}{l2}{eq} sm u with disjoint-++2{l1a = [ x ]}{l1b = l1}{l2 = l2}{eq = eq} u
+disjoint-sym {l1 = x :: l1}{l2}{eq} sm u | u1 , u2 rewrite &&-tt (~ list-member eq x l2) = 
+  disjoint-++i{l1 = l2}{l2a = [ x ]}{l2b = l1} 
+    (list-member-disjoint{x = x}{l = l2}{eq} u1 sm)
+    (disjoint-sym{l1 = l1}{l2 = l2}{eq} sm u2)
+
+all-pred-implies : ∀{X : Set}{f g : X → Set}{l : 𝕃 X} →
+                   (∀{x} → f x → g x) → 
+                   all-pred f l →
+                   all-pred g l
+all-pred-implies {l = []} p _ = triv
+all-pred-implies {l = x :: l} p (u , u') = p u , all-pred-implies p u'
+
+disjoint-in-out : ∀{A : Set}{l1 l2 : 𝕃 A}{x y : A}{eq : A → A → 𝔹} →
+                  computational-equality eq → 
+                  disjoint eq l1 l2 ≡ tt →
+                  list-member eq x l1 ≡ tt →
+                  list-member eq y l2 ≡ tt →
+                  eq x y ≡ ff
+disjoint-in-out {A} {x' :: l1} {l2} {x} {y} {eq} e dis xin yin with ||-elim{eq x x'} xin
+disjoint-in-out {A} {x' :: l1} {y' :: l2} {x} {y} {eq} e dis xin yin | inj₁ q with ||-elim{eq y y'} yin 
+disjoint-in-out {A} {x' :: l1} {y' :: l2} {x} {y} {eq} e dis xin yin | inj₁ q | inj₁ q' rewrite e q | e q' =
+  ~-≡-tt (~||-elim1{eq x' y'} (&&-elim1 dis))
+disjoint-in-out {A} {x' :: l1} {y' :: l2} {x} {y} {eq} e dis xin yin | inj₁ q | inj₂ rec =
+  disjoint-in-out{A}{x' :: l1}{l2}{x}{y}{eq} e zz xin rec
+  where zz : disjoint eq (x' :: l1) l2 ≡ tt
+        zz = &&-intro (~||-elim2{eq x' y'} (&&-elim1 dis))
+                      (list-all-sub l1 (λ a u → ~||-elim2{eq a y'} u) (&&-elim2 dis))
+disjoint-in-out {A} {x' :: l1} {l2} {x} {y} {eq} e dis xin yin | inj₂ rec =
+  disjoint-in-out {A} {l1} {l2} {x} {y} {eq} e (&&-elim2{~ list-member eq x' l2} dis) rec yin
+
+
+member-in-out : ∀{A : Set}{l : 𝕃 A}{x y : A}{eq : A → A → 𝔹} →
+                 computational-equality eq → 
+                 list-member eq x l ≡ tt →
+                 list-member eq y l ≡ ff →
+                 eq x y ≡ ff
+member-in-out {A} {z :: l} {x} {y} {eq} e inx outy with ||-elim{eq x z} inx 
+member-in-out {A} {z :: l} {x} {y} {eq} e inx outy | inj₁ p rewrite e p with keep (eq z y)
+member-in-out {A} {z :: l} {x} {y} {eq} e inx outy | inj₁ p | tt , q rewrite e q = sym (sym (||≡ff₁{eq y y} outy))
+member-in-out {A} {z :: l} {x} {y} {eq} e inx outy | inj₁ p | ff , q = q
+member-in-out {A} {z :: l} {x} {y} {eq} e inx outy | inj₂ p = member-in-out{A}{l}{x}{y}{eq} e p (||≡ff₂{eq y z} outy)
+
+sublist-in-out : ∀{A : Set}{l1 l2 : 𝕃 A}{x y : A}{eq : A → A → 𝔹} →
+                  computational-equality eq → 
+                  isSublist l1 l2 eq ≡ tt →
+                  list-member eq x l1 ≡ tt →
+                  list-member eq y l2 ≡ ff →
+                  eq x y ≡ ff
+sublist-in-out{A}{l1}{l2}{x}{y}{eq} e sl m = member-in-out{A}{l2} e (list-member-sub{A}{eq}{x}{l1}{l2} e m sl)

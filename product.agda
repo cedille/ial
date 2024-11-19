@@ -50,6 +50,12 @@ fst (a , b) = a
 snd : ∀ {ℓ ℓ'} {A : Set ℓ} {B : Set ℓ'} → A × B → B
 snd (a , b) = b
 
+fst-map : ∀ {ℓ ℓ'} {A A' : Set ℓ} {B : Set ℓ'} → (A → A') → A × B → A' × B
+fst-map f (a , b) = f a , b
+
+snd-map : ∀ {ℓ ℓ'} {A : Set ℓ} {B B' : Set ℓ'} → (B → B') → A × B → A × B'
+snd-map f (a , b) = a , f b
+
 ⟨_,_⟩ : ∀{ℓ₁ ℓ₂ ℓ₃ ℓ₄}
          {A : Set ℓ₁}{B : Set ℓ₂}
          {C : Set ℓ₃}{D : Set ℓ₄}

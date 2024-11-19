@@ -161,6 +161,13 @@ list-max lt (y :: ys) x = list-max lt ys (if lt y x then x else y)
 isSublist : ∀{ℓ}{A : Set ℓ} → 𝕃 A → 𝕃 A → (A → A → 𝔹) → 𝔹
 isSublist l1 l2 eq = list-all (λ a → list-member eq a l2) l1
 
+disjoint : ∀{A : Set} → (A → A → 𝔹) → 𝕃 A → 𝕃 A → 𝔹
+disjoint eq l1 l2 = list-all (λ x → ~ list-member eq x l2) l1
+
+distinct : ∀{A : Set} → (A → A → 𝔹) → 𝕃 A → 𝔹
+distinct eq [] = tt
+distinct eq (x :: xs) = ~ list-member eq x xs && distinct eq xs
+
 =𝕃 : ∀{ℓ}{A : Set ℓ} → (A → A → 𝔹) → (l1 : 𝕃 A) → (l2 : 𝕃 A) → 𝔹
 =𝕃 eq (a :: as) (b :: bs) = eq a b && =𝕃 eq as bs
 =𝕃 eq [] [] = tt

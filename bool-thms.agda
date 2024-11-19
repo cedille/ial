@@ -3,6 +3,8 @@ module bool-thms where
 open import bool
 open import eq
 open import sum
+open import product
+open import product-thms
 
 ~~-elim : ∀ (b : 𝔹) → ~ ~ b ≡ b
 ~~-elim tt = refl
@@ -16,9 +18,9 @@ open import sum
 ||-idem{tt} = refl
 ||-idem{ff} = refl
 
-||≡ff₁ : ∀ {b1 b2} → b1 || b2 ≡ ff → ff ≡ b1
+||≡ff₁ : ∀ {b1 b2} → b1 || b2 ≡ ff → b1 ≡ ff
 ||≡ff₁ {ff} p = refl
-||≡ff₁ {tt} p = sym p
+||≡ff₁ {tt} p = p
 
 ||≡ff₂ : ∀ {b1 b2} → b1 || b2 ≡ ff → b2 ≡ ff
 ||≡ff₂ {tt} ()
@@ -81,3 +83,16 @@ ite-arg f ff x y = refl
 not-not : ∀(b : 𝔹) → (~ ~ b) ≡ b
 not-not tt = refl
 not-not ff = refl
+
+
+contrapos : ∀{b1 b2 : 𝔹} → (b1 ≡ ff → b2 ≡ ff) → b2 ≡ tt → b1 ≡ tt
+contrapos{b1}{b2} u d with keep b1
+contrapos{b1}{b2} u d | tt , p = p
+contrapos{b1}{b2} u d | ff , p rewrite u p with d
+contrapos{b1}{b2} u d | ff , p | ()
+
+contrapos2 : ∀{b1 b2 : 𝔹} → (b1 ≡ tt → b2 ≡ tt) → b2 ≡ ff → b1 ≡ ff
+contrapos2{b1}{b2} u d with keep b1
+contrapos2{b1}{b2} u d | ff , p = p
+contrapos2{b1}{b2} u d | tt , p rewrite u p with d
+contrapos2{b1}{b2} u d | tt , p | ()

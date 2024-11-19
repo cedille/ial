@@ -350,6 +350,9 @@ suc<<{n = n} p = <-trans{n} (<-suc n) p
 <+2 : ∀ {x y : ℕ} → x < (suc y) + x ≡ tt
 <+2{x}{y} = <+{x}{suc y} refl
 
+<+3 : ∀{x y z : ℕ} → x < y ≡ tt → x < y + z ≡ tt
+<+3 {x}{y}{z} rewrite +comm y z = <+1{x}{z}{y}
+
 <-iter-suc-trans-t-h : (n : ℕ) → (x : ℕ) → (accum : ℕ) → Set
 <-iter-suc-trans-t-h 0 x accum = x < accum ≡ tt
 <-iter-suc-trans-t-h (suc n) x accum = <-iter-suc-trans-t-h n x (suc accum)

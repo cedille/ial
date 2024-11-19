@@ -100,6 +100,10 @@ tt-imp ff = refl
 ||-intro1 {tt} p = refl
 ||-intro1 {ff} ()
 
+||-intro2 : ∀ {b1 b2 : 𝔹} → b2 ≡ tt → b1 || b2 ≡ tt
+||-intro2 {tt} p = refl
+||-intro2 {ff} p = p
+
 &&-elim : ∀ {b1 b2 : 𝔹} → b1 && b2 ≡ tt → b1 ≡ tt ∧ b2 ≡ tt 
 &&-elim{tt}{tt} _ = refl , refl
 &&-elim{ff}{_} ()
@@ -112,6 +116,16 @@ tt-imp ff = refl
 &&-elim2 : ∀ {b1 b2 : 𝔹} → b1 && b2 ≡ tt → b2 ≡ tt
 &&-elim2{b1} p with &&-elim{b1} p
 &&-elim2 _ | _ , p = p
+
+~||-intro : ∀{b1 b2 : 𝔹} → b1 ≡ ff → b2 ≡ ff → ~ (b1 || b2) ≡ tt
+~||-intro refl refl = refl
+
+~||-elim1 : ∀ {b1 b2 : 𝔹} → ~ (b1 || b2) ≡ tt → ~ b1 ≡ tt
+~||-elim1{b1}{b2} u rewrite ~-over-|| b1 b2 = &&-elim1{~ b1} u
+
+~||-elim2 : ∀ {b1 b2 : 𝔹} → ~ (b1 || b2) ≡ tt → ~ b2 ≡ tt
+~||-elim2{b1}{b2} u rewrite ~-over-|| b1 b2 = &&-elim2{~ b1} u
+
 
 ||-elim : ∀ {b1 b2 : 𝔹} → b1 || b2 ≡ tt → b1 ≡ tt ∨ b2 ≡ tt
 ||-elim {tt} refl = inj₁ refl
@@ -242,3 +256,5 @@ nand-comm tt ff = refl
 nand-comm ff tt = refl
 nand-comm ff ff = refl
 
+~-≡-ff : ∀{b : 𝔹} → b ≡ ff → ~ b ≡ tt
+~-≡-ff u rewrite u = refl
