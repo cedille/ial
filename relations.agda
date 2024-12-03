@@ -30,3 +30,5 @@ symmetric = ∀{a b : A} → a ≥A b → b ≥A a
 equivalence : Set 
 equivalence = preorder ∧ symmetric
 
+deterministic : Set
+deterministic = ∀{a b c : A} → a ≥A b → a ≥A c → b ≡ c

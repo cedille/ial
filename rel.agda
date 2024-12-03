@@ -14,6 +14,9 @@ a ⟨ r ⟩ a' = r a a'
 _∪_ : ∀ {A : Set} → Rel A → Rel A → Rel A
 (r ∪ r') x y = (r x y) ∨ (r' x y)
 
+_∩_ : ∀ {A : Set} → Rel A → Rel A → Rel A
+(r ∩ r') x y = (r x y) ∧ (r' x y)
+
 1r : ∀ {A : Set} → Rel A
 1r = _≡_
 

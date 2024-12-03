@@ -1,14 +1,28 @@
 {- definition of the diamond property for relations, and proof
    that reflexive-transitive closure preserves that property -}
 
+open import eq
 open import product
+open import sum
 open import rel
 open import rtc
 
 module diamond where
 
+square : ∀{A : Set}(r1 : Rel A)(r2 : Rel A)(r3 : Rel A)(r4 : Rel A) → Set
+square{A} r1 r2 r3 r4 = ∀ {x y z : A} → r1 x y → r2 x z → Σi[ q ∈ A ] r3 y q ∧ r4 z q
+
+commute : ∀{A : Set}(r1 : Rel A)(r2 : Rel A) → Set
+commute r1 r2 = square r1 r2 r1 r2
+
 diamond : ∀{A : Set}(r : Rel A) → Set
-diamond{A} r = ∀ {x y z : A} → r x y → r x z → Σi[ q ∈ A ] r y q ∧ r z q
+diamond r = commute r r
+
+subcommute : ∀{A : Set}(r1 : Rel A)(r2 : Rel A) → Set
+subcommute{A} r1 r2 = ∀ {x y z : A} → r1 x y → r2 x z → y ≡ z ∨ Σi[ q ∈ A ] r2 y q ∧ r1 z q
+
+subdiamond : ∀{A : Set}(r : Rel A) → Set
+subdiamond r = subcommute r r
 
 confluent : ∀{A : Set}(r : Rel A) → Set
 confluent r = diamond (r ⋆)
