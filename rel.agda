@@ -5,8 +5,8 @@ open import sum
 
 module rel where
 
-Rel : Set → Set₁
-Rel A = A → A → Set
+Rel : {ℓ : level} → Set ℓ → Set (lsuc ℓ)
+Rel{ℓ} A = A → A → Set ℓ
 
 _⟨_⟩_ : ∀ {A : Set} → A → Rel A → A → Set
 a ⟨ r ⟩ a' = r a a'
