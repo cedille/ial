@@ -7,23 +7,23 @@ open import relations
 
 module closures where
 
-  module basics {ℓ ℓ' : level}{A : Set ℓ} (_>A_ : A → A → Set ℓ') where
+  module basics {ℓ : level}{A : Set ℓ} (_>A_ : A → A → Set ℓ) where
 
-    data tc : A → A → Set (ℓ ⊔ ℓ') where
+    data tc : A → A → Set ℓ where
       tc-step : ∀{a b : A} → a >A b → tc a b
       tc-trans : ∀{a b c : A} → tc a b → tc b c → tc a c
 
-    data rc : A → A → Set (ℓ ⊔ ℓ') where
+    data rc : A → A → Set ℓ where
       rc-step : ∀{a b : A} → a >A b → rc a b
       rc-refl : ∀{a : A} → rc a a
   
     tc-transitive : transitive tc
     tc-transitive = tc-trans 
 
-  module combinations {ℓ ℓ' : level}{A : Set ℓ} (_>A_ : A → A → Set ℓ') where
+  module combinations {ℓ : level}{A : Set ℓ} (_>A_ : A → A → Set ℓ) where
      open basics public
 
-     rtc : A → A → Set (ℓ ⊔ ℓ')
+     rtc : A → A → Set ℓ
      rtc = rc (tc _>A_)
 
      rtc-refl : reflexive rtc
