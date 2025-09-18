@@ -54,3 +54,10 @@ mediator-diamond : ∀{A : Set}{r1 r2 : Rel A} → r1 ⊆ r2 → r2 ⊆ r1 ⋆ �
 mediator-diamond sub1 sub2 di2 p1 p2  with ⋆diamond di2 (⋆mono sub1 p1) (⋆mono sub1 p2)
 mediator-diamond sub1 sub2 di2 p1 p2 | , q1 , q2 = , ⋆idem (⋆mono sub2 q1) , ⋆idem (⋆mono sub2 q2)
 
+triangle : ∀{A : Set}(f : A → A)(r : Rel A) → Set
+triangle{A} f r = ∀{x y : A} → r x y → r y (f x)
+
+triangle-diamond : ∀{A : Set}{f : A → A}{r : Rel A} →
+                    triangle f r →
+                    diamond r
+triangle-diamond t r1 r2 = , t r1 , t r2
