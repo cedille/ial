@@ -20,12 +20,12 @@ open import product-thms
 
 ||≡ff₁ : ∀ {b1 b2} → b1 || b2 ≡ ff → b1 ≡ ff
 ||≡ff₁ {ff} p = refl
-||≡ff₁ {tt} p = p
 
 ||≡ff₂ : ∀ {b1 b2} → b1 || b2 ≡ ff → b2 ≡ ff
-||≡ff₂ {tt} ()
-||≡ff₂ {ff}{tt} ()
 ||≡ff₂ {ff}{ff} p = refl
+
+||≡ff : ∀ {b1 b2} → b1 || b2 ≡ ff → b1 ≡ ff ∧ b2 ≡ ff
+||≡ff {ff} {ff} eq = refl , refl
 
 ||-tt : ∀ (b : 𝔹) → b || tt ≡ tt
 ||-tt tt = refl
