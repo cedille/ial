@@ -214,3 +214,10 @@ sublist-in-out : ∀{A : Set}{l1 l2 : 𝕃 A}{x y : A}{eq : A → A → 𝔹} �
                   list-member eq y l2 ≡ ff →
                   eq x y ≡ ff
 sublist-in-out{A}{l1}{l2}{x}{y}{eq} e sl m = member-in-out{A}{l2} e (list-member-sub{A}{eq}{x}{l1}{l2} e m sl)
+
+list-in-member : ∀{X : Set}{eq : X → X → 𝔹}{x : X}{xs : 𝕃 X} →
+                  eq x x ≡ tt → 
+                  list-in x xs →
+                  list-member eq x xs ≡ tt
+list-in-member {x = x} {y :: xs} eq (inj₁ refl) rewrite eq = refl
+list-in-member {x = x} {y :: xs} eq (inj₂ p) = ||-intro2 (list-in-member eq p)

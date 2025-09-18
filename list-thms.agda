@@ -244,6 +244,40 @@ isSublist-refl r {[]} = refl
 isSublist-refl{A}{eq} r {x :: l} with isSublist-refl{A}{eq} r {l}
 isSublist-refl{A}{eq} r {x :: l} | p rewrite r {x} = list-all-sub l (λ a u → ||-intro2{eq a x} u) p
 
+sublist-refl : ∀{A : Set}{l : 𝕃 A} → sublist l l
+sublist-refl p = p
+
+list-in-++1 : ∀{A : Set}{x : A}{l1 l2 : 𝕃 A} →
+              list-in x l1 →
+              list-in x (l1 ++ l2)
+list-in-++1 {A} {x} {y :: l1} {l2} (inj₁ r) = inj₁ r
+list-in-++1 {A} {x} {y :: l1} {l2} (inj₂ p) = inj₂ (list-in-++1 p)
+
+list-in-++ : ∀{A : Set}{x : A}{l1 l2 : 𝕃 A} →
+              list-in x (l1 ++ l2) → 
+              list-in x l1 ∨ list-in x l2
+list-in-++ {A} {x} {[]} {l2} p = inj₂ p
+list-in-++ {A} {x} {y :: l1} {l2} (inj₁ p) = inj₁ (inj₁ p)
+list-in-++ {A} {x} {y :: l1} {l2} (inj₂ p) with list-in-++{l1 = l1} p 
+list-in-++ {A} {x} {y :: l1} {l2} (inj₂ p) | inj₁ q = inj₁ (inj₂ q)
+list-in-++ {A} {x} {y :: l1} {l2} (inj₂ p) | inj₂ q = inj₂ q
+
+sublist-++1 : ∀{A : Set}{l1 l2 l : 𝕃 A} →
+             sublist (l1 ++ l2) l →
+             sublist l1 l 
+sublist-++1{A}{l1}{l2}{l} S {x} p = S (list-in-++1 p)
+
+list-in-++2 : ∀{A : Set}{x : A}{l1 l2 : 𝕃 A} →
+              list-in x l2 →
+              list-in x (l1 ++ l2)
+list-in-++2 {A} {x} {[]} {l2} p = p
+list-in-++2 {A} {x} {y :: l1} {l2} p = inj₂ (list-in-++2 p)
+
+sublist-++2 : ∀{A : Set}{l1 l2 l : 𝕃 A} →
+             sublist (l1 ++ l2) l →
+             sublist l2 l 
+sublist-++2{A}{l1}{l2}{l} S {x} p = S (list-in-++2 p)
+
 list-member-sub : ∀{A : Set}{eq : A → A → 𝔹}{a : A}{l1 l2 : 𝕃 A} →
                   computational-equality eq → 
                   list-member eq a l1 ≡ tt →
@@ -330,3 +364,56 @@ list-member-list-all-ff : ∀{A : Set}{eq : A → A → 𝔹}{z : A}{l : 𝕃 A}
 list-member-list-all-ff {l = []} p = refl
 list-member-list-all-ff {eq = eq}{z}{x :: l} p with eq z x
 list-member-list-all-ff {eq = _} {_} {x :: l} p | ff = list-member-list-all-ff{l = l} p
+
+list-in-remove : ∀{A : Set}{eq : A → A → 𝔹}{x y : A}{l : 𝕃 A} →
+                  computational-equality eq →
+                  reflexive eq →                   
+                  eq x y ≡ ff → 
+                  list-in x l →
+                  list-in x (remove eq y l)
+list-in-remove {eq = eq}{x}{y}{z :: l} ceq rf e i with keep (eq y z)
+list-in-remove {eq = eq}{x}{y}{z :: l} ceq rf e i | tt , p rewrite p with keep (eq x z) 
+list-in-remove {eq = eq}{x}{y}{z :: l} ceq rf e i | tt , p | tt , q rewrite ceq p | ceq q | rf{z} with e
+list-in-remove {eq = eq}{x}{y}{z :: l} ceq rf e i | tt , p | tt , q | ()
+list-in-remove {eq = eq}{x}{y}{z :: l} ceq rf e (inj₁ i) | tt , p | ff , q rewrite i | rf{z} with q 
+list-in-remove {eq = eq}{x}{y}{z :: l} ceq rf e (inj₁ i) | tt , p | ff , q | () 
+list-in-remove {eq = eq}{x}{y}{z :: l} ceq rf e (inj₂ i) | tt , p | ff , q = list-in-remove ceq rf e i
+list-in-remove {eq = eq}{x}{y}{z :: l} ceq rf e (inj₁ i) | ff , p rewrite p = inj₁ i
+list-in-remove {eq = eq}{x}{y}{z :: l} ceq rf e (inj₂ i) | ff , p rewrite p = inj₂ (list-in-remove ceq rf e i)
+
+sublist-remove : ∀{A : Set}{eq : A → A → 𝔹}{l1 l2 : 𝕃 A}{a : A} →
+                  computational-equality eq →
+                  reflexive eq →
+                  sublist (remove eq a l1) l2 →
+                  sublist l1 (a :: l2)
+sublist-remove {l1 = []} _ _ S ()
+sublist-remove {eq = eq}{x :: l1}{a = a} ceq rf S p with keep (eq a x)
+sublist-remove {eq = eq}{l1 = x :: l1}{a = a} ceq rf S p | tt , q rewrite ceq q with p 
+sublist-remove {eq = eq}{l1 = x :: l1}{a = a} ceq rf S p | tt , q | inj₁ p' = inj₁ p'
+sublist-remove {eq = eq}{l1 = x :: l1}{a = a} ceq rf S {y} p | tt , q | inj₂ p' rewrite rf{a} with keep (eq y a) 
+sublist-remove {eq = eq}{l1 = x :: l1}{a = a} ceq rf S {y} p | tt , q | inj₂ p' | tt , w rewrite ceq q | ceq w = inj₁ (ceq (rf{x}))
+sublist-remove {eq = eq}{l1 = x :: l1}{a = a} ceq rf S {y} p | tt , q | inj₂ p' | ff , w rewrite rf{x} | ceq q =
+  inj₂ (S (list-in-remove{eq = eq} ceq rf w p'))
+sublist-remove {eq = eq}{l1 = x :: l1}{a = a} ceq rf S (inj₁ p) | ff , q rewrite p | q  = inj₂ (S (inj₁ refl))
+sublist-remove {eq = eq}{l1 = x :: l1}{a = a} ceq rf S {y} (inj₂ p) | ff , q rewrite q = sublist-remove ceq rf (λ p → S (inj₂ p)) p
+
+list-in-remove2 : ∀{A : Set}{eq : A → A → 𝔹}{x y : A}{l : 𝕃 A} →
+                  list-in x (remove eq y l) →
+                  eq y x ≡ ff 
+list-in-remove2 {eq = eq}{x}{y}{z :: l} i with keep (eq y z)
+list-in-remove2 {eq = eq}{x}{y}{z :: l} i | tt , p rewrite p = list-in-remove2{eq = eq}{l = l} i
+list-in-remove2 {eq = eq}{x}{y}{z :: l} i | ff , p rewrite p with i
+list-in-remove2 {eq = eq}{x}{y}{z :: l} i | ff , p | inj₁ refl = p
+list-in-remove2 {eq = eq}{x}{y}{z :: l} i | ff , p | inj₂ u = list-in-remove2{eq = eq}{l = l} u
+
+list-in-remove3 : ∀{A : Set}{eq : A → A → 𝔹}{x y : A}{l : 𝕃 A} →
+                  computational-equality eq →
+                  list-in x (remove eq y l) →
+                  list-in x l
+list-in-remove3 {A} {eq} {x} {y} {z :: l} ceq L with keep (eq x z)
+list-in-remove3 {A} {eq} {x} {y} {z :: l} ceq L | tt , p = inj₁ (ceq p)
+list-in-remove3 {A} {eq} {x} {y} {z :: l} ceq L | ff , p with eq y z
+list-in-remove3 {A} {eq} {x} {y} {z :: l} ceq L | ff , p | tt = inj₂ (list-in-remove3 ceq L)
+list-in-remove3 {A} {eq} {x} {y} {z :: l} ceq L | ff , p | ff with L
+list-in-remove3 {A} {eq} {x} {y} {z :: l} ceq L | ff , p | ff | inj₁ r = inj₁ r
+list-in-remove3 {A} {eq} {x} {y} {z :: l} ceq L | ff , p | ff | inj₂ r = inj₂ (list-in-remove3 ceq r)

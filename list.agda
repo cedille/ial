@@ -111,6 +111,10 @@ list-member : ∀{ℓ}{A : Set ℓ}(eq : A → A → 𝔹)(a : A)(l : 𝕃 A) �
 list-member eq a [] = ff
 list-member eq a (x :: xs) = eq a x || list-member eq a xs
 
+list-in : ∀{A : Set}(a : A)(l : 𝕃 A) → Set
+list-in a [] = ⊥
+list-in a (b :: l) = a ≡ b ∨ list-in a l
+
 -- like Data.List.find in Haskell
 find : ∀{ℓ}{A : Set ℓ}(pred : A → 𝔹)(l : 𝕃 A) → maybe A
 find pred [] = nothing
@@ -160,6 +164,10 @@ list-max lt (y :: ys) x = list-max lt ys (if lt y x then x else y)
 
 isSublist : ∀{ℓ}{A : Set ℓ} → 𝕃 A → 𝕃 A → (A → A → 𝔹) → 𝔹
 isSublist l1 l2 eq = list-all (λ a → list-member eq a l2) l1
+
+-- set version, with equality predicate
+sublist : ∀{A : Set} → 𝕃 A → 𝕃 A → Set
+sublist{A} l1 l2 = ∀{x : A} → list-in x l1 → list-in x l2
 
 disjoint : ∀{A : Set} → (A → A → 𝔹) → 𝕃 A → 𝕃 A → 𝔹
 disjoint eq l1 l2 = list-all (λ x → ~ list-member eq x l2) l1
