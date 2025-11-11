@@ -310,7 +310,7 @@ isSublist-++2 : ∀{A : Set}{eq : A → A → 𝔹}{l1 l2 l2' : 𝕃 A} →
                 isSublist l2 (l1 ++ l2') eq ≡ tt
 isSublist-++2 {A} {eq} {[]} {l2} r p = p
 isSublist-++2 {A} {eq} {x :: l1} {l2} {l2'} r p with isSublist-++2{A}{eq}{l1}{l2}{l2'} r p
-isSublist-++2 {A} {eq} {x :: l1} {l2} {l2'} r p | ih rewrite r {x} = 
+isSublist-++2 {A} {eq} {x :: l1} {l2} {l2'} r p | ih = 
  list-all-sub{p = λ a → list-member eq a (l1 ++ l2')} l2 (λ a u → ||-intro2 u) ih
 
 isSublist-++-cong : ∀{A : Set}{eq : A → A → 𝔹}{l1 l2 l3 : 𝕃 A} →
@@ -390,7 +390,7 @@ sublist-remove {l1 = []} _ _ S ()
 sublist-remove {eq = eq}{x :: l1}{a = a} ceq rf S p with keep (eq a x)
 sublist-remove {eq = eq}{l1 = x :: l1}{a = a} ceq rf S p | tt , q rewrite ceq q with p 
 sublist-remove {eq = eq}{l1 = x :: l1}{a = a} ceq rf S p | tt , q | inj₁ p' = inj₁ p'
-sublist-remove {eq = eq}{l1 = x :: l1}{a = a} ceq rf S {y} p | tt , q | inj₂ p' rewrite rf{a} with keep (eq y a) 
+sublist-remove {eq = eq}{l1 = x :: l1}{a = a} ceq rf S {y} p | tt , q | inj₂ p'  with keep (eq y a) 
 sublist-remove {eq = eq}{l1 = x :: l1}{a = a} ceq rf S {y} p | tt , q | inj₂ p' | tt , w rewrite ceq q | ceq w = inj₁ (ceq (rf{x}))
 sublist-remove {eq = eq}{l1 = x :: l1}{a = a} ceq rf S {y} p | tt , q | inj₂ p' | ff , w rewrite rf{x} | ceq q =
   inj₂ (S (list-in-remove{eq = eq} ceq rf w p'))

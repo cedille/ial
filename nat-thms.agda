@@ -550,7 +550,7 @@ min-mono1 n n' m p with ||-split{n < n'} p
 ... | inj₂ p' rewrite =ℕ-to-≡ {n} p' | =ℕ-refl (min n' m) | ||-tt ((min n' m) < (min n' m)) = refl
 ... | inj₁ p' with ℕ-trichotomy n' m
 ... | inj₁ p'' rewrite <-trans {n} p' p'' | p'' | p' = refl
-... | inj₂ (inj₁ p'') rewrite =ℕ-to-≡ {n'} p'' | p' | =ℕ-refl (min n m) | ||-tt ((min n m) < (min n m)) | <-irrefl m | p' = refl
+... | inj₂ (inj₁ p'') rewrite =ℕ-to-≡ {n'} p'' | p' | <-irrefl m | p' = refl
 ... | inj₂ (inj₂ p'') rewrite <-asym {m} p'' with ℕ-trichotomy n m 
 ... | inj₁ p''' rewrite p''' | p''' = refl
 ... | inj₂ (inj₁ p''') rewrite =ℕ-to-≡ {n} p''' | <-irrefl m | =ℕ-refl m | ||-tt (m < m) = refl
