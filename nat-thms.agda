@@ -30,6 +30,9 @@ open import sum
 +suc zero y = refl
 +suc (suc x) y rewrite +suc x y = refl
 
+suc+ : ∀ (x y : ℕ) → suc x + y ≡ suc(x + y)
+suc+ x y = refl
+
 +assoc : ∀ (x y z : ℕ) → x + (y + z) ≡ (x + y) + z
 +assoc zero y z = refl
 +assoc (suc x) y z rewrite +assoc x y z = refl
@@ -235,7 +238,7 @@ iszeromult (suc x) (suc y) p q = refl
 ... | p' rewrite sym (+suc (d + q * suc (suc d)) r) | +comm d (q * suc (suc d)) 
                | sym (+assoc (q * (suc (suc d))) d (suc r)) = ÷<{suc (suc d)}{q}{d + suc r}{x} refl p'  
 
---------------------------------------------------
+-------------------------------------------------
 -- ordering properties of < and ≤ℕ
 --------------------------------------------------
 
@@ -305,6 +308,12 @@ iszeromult (suc x) (suc y) p q = refl
 ... | inj₂ p' | inj₁ p'' rewrite =ℕ-to-≡ {x} p'  | p'' = refl
 ... | inj₁ p' | inj₂ p'' rewrite =ℕ-to-≡ {y} p'' | p' = refl
 ... | inj₂ p' | inj₂ p'' rewrite =ℕ-to-≡ {x} p'  | =ℕ-to-≡ {y} p'' | =ℕ-refl z | ||-tt (z < z) = refl
+
++≤1 : ∀{x y z} → x + y ≤ z ≡ tt → x ≤ z ≡ tt
++≤1{x}{y} u = (≤-trans{x} (≤+1 x y) u)
+
++≤2 : ∀{x y z} → x + y ≤ z ≡ tt → y ≤ z ≡ tt
++≤2{x}{y} u = (≤-trans{y} (≤+2 x y) u)
 
 ≤-total : ∀{x y : ℕ} → x ≤ y ≡ ff → y ≤ x ≡ tt
 ≤-total {zero} {zero} p = refl
@@ -683,3 +692,20 @@ even~odd zero = refl
 even~odd (suc x) = odd~even x
 odd~even zero = refl
 odd~even (suc x) = even~odd x
+
+--------------------------------------------------
+-- some lemmas about iter
+
+iter-shift : ∀{n : ℕ}{ℓ}{X : Set ℓ}{f : X → X}{x : X} →
+             f (iter n f x) ≡ iter n f (f x)
+iter-shift {zero} = refl
+iter-shift {suc n}{ℓ}{X}{f}{x} rewrite iter-shift{n}{ℓ}{X}{f}{x} = refl
+
+iter-add : ∀{n m : ℕ}{ℓ}{X : Set ℓ}{f : X → X}{x : X} →
+           iter n f (iter m f x) ≡ iter (n + m) f x
+iter-add {zero} {m} {ℓ} {X} {f} {x} = refl
+iter-add {suc n} {m} {ℓ} {X} {f} {x} rewrite iter-add{n}{m}{ℓ}{X}{f}{x} = refl
+
+0≤ : ∀{n : ℕ} → 0 ≤ n ≡ tt
+0≤ {zero} = refl
+0≤ {suc n} = refl

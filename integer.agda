@@ -20,6 +20,9 @@ open import unit
 data ℤ : Set where
   mkℤ : (n : ℕ) → ℤ-pos-t n → ℤ
 
+infixl 9 _+ℤ_ _-ℤ_
+infixl 8 _≤ℤ_ 
+
 0ℤ : ℤ
 0ℤ = mkℤ 0 triv
 
@@ -29,8 +32,16 @@ data ℤ : Set where
 -1ℤ : ℤ
 -1ℤ = mkℤ 1 ff
 
+toℤ : ℕ → ℤ
+toℤ 0 = 0ℤ
+toℤ (suc x) = mkℤ (suc x) tt
+
 abs-val : ℤ → ℕ
 abs-val (mkℤ n _) = n
+
+negℤ : ℤ → ℤ
+negℤ (mkℤ 0 triv) = mkℤ 0 triv
+negℤ (mkℤ (suc n) b) = mkℤ (suc n) (~ b)
 
 is-evenℤ : ℤ → 𝔹
 is-evenℤ (mkℤ n _) = is-even n
@@ -54,6 +65,9 @@ x +ℤ (mkℤ 0 _) = x
 (mkℤ (suc n) p1) +ℤ (mkℤ (suc m) p2) with p1 xor p2 
 (mkℤ (suc n) p1) +ℤ (mkℤ (suc m) p2) | ff = mkℤ (suc n + suc m) p1
 (mkℤ (suc n) p1) +ℤ (mkℤ (suc m) p2) | tt = if p1 imp p2 then diffℤ m n else diffℤ n m 
+
+_-ℤ_ : ℤ → ℤ → ℤ
+x -ℤ y = x +ℤ (negℤ y)
 
 test-+ℤ1 : (mkℤ 2 ff) +ℤ (mkℤ 4 tt) ≡ (mkℤ 2 tt)
 test-+ℤ1 = refl
@@ -83,3 +97,14 @@ _≤ℤ_ : ℤ → ℤ → 𝔹
  rewrite rp | xor-comm pos1 pos2 | rp | xor-≡{pos2}rp with pos1 
 ≤ℤ-antisymm (mkℤ (suc x) pos1) (mkℤ (suc y) pos2) p q | ff , rp | tt rewrite ≤-antisym{x} p q = refl
 ≤ℤ-antisymm (mkℤ (suc x) pos1) (mkℤ (suc y) pos2) p q | ff , rp | ff rewrite ≤-antisym{y} p q = refl
+
++ℤ0 : ∀{z : ℤ} → z +ℤ 0ℤ ≡ z
++ℤ0 {mkℤ zero triv} = refl
++ℤ0 {mkℤ (suc n) tt} = refl
++ℤ0 {mkℤ (suc n) ff} = refl
+
+toℤ-≤ : ∀{n m : ℕ} → toℤ n ≤ℤ toℤ m ≡ tt → n ≤ m ≡ tt
+toℤ-≤ {zero} {zero} p = refl
+toℤ-≤ {zero} {suc m} p = refl
+toℤ-≤ {suc n} {suc m} p = p
+
