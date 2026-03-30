@@ -23,6 +23,9 @@ id = λ x → x
 id-∘ : ∀{ℓ ℓ'}{A : Set ℓ}{B : Set ℓ'}(f : A → B) → id ∘ f ≡ f
 id-∘ f = refl
 
+injective : ∀{A B : Set} → (A → B) → Set
+injective{A} f = ∀ (a a' : A) → f a ≡ f a' → a ≡ a'
+
 extensionality : {ℓ₁ ℓ₂ : Level} → Set (lsuc ℓ₁ ⊔ lsuc ℓ₂)
 extensionality {ℓ₁}{ℓ₂} = ∀{A : Set ℓ₁}{B : Set ℓ₂}{f g : A → B} → (∀{a : A} → f a ≡ g a) → f ≡ g
 

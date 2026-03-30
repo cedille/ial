@@ -21,7 +21,7 @@ data ℤ : Set where
   mkℤ : (n : ℕ) → ℤ-pos-t n → ℤ
 
 infixl 9 _+ℤ_ _-ℤ_
-infixl 8 _≤ℤ_ 
+infixl 8 _≤ℤ_ _≥ℤ_ 
 
 0ℤ : ℤ
 0ℤ = mkℤ 0 triv
@@ -83,6 +83,9 @@ _≤ℤ_ : ℤ → ℤ → 𝔹
 (mkℤ (suc x) pos1) ≤ℤ (mkℤ (suc y) pos2) | tt = pos1 imp pos2
 (mkℤ (suc x) pos1) ≤ℤ (mkℤ (suc y) pos2) | ff = if pos1 then x ≤ y else y ≤ x
 
+_≥ℤ_ : ℤ → ℤ → 𝔹
+i ≥ℤ j = j ≤ℤ i 
+
 ≤ℤ-antisymm : ∀(x y : ℤ) → x ≤ℤ y ≡ tt → y ≤ℤ x ≡ tt → x ≡ y
 ≤ℤ-antisymm (mkℤ zero triv) (mkℤ zero triv) p q = refl
 ≤ℤ-antisymm (mkℤ zero triv) (mkℤ (suc y) pos2) p q rewrite p with q 
@@ -108,3 +111,13 @@ toℤ-≤ {zero} {zero} p = refl
 toℤ-≤ {zero} {suc m} p = refl
 toℤ-≤ {suc n} {suc m} p = p
 
+≤-toℤ : ∀{n m : ℕ} → n ≤ m ≡ tt → toℤ n ≤ℤ toℤ m ≡ tt 
+≤-toℤ {zero} {zero} e = refl
+≤-toℤ {zero} {suc m} e = refl
+≤-toℤ {suc n} {suc m} e = suc≤{n}{m} e
+
+toℤ+ : ∀{x y : ℕ} → toℤ (x + y) ≡ toℤ x +ℤ toℤ y
+toℤ+ {zero} {zero} = refl
+toℤ+ {zero} {suc y} = refl
+toℤ+ {suc x} {zero} rewrite (+0 x) = refl
+toℤ+ {suc x} {suc y} = refl
