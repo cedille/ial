@@ -521,6 +521,10 @@ suc<<{n = n} p = <-trans{n} (<-suc n) p
 ∸suc2 : ∀ {x y z : ℕ } → y < x ≡ tt → x ∸ ((suc z) + y) < x ∸ y ≡ tt
 ∸suc2{x}{y}{z} p rewrite +comm (suc z) y = ∸suc{x}{y}{z} p
 
+∸cancel1 : ∀(x : ℕ) → x ∸ x ≡ 0
+∸cancel1 zero = refl
+∸cancel1 (suc x) = ∸cancel1 x
+
 ∸cancel : ∀ (x y z : ℕ) → (x + y) ∸ (x + z) ≡ y ∸ z
 ∸cancel 0 y z = refl
 ∸cancel (suc x) y z = ∸cancel x y z
