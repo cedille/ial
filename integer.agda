@@ -50,7 +50,7 @@ is-oddℤ : ℤ → 𝔹
 is-oddℤ (mkℤ n _) = is-odd n
 
 {- subtract the second natural number from the first, returning an integer.
-   This is mostly a helper for _+ℤ_ -}
+   This is mostly a helper for _+ℤ_ 
 diffℤ : ℕ → ℕ → ℤ
 diffℤ n m with ℕ-trichotomy n m 
 diffℤ n m | inj₁ p with <∸suc{m}{n} p               -- n < m
@@ -58,6 +58,13 @@ diffℤ n m | inj₁ p | x , _ = mkℤ (suc x) ff
 diffℤ n m | inj₂ (inj₁ p) = mkℤ 0 triv              -- n = m 
 diffℤ n m | inj₂ (inj₂ p) with <∸suc{n}{m} p
 diffℤ n m | inj₂ (inj₂ p) | x , _ = mkℤ (suc x) tt  -- m < n 
+-}
+
+diffℤ : ℕ → ℕ → ℤ
+diffℤ zero zero = 0ℤ
+diffℤ zero (suc m) = mkℤ (suc m) ff
+diffℤ (suc n) zero = mkℤ (suc n) tt
+diffℤ (suc n) (suc m) = diffℤ n m
 
 _+ℤ_ : ℤ → ℤ → ℤ
 (mkℤ 0 _) +ℤ x = x
