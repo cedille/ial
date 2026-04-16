@@ -1,4 +1,4 @@
-{- This file describes properties of computable relations. -}
+{- This file describes properties of relations. -}
 
 open import bool
 open import level
