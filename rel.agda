@@ -8,6 +8,8 @@ module rel where
 Rel : {ℓ : level} → Set ℓ → Set (lsuc ℓ)
 Rel{ℓ} A = A → A → Set ℓ
 
+infix 5 _⟨_⟩_
+
 _⟨_⟩_ : ∀ {A : Set} → A → Rel A → A → Set
 a ⟨ r ⟩ a' = r a a'
 

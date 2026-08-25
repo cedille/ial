@@ -107,6 +107,10 @@ reverse-helper h (x :: xs) = reverse-helper (x :: h) xs
 reverse : ∀ {ℓ}{A : Set ℓ} → 𝕃 A → 𝕃 A
 reverse l = reverse-helper [] l
 
+nreverse : ∀{A : Set} → 𝕃 A → 𝕃 A
+nreverse [] = []
+nreverse (x :: xs) = nreverse xs ++ [ x ] 
+
 list-member : ∀{ℓ}{A : Set ℓ}(eq : A → A → 𝔹)(a : A)(l : 𝕃 A) → 𝔹
 list-member eq a [] = ff
 list-member eq a (x :: xs) = eq a x || list-member eq a xs
@@ -114,6 +118,10 @@ list-member eq a (x :: xs) = eq a x || list-member eq a xs
 list-in : ∀{A : Set}(a : A)(l : 𝕃 A) → Set
 list-in a [] = ⊥
 list-in a (b :: l) = a ≡ b ∨ list-in a l
+
+unique : ∀{A : Set}(eq : A → A → 𝔹)(vs : 𝕃 A) → 𝔹
+unique _ [] = tt
+unique eq (x :: xs) = ~ list-member eq x xs && unique eq xs
 
 -- like Data.List.find in Haskell
 find : ∀{ℓ}{A : Set ℓ}(pred : A → 𝔹)(l : 𝕃 A) → maybe A
@@ -171,6 +179,9 @@ sublist{A} l1 l2 = ∀{x : A} → list-in x l1 → list-in x l2
 
 disjoint : ∀{A : Set} → (A → A → 𝔹) → 𝕃 A → 𝕃 A → 𝔹
 disjoint eq l1 l2 = list-all (λ x → ~ list-member eq x l2) l1
+
+diagonal : ∀{A : Set} → 𝕃 A → 𝕃 (A × A)
+diagonal = map (λ x → x , x) 
 
 distinct : ∀{A : Set} → (A → A → 𝔹) → 𝕃 A → 𝔹
 distinct eq [] = tt
@@ -248,3 +259,11 @@ null : ∀{ℓ}{A : Set ℓ} → 𝕃 A → 𝔹
 null [] = tt
 null (x :: xs) = ff
 
+_>>=𝕃_ : ∀{A B : Set} → 𝕃 A → (A → 𝕃 B) → 𝕃 B
+xs >>=𝕃 f = concat (map f xs)
+
+_::₁_ : ∀{A B : Set} → A → 𝕃 A × 𝕃 B → 𝕃 A × 𝕃 B
+_::₁_ a (xs , ys) = a :: xs , ys
+
+_::₂_ : ∀{A B : Set} → B → 𝕃 A × 𝕃 B → 𝕃 A × 𝕃 B
+_::₂_ b (xs , ys) = xs , b :: ys

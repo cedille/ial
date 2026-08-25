@@ -196,6 +196,48 @@ disjoint-in-out {A} {x' :: l1} {l2} {x} {y} {eq} e dis xin yin | inj₂ rec =
   disjoint-in-out {A} {l1} {l2} {x} {y} {eq} e (&&-elim2{~ list-member eq x' l2} dis) rec yin
 
 
+list-all-sublist-h : ∀{A : Set}{eq : A → A → 𝔹}{p : A → 𝔹}{l : 𝕃 A}{x : A} →
+                     computational-equality eq → 
+                     list-member eq x l ≡ tt → 
+                     list-all p l ≡ tt →
+                     p x ≡ tt 
+list-all-sublist-h {A} {eq} {p} {y :: l} {x} ceq mem al with keep (eq x y)
+list-all-sublist-h {A} {eq} {p} {y :: l} {x} ceq mem al | tt , u rewrite ceq{x} u = &&-elim1 al
+list-all-sublist-h {A} {eq} {p} {y :: l} {x} ceq mem al | ff , u rewrite u = list-all-sublist-h {A} {eq} {p} {l} {x} ceq mem (&&-elim2 al)
+
+list-all-sublist : ∀{A : Set}{eq : A → A → 𝔹}{p : A → 𝔹}{l l' : 𝕃 A} →
+                   computational-equality eq → 
+                   list-all p l' ≡ tt → 
+                   isSublist l l' eq ≡ tt →
+                   list-all p l ≡ tt
+list-all-sublist {A} {eq} {p} {[]} {l'} ceq al sb = refl
+list-all-sublist {A} {eq} {p} {x :: l} {l'} ceq al sb
+  rewrite list-all-sublist-h{A}{eq}{p}{l'}{x} ceq (&&-elim1{list-member eq x l'} sb) al =
+  list-all-sublist {A} {eq} {p} {l} {l'} ceq al (isSublist-++2l{A}{eq}{[ x ]}{l}{l'} sb)
+
+disjoint-sublist1 : ∀{A : Set}{eq : A → A → 𝔹} →
+                    {l1 l1' l2 : 𝕃 A} →
+                    computational-equality eq → 
+                    isSublist l1 l1' eq ≡ tt →
+                    disjoint eq l1' l2 ≡ tt →
+                    disjoint eq l1 l2 ≡ tt 
+disjoint-sublist1 {A} {eq} {l1} {l1'} {l2} ceq s d =
+  list-all-sublist{A}{eq}{λ x → ~ list-member eq x l2}{l1}{l1'} ceq d s
+
+disjoint-sublist : ∀{A : Set}{eq : A → A → 𝔹} →
+                    {l1 l1' l2 l2' : 𝕃 A} →
+                    computational-equality eq → 
+                    B.symmetric eq → 
+                    isSublist l1 l1' eq ≡ tt →
+                    isSublist l2 l2' eq ≡ tt →
+                    disjoint eq l1' l2' ≡ tt →
+                    disjoint eq l1 l2 ≡ tt 
+disjoint-sublist{A}{eq}{l1}{l1'}{l2}{l2'} ceq sym s1 s2 d = 
+  disjoint-sublist1{A}{eq}{l1}{l1'}{l2} ceq s1 
+   (disjoint-sym {A} {l2} {l1'} {eq} sym
+     (disjoint-sublist1 {A} {eq} {l2} {l2'} {l1'} ceq s2
+       (disjoint-sym {A} {l1'} {l2'} sym d)))
+
 member-in-out : ∀{A : Set}{l : 𝕃 A}{x y : A}{eq : A → A → 𝔹} →
                  computational-equality eq → 
                  list-member eq x l ≡ tt →
@@ -221,3 +263,47 @@ list-in-member : ∀{X : Set}{eq : X → X → 𝔹}{x : X}{xs : 𝕃 X} →
                   list-member eq x xs ≡ tt
 list-in-member {x = x} {y :: xs} eq (inj₁ refl) rewrite eq = refl
 list-in-member {x = x} {y :: xs} eq (inj₂ p) = ||-intro2 (list-in-member eq p)
+
+remove-idem : ∀{X : Set}{eq : X → X → 𝔹}{x : X}{xs : 𝕃 X} →
+              remove eq x (remove eq x xs) ≡ remove eq x xs
+remove-idem {X} {eq} {x} {xs} = filter-idem (λ y → ~ (eq x y)) xs
+
+remove-commute : ∀{X : Set}{eq : X → X → 𝔹}{x1 x2 : X}{xs : 𝕃 X} →
+              remove eq x1 (remove eq x2 xs) ≡ remove eq x2 (remove eq x1 xs)
+remove-commute{eq = eq}{x1}{x2}{xs} = filter-commute (λ y → ~ (eq x1 y)) (λ y → ~ (eq x2 y)) xs
+
+list-member-remove : ∀{A : Set}{eq : A → A → 𝔹}{x y : A}{l : 𝕃 A} →
+                     list-member eq x (remove eq y l) ≡ tt →
+                     eq x y ≡ tt ∨ list-member eq x l ≡ tt
+list-member-remove {A} {eq} {x} {y} {z :: l} u with eq y z
+list-member-remove {A} {eq} {x} {y} {z :: l} u | tt with list-member-remove{A}{eq}{x}{y}{l} u 
+list-member-remove {A} {eq} {x} {y} {z :: l} u | tt | inj₁ i = inj₁ i
+list-member-remove {A} {eq} {x} {y} {z :: l} u | tt | inj₂ i = inj₂ (||-intro2{eq x z} i)
+list-member-remove {A} {eq} {x} {y} {z :: l} u | ff  with ||-elim{eq x z} u
+list-member-remove {A} {eq} {x} {y} {z :: l} u | ff | inj₁ i = inj₂ (||-intro1{eq x z} i)
+list-member-remove {A} {eq} {x} {y} {z :: l} u | ff | inj₂ i with list-member-remove{A}{eq}{x}{y}{l} i
+list-member-remove {A} {eq} {x} {y} {z :: l} u | ff | inj₂ i | inj₁ j = inj₁ j
+list-member-remove {A} {eq} {x} {y} {z :: l} u | ff | inj₂ i | inj₂ j = inj₂ (||-intro2{eq x z} j)
+
+list-member-remove2 : ∀{A : Set}{eq : A → A → 𝔹}{x y : A}{l : 𝕃 A} →
+                      computational-equality eq → 
+                      list-member eq x (remove eq y l) ≡ ff →
+                      eq x y ≡ tt ∨ list-member eq x l ≡ ff
+list-member-remove2{A}{eq}{x}{y}{[]} ceq u = inj₂ refl
+list-member-remove2{A}{eq}{x}{y}{z :: l} ceq u with keep (eq y z)
+list-member-remove2{A}{eq}{x}{y}{z :: l} ceq u | tt , p rewrite p with list-member-remove2{A}{eq}{x}{y}{l} ceq u
+list-member-remove2{A}{eq}{x}{y}{z :: l} ceq u | tt , p | inj₁ i = inj₁ i
+list-member-remove2{A}{eq}{x}{y}{z :: l} ceq u | tt , p | inj₂ i with keep (eq x z)
+list-member-remove2{A}{eq}{x}{y}{z :: l} ceq u | tt , p | inj₂ i | tt , q rewrite ceq{y} p = inj₁ q
+list-member-remove2{A}{eq}{x}{y}{z :: l} ceq u | tt , p | inj₂ i | ff , q = inj₂ (||ff-intro{eq x z} q i)
+list-member-remove2{A}{eq}{x}{y}{z :: l} ceq u | ff , p rewrite p with ||-ff-elim{eq x z} u 
+list-member-remove2{A}{eq}{x}{y}{z :: l} ceq u | ff , p | u1 , u2 with list-member-remove2{A}{eq}{x}{y}{l} ceq u2
+list-member-remove2{A}{eq}{x}{y}{z :: l} ceq u | ff , p | u1 , u2 | inj₁ i = inj₁ i
+list-member-remove2{A}{eq}{x}{y}{z :: l} ceq u | ff , p | u1 , u2 | inj₂ i = inj₂ (||ff-intro{eq x z} u1 i)
+
+list-member-remove-same : ∀{A : Set}{eq : A → A → 𝔹}{x : A}{l : 𝕃 A} →
+                          list-member eq x (remove eq x l) ≡ ff
+list-member-remove-same {A} {eq} {x} {[]} = refl
+list-member-remove-same {A} {eq} {x} {y :: l} with keep (eq x y)
+list-member-remove-same {A} {eq} {x} {y :: l} | tt , p rewrite p = list-member-remove-same{A}{eq}{x}{l}
+list-member-remove-same {A} {eq} {x} {y :: l} | ff , p rewrite p | p = list-member-remove-same{A}{eq}{x}{l}

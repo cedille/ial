@@ -44,11 +44,14 @@ syntax Σi-syntax A (λ x → B) = Σi[ x ∈ A ] B
 ----------------------------------------------------------------------
 -- operations
 ----------------------------------------------------------------------
-fst : ∀ {ℓ ℓ'} {A : Set ℓ} {B : Set ℓ'} → A × B → A
+fst : ∀ {ℓ ℓ'} {A : Set ℓ} {B : A → Set ℓ'} → Σ A B → A
 fst (a , b) = a
 
 snd : ∀ {ℓ ℓ'} {A : Set ℓ} {B : Set ℓ'} → A × B → B
 snd (a , b) = b
+
+snd' : ∀ {ℓ ℓ'} {A : Set ℓ} {B : A → Set ℓ'} → (p : Σ A B) → B (fst p)
+snd' (a , b) = b
 
 fst-map : ∀ {ℓ ℓ'} {A A' : Set ℓ} {B : Set ℓ'} → (A → A') → A × B → A' × B
 fst-map f (a , b) = f a , b

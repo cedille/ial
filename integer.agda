@@ -20,8 +20,8 @@ open import unit
 data ℤ : Set where
   mkℤ : (n : ℕ) → ℤ-pos-t n → ℤ
 
-infixl 9 _+ℤ_ _-ℤ_
-infixl 8 _≤ℤ_ _≥ℤ_ 
+infixl 9 _+ℤ_ _-ℤ_ 
+infixl 8 _≤ℤ_ _≥ℤ_ _=ℤ_
 
 0ℤ : ℤ
 0ℤ = mkℤ 0 triv
@@ -82,6 +82,11 @@ test-+ℤ1 = refl
 test-+ℤ2 : (mkℤ 2 tt) +ℤ (mkℤ 4 ff) ≡ (mkℤ 2 ff)
 test-+ℤ2 = refl
 
+_*ℤ_ : ℤ → ℤ → ℤ
+(mkℤ 0 _) *ℤ x = 0ℤ
+x *ℤ (mkℤ 0 _) = 0ℤ
+(mkℤ (suc n) p1) *ℤ (mkℤ (suc m) p2) = mkℤ (suc n * suc m) (p1 iff p2)
+
 _≤ℤ_ : ℤ → ℤ → 𝔹
 (mkℤ 0 triv) ≤ℤ (mkℤ 0 triv) = tt
 (mkℤ 0 triv) ≤ℤ (mkℤ (suc _) pos) = pos
@@ -92,6 +97,24 @@ _≤ℤ_ : ℤ → ℤ → 𝔹
 
 _≥ℤ_ : ℤ → ℤ → 𝔹
 i ≥ℤ j = j ≤ℤ i 
+
+_<ℤ_ : ℤ → ℤ → 𝔹
+mkℤ zero triv <ℤ mkℤ zero triv = ff
+mkℤ zero triv <ℤ mkℤ (suc _) b = b
+mkℤ (suc n) b <ℤ mkℤ zero triv = ~ b
+mkℤ (suc n) tt <ℤ mkℤ (suc n₁) tt = n < n₁
+mkℤ (suc n) tt <ℤ mkℤ (suc n₁) ff = ff
+mkℤ (suc n) ff <ℤ mkℤ (suc n₁) tt = tt
+mkℤ (suc n) ff <ℤ mkℤ (suc n₁) ff = n > n₁
+
+_=ℤ_ : ℤ → ℤ → 𝔹
+mkℤ zero triv =ℤ mkℤ zero triv = tt
+mkℤ zero triv =ℤ mkℤ (suc _) _ = ff
+mkℤ (suc _) _ =ℤ mkℤ zero triv = ff
+mkℤ (suc n) tt =ℤ mkℤ (suc m) tt = n =ℕ m
+mkℤ (suc _) tt =ℤ mkℤ (suc _) ff = ff
+mkℤ (suc _) ff =ℤ mkℤ (suc _) tt = ff
+mkℤ (suc n) ff =ℤ mkℤ (suc m) ff = n =ℕ m
 
 ≤ℤ-antisymm : ∀(x y : ℤ) → x ≤ℤ y ≡ tt → y ≤ℤ x ≡ tt → x ≡ y
 ≤ℤ-antisymm (mkℤ zero triv) (mkℤ zero triv) p q = refl
@@ -128,3 +151,9 @@ toℤ+ {zero} {zero} = refl
 toℤ+ {zero} {suc y} = refl
 toℤ+ {suc x} {zero} rewrite (+0 x) = refl
 toℤ+ {suc x} {suc y} = refl
+
+=ℤ-to-≡ : ∀{x y : ℤ} → x =ℤ y ≡ tt → x ≡ y
+=ℤ-to-≡ {mkℤ zero triv} {mkℤ zero triv} u = refl
+=ℤ-to-≡ {mkℤ (suc n) tt} {mkℤ (suc n₁) tt} u rewrite =ℕ-to-≡{n}{n₁} u = refl
+=ℤ-to-≡ {mkℤ (suc n) ff} {mkℤ (suc n₁) ff} u rewrite =ℕ-to-≡{n}{n₁} u = refl
+=ℤ-to-≡ {mkℤ (suc n) b} {mkℤ 0 triv} ()

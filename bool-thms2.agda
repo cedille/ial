@@ -120,12 +120,30 @@ tt-imp ff = refl
 ~||-intro : ∀{b1 b2 : 𝔹} → b1 ≡ ff → b2 ≡ ff → ~ (b1 || b2) ≡ tt
 ~||-intro refl refl = refl
 
+||ff-intro : ∀{b1 b2 : 𝔹} → b1 ≡ ff → b2 ≡ ff → b1 || b2 ≡ ff
+||ff-intro refl refl = refl
+
 ~||-elim1 : ∀ {b1 b2 : 𝔹} → ~ (b1 || b2) ≡ tt → ~ b1 ≡ tt
 ~||-elim1{b1}{b2} u rewrite ~-over-|| b1 b2 = &&-elim1{~ b1} u
 
 ~||-elim2 : ∀ {b1 b2 : 𝔹} → ~ (b1 || b2) ≡ tt → ~ b2 ≡ tt
 ~||-elim2{b1}{b2} u rewrite ~-over-|| b1 b2 = &&-elim2{~ b1} u
 
+~||&&  : ∀{b1 b2 : 𝔹} →
+       ~ (b1 || b2) ≡ ~ b1 && ~ b2
+~||&&{tt} = refl
+~||&&{ff} = refl
+
+||-ff-elim : ∀{b b' : 𝔹} → b || b' ≡ ff → b ≡ ff ∧ b' ≡ ff
+||-ff-elim {ff} {ff} e = refl , refl
+
+&&-ff-elim : ∀{b1 b2 : 𝔹} → b1 && b2 ≡ ff → b1 ≡ ff ∨ b2 ≡ ff 
+&&-ff-elim {tt} {b2} e = inj₂ e
+&&-ff-elim {ff} {b2} e = inj₁ e
+
+&&-ff-intro2 : ∀{b1 b2 : 𝔹} → b2 ≡ ff → b1 && b2 ≡ ff
+&&-ff-intro2 {tt} refl = refl
+&&-ff-intro2 {ff} refl = refl
 
 ||-elim : ∀ {b1 b2 : 𝔹} → b1 || b2 ≡ tt → b1 ≡ tt ∨ b2 ≡ tt
 ||-elim {tt} refl = inj₁ refl
@@ -258,3 +276,6 @@ nand-comm ff ff = refl
 
 ~-≡-ff : ∀{b : 𝔹} → b ≡ ff → ~ b ≡ tt
 ~-≡-ff u rewrite u = refl
+
+~ff-≡ : ∀{b : 𝔹} → ~ b ≡ ff → b ≡ tt
+~ff-≡ {tt} e = refl
