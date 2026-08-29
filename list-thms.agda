@@ -351,6 +351,16 @@ isSublist-++-merge{eq = eq} {x :: l1} {l1'}{l2}{l2'} ceq r s1 s2 | s1a , s1b
   rewrite isSublist-++-merge{eq = eq}{l1}{l1'}{l2}{l2'} ceq r s1b s2 |
           list-member-sub{eq = eq}{x}{l1'}{l1' ++ l2'} ceq s1a (isSublist-++1 {eq = eq} {l1'} {l2'} r) = refl
 
+isSublist-++3 : ∀{A : Set}{eq : A → A → 𝔹}{l1 l1' l2 : 𝕃 A} →
+                computational-equality eq → 
+                reflexive eq →
+                isSublist l1 l1' eq ≡ tt → 
+                isSublist l1 (l1' ++ l2) eq ≡ tt
+isSublist-++3{A}{eq}{l1}{l1'}{l2} ceq rf sb rewrite sym (++[] l1) = 
+ isSublist-++-merge{A}{eq}{l1}{l1'}{[]}{l2} ceq rf h refl
+ where h : isSublist l1 l1' eq ≡ tt
+       h rewrite ++[] l1 = sb
+
 isSublist-trans : ∀{A : Set}{eq : A → A → 𝔹}{l1 l2 l3 : 𝕃 A} →
                   computational-equality eq → 
                   isSublist l1 l2 eq ≡ tt →
@@ -383,6 +393,12 @@ isSublist-++il {A} {eq} {[]} {l2} {l3} s1 s2 = s2
 isSublist-++il {A} {eq} {x :: l1} {l2} {l3} s1 s2 with &&-elim{list-member eq x l3} s1 
 isSublist-++il {A} {eq} {x :: l1} {l2} {l3} s1 s2 | p1 , p2 =
   &&-intro {list-member eq x l3} p1 (isSublist-++il{eq = eq}{l1}{l2}{l3} p2 s2)
+
+isSublist-++-commute : ∀{A : Set}{eq : A → A → 𝔹}{l1 l2 : 𝕃 A} →
+                       reflexive eq → 
+                       isSublist (l1 ++ l2) (l2 ++ l1) eq ≡ tt
+isSublist-++-commute{A}{eq}{l1}{l2} rf =
+  isSublist-++il{A}{eq}{l1}{l2}{l2 ++ l1} (isSublist-++2a{A}{eq}{l2}{l1} rf) (isSublist-++1{A}{eq}{l2}{l1} rf)
 
 isSublist-remove : ∀{A : Set}{eq : A → A → 𝔹}{l1 l2 : 𝕃 A}{a : A} →
                   symmetric eq →                  

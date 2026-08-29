@@ -2,6 +2,7 @@ module bool-thms2 where
 
 open import bool
 open import eq
+open import negation
 open import product
 open import sum
 
@@ -279,3 +280,6 @@ nand-comm ff ff = refl
 
 ~ff-≡ : ∀{b : 𝔹} → ~ b ≡ ff → b ≡ tt
 ~ff-≡ {tt} e = refl
+
+contra : ¬ (ff ≡ tt)
+contra ()

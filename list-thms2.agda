@@ -273,17 +273,18 @@ remove-commute : ∀{X : Set}{eq : X → X → 𝔹}{x1 x2 : X}{xs : 𝕃 X} →
 remove-commute{eq = eq}{x1}{x2}{xs} = filter-commute (λ y → ~ (eq x1 y)) (λ y → ~ (eq x2 y)) xs
 
 list-member-remove : ∀{A : Set}{eq : A → A → 𝔹}{x y : A}{l : 𝕃 A} →
+                     computational-equality eq →
+                     symmetric eq →                      
+                     reflexive eq →                      
                      list-member eq x (remove eq y l) ≡ tt →
-                     eq x y ≡ tt ∨ list-member eq x l ≡ tt
-list-member-remove {A} {eq} {x} {y} {z :: l} u with eq y z
-list-member-remove {A} {eq} {x} {y} {z :: l} u | tt with list-member-remove{A}{eq}{x}{y}{l} u 
-list-member-remove {A} {eq} {x} {y} {z :: l} u | tt | inj₁ i = inj₁ i
-list-member-remove {A} {eq} {x} {y} {z :: l} u | tt | inj₂ i = inj₂ (||-intro2{eq x z} i)
-list-member-remove {A} {eq} {x} {y} {z :: l} u | ff  with ||-elim{eq x z} u
-list-member-remove {A} {eq} {x} {y} {z :: l} u | ff | inj₁ i = inj₂ (||-intro1{eq x z} i)
-list-member-remove {A} {eq} {x} {y} {z :: l} u | ff | inj₂ i with list-member-remove{A}{eq}{x}{y}{l} i
-list-member-remove {A} {eq} {x} {y} {z :: l} u | ff | inj₂ i | inj₁ j = inj₁ j
-list-member-remove {A} {eq} {x} {y} {z :: l} u | ff | inj₂ i | inj₂ j = inj₂ (||-intro2{eq x z} j)
+                     eq x y ≡ ff ∧ list-member eq x l ≡ tt
+list-member-remove {A} {eq} {x} {y} {z :: l} ceq sm rf u with keep (eq y z) 
+list-member-remove {A} {eq} {x} {y} {z :: l} ceq sm rf u | tt , p rewrite p with list-member-remove{A}{eq}{x}{y}{l} ceq sm rf u 
+list-member-remove {A} {eq} {x} {y} {z :: l} ceq sm rf u | tt , p | p1 , p2 rewrite ceq{y} p = p1 , ||-intro2 {eq x z} p2
+list-member-remove {A} {eq} {x} {y} {z :: l} ceq sm rf u | ff , p rewrite p with ||-elim{eq x z} u
+list-member-remove {A} {eq} {x} {y} {z :: l} ceq sm rf u | ff , p | inj₁ i rewrite ceq{x} i = ~symmetric eq sm {y} p , ||-intro1{eq z z} (rf{z})
+list-member-remove {A} {eq} {x} {y} {z :: l} ceq sm rf u | ff , p | inj₂ i with list-member-remove{A}{eq}{x}{y}{l} ceq sm rf i 
+list-member-remove {A} {eq} {x} {y} {z :: l} ceq sm rf u | ff , p | inj₂ i | u1 , u2 = u1 , ||-intro2 u2
 
 list-member-remove2 : ∀{A : Set}{eq : A → A → 𝔹}{x y : A}{l : 𝕃 A} →
                       computational-equality eq → 
@@ -301,9 +302,49 @@ list-member-remove2{A}{eq}{x}{y}{z :: l} ceq u | ff , p | u1 , u2 with list-memb
 list-member-remove2{A}{eq}{x}{y}{z :: l} ceq u | ff , p | u1 , u2 | inj₁ i = inj₁ i
 list-member-remove2{A}{eq}{x}{y}{z :: l} ceq u | ff , p | u1 , u2 | inj₂ i = inj₂ (||ff-intro{eq x z} u1 i)
 
+list-member-neq : ∀{A : Set}{eq : A → A → 𝔹}{x y : A}{l : 𝕃 A} →
+                   computational-equality eq → 
+                   symmetric eq →                      
+                   reflexive eq →                      
+                   eq x y ≡ ff →
+                   list-member eq x (remove eq y l) ≡ list-member eq x l
+list-member-neq{A}{eq}{x}{y}{l} ceq sm rf u with keep (list-member eq x (remove eq y l))
+list-member-neq{A}{eq}{x}{y}{l} ceq sm rf u | tt , eq' rewrite eq' = sym (snd (list-member-remove{A}{eq}{x}{y}{l} ceq sm rf eq'))
+list-member-neq{A}{eq}{x}{y}{l} ceq sm rf u | ff , eq' with list-member-remove2{A}{eq}{x}{y}{l} ceq eq'
+list-member-neq{A}{eq}{x}{y}{l} ceq sm rf u | ff , eq' | inj₁ i rewrite i with u 
+list-member-neq{A}{eq}{x}{y}{l} ceq sm rf u | ff , eq' | inj₁ i | ()
+list-member-neq{A}{eq}{x}{y}{l} ceq sm rf u | ff , eq' | inj₂ i rewrite i = eq'
+
 list-member-remove-same : ∀{A : Set}{eq : A → A → 𝔹}{x : A}{l : 𝕃 A} →
                           list-member eq x (remove eq x l) ≡ ff
 list-member-remove-same {A} {eq} {x} {[]} = refl
 list-member-remove-same {A} {eq} {x} {y :: l} with keep (eq x y)
 list-member-remove-same {A} {eq} {x} {y :: l} | tt , p rewrite p = list-member-remove-same{A}{eq}{x}{l}
 list-member-remove-same {A} {eq} {x} {y :: l} | ff , p rewrite p | p = list-member-remove-same{A}{eq}{x}{l}
+
+unique-++1 : ∀{A : Set}{eq : A → A → 𝔹}{l1 l2 : 𝕃 A} →
+              unique eq (l1 ++ l2) ≡ tt →
+              unique eq l1 ≡ tt
+unique-++1 {A} {eq} {[]} {l2} un = refl
+unique-++1 {A} {eq} {x :: l1} {l2} un with &&-elim{~ list-member eq x (l1 ++ l2)} un
+unique-++1 {A} {eq} {x :: l1} {l2} un | p1 , p2
+  rewrite list-member-++ eq x l1 l2 | ~||&&{list-member eq x l1}{list-member eq x l2}
+        | &&-elim1{~ list-member eq x l1} p1 = unique-++1{A}{eq}{l1}{l2} p2
+
+unique-++2 : ∀{A : Set}{eq : A → A → 𝔹}{l1 l2 : 𝕃 A} →
+              unique eq (l1 ++ l2) ≡ tt →
+              unique eq l2 ≡ tt
+unique-++2 {A} {eq} {[]} {l2} un = un
+unique-++2 {A} {eq} {x :: l1} {l2} un with &&-elim{~ list-member eq x (l1 ++ l2)} un
+unique-++2 {A} {eq} {x :: l1} {l2} un | p1 , p2
+  rewrite list-member-++ eq x l1 l2 | ~||&&{list-member eq x l1}{list-member eq x l2}
+        | &&-elim2{~ list-member eq x l1} p1 = unique-++2{A}{eq}{l1}{l2} p2
+
+unique-++-disjoint : ∀{A : Set}{eq : A → A → 𝔹}{l1 l2 : 𝕃 A} →
+                     unique eq (l1 ++ l2) ≡ tt →
+                     disjoint eq l1 l2 ≡ tt 
+unique-++-disjoint {A} {eq} {[]} {l2} u = refl
+unique-++-disjoint {A} {eq} {x :: l1} {l2} u rewrite list-member-++ eq x l1 l2 =
+  &&-intro {~ list-member eq x l2}
+    (~||-elim2{list-member eq x l1} (&&-elim1 u))
+    (unique-++-disjoint {A} {eq} {l1} {l2} (&&-elim2 u))

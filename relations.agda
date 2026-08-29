@@ -3,6 +3,7 @@
 open import bool
 open import level
 open import eq
+open import list
 open import product
 open import product-thms
 open import rel
@@ -32,3 +33,6 @@ equivalence = preorder ∧ symmetric
 
 deterministic : Set ℓ
 deterministic = ∀{a b c : A} → a ≥A b → a ≥A c → b ≡ c
+
+preserves-set : ∀{B : Set} → (f : A → 𝕃 B) → (eq : B → B → 𝔹) → Set ℓ
+preserves-set f eq = ∀{a b : A} → a ≥A b → isSublist (f b) (f a) eq ≡ tt
